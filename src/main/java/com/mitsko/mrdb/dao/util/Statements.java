@@ -6,4 +6,11 @@ public class Statements {
     public static final String TAKE_ALL_LOGINS = "SELECT login FROM user";
     public static final String SELECT_USERS_LOGIN = "SELECT login FROM user WHERE login = ?";
     public static final String SELECT_USER = "SELECT * FROM user WHERE login = ? AND password = ?";
+    public static final String NEW_STATUS = "UPDATE user SET status = ? WHERE login = ?";
+    public static final String NEW_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";
+    public static final String ADD_NEW_MOVIE = "INSERT INTO movie(id, name, averageRating, countOfRating) " +
+            "VALUES(NULL,?,?,?)";
+    public static final String TAKE_ALL_MOVIES_NAME = "SELECT name FROM movie";
+    public static final String UPDATE_MOVIES_RATING = "UPDATE movie SET averageRating = ? WHERE name = ?";
+    public static final String UPDATE_COUNT_OF_RATING = "UPDATE movie SET countOfRating = ? WHERE name = ?";
 }
