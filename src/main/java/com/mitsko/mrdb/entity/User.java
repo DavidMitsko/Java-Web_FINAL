@@ -9,16 +9,25 @@ public class User {
     private int ID;
     private String login;
     private String password;
-    private Role role;
+    private final Role role;
     private Status status;
     private float averageRating;
 
-    public User(int ID, String login, String password, Role role, Status status, float averageRating) {
+    public User(int ID, String login, String password, Role role) {
         this.ID = ID;
         this.login = login;
         this.password = password;
         this.role = role;
-        this.status = status;
+        this.status = Status.NO_LIMITS;
+        this.averageRating = 0;
+    }
+
+    public User(int ID, String login, String password, String role, String status, float averageRating) {
+        this.ID = ID;
+        this.login = login;
+        this.password = password;
+        this.role = Role.valueOf(role);
+        this.status = Status.valueOf(status);
         this.averageRating = averageRating;
     }
 
@@ -48,10 +57,6 @@ public class User {
 
     public Role getRole() {
         return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public Status getStatus() {
