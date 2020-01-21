@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public class Rating {
     private int ID;
-    private int userID;
-    private int movieID;
+    private String usersLogin;
+    private String nameOfMovie;
     private float rating;
 
-    public Rating(int ID, int userID, int movieID, float rating) {
+    public Rating(int ID, String usersLogin, String nameOfMovie, float rating) {
         this.ID = ID;
-        this.userID = userID;
-        this.movieID = movieID;
+        this.usersLogin = usersLogin;
+        this.nameOfMovie = nameOfMovie;
         this.rating = rating;
     }
 
@@ -23,20 +23,20 @@ public class Rating {
         this.ID = ID;
     }
 
-    public int getUserID() {
-        return userID;
+    public String getUsersLogin() {
+        return usersLogin;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUsersLogin(String usersLogin) {
+        this.usersLogin = usersLogin;
     }
 
-    public int getMovieID() {
-        return movieID;
+    public String getNameOfMovie() {
+        return nameOfMovie;
     }
 
-    public void setMovieID(int movieID) {
-        this.movieID = movieID;
+    public void setNameOfMovie(String nameOfMovie) {
+        this.nameOfMovie = nameOfMovie;
     }
 
     public float getRating() {
@@ -54,21 +54,21 @@ public class Rating {
         Rating rating1 = (Rating) o;
         return ID == rating1.ID &&
                 Float.compare(rating1.rating, rating) == 0 &&
-                userID == rating1.userID &&
-                movieID == rating1.movieID;
+                usersLogin.equals(rating1.usersLogin) &&
+                nameOfMovie.equals(rating1.nameOfMovie);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, userID, movieID, rating);
+        return Objects.hash(ID, usersLogin, nameOfMovie, rating);
     }
 
     @Override
     public String toString() {
         return "Rating{" +
                 "ID=" + ID +
-                ", userID='" + userID + '\'' +
-                ", movieID='" + movieID + '\'' +
+                ", usersLogin='" + usersLogin + '\'' +
+                ", nameOfMovie='" + nameOfMovie + '\'' +
                 ", rating=" + rating +
                 '}';
     }
