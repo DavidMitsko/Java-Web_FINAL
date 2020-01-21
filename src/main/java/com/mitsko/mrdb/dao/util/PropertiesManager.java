@@ -10,7 +10,7 @@ public class PropertiesManager {
     public String getValue(String parameter) {
         Properties properties = new Properties();
 
-        try(FileInputStream fis = new FileInputStream("src/main/resources/db.properties")){
+        try(FileInputStream fis = new FileInputStream(Parameter.PROPERTIES_PATH)){
             properties.load(fis);
 
         } catch (FileNotFoundException ex) {

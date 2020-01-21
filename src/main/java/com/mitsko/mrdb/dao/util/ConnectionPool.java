@@ -49,7 +49,7 @@ public class ConnectionPool {
             }
 
         } catch(ClassNotFoundException | SQLException ex) {
-
+            ex.printStackTrace();
         }
     }
 
