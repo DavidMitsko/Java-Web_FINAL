@@ -9,4 +9,5 @@ public interface UserDAO {
     void registration(User newUser);
     ResultSet takeAllLogins();
     String takeLogin(String login);
+    void updateRating(String login, int newRating);
 }

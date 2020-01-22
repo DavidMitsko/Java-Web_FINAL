@@ -46,6 +46,8 @@ public class SQLMovieDAOImpl implements MovieDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_ALL_MOVIES_NAME);
 
             resultSet = preparedStatement.executeQuery();
+
+            connectionPool.releaseConnection(connection);
         }catch (SQLException ex) {
 
         }
@@ -63,6 +65,8 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setFloat(2, newRating);
 
             preparedStatement.executeUpdate();
+
+            connectionPool.releaseConnection(connection);
         } catch(SQLException ex) {
 
         }
@@ -79,6 +83,8 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setFloat(2, newCountOfRating);
 
             preparedStatement.executeUpdate();
+
+            connectionPool.releaseConnection(connection);
         } catch(SQLException ex) {
 
         }

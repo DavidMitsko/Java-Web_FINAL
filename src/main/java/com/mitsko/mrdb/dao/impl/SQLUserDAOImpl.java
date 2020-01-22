@@ -56,7 +56,7 @@ public class SQLUserDAOImpl implements UserDAO {
             int id = resultSet.getInt(1);
             String role = resultSet.getString(4);
             String status = resultSet.getString(5);
-            float averageRating = resultSet.getFloat(6);
+            int averageRating = resultSet.getInt(6);
 
             connectionPool.releaseConnection(connection);
 
@@ -73,7 +73,7 @@ public class SQLUserDAOImpl implements UserDAO {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_USER_STATEMENT);
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_USER);
 
             preparedStatement.setString(1, newUser.getLogin());
             preparedStatement.setString(2, newUser.getPassword());
@@ -84,12 +84,11 @@ public class SQLUserDAOImpl implements UserDAO {
             String status = newUser.getStatus().toString();
             preparedStatement.setString(4, status);
 
-            preparedStatement.setFloat(5, newUser.getAverageRating());
+            preparedStatement.setInt(5, newUser.getAverageRating());
 
             preparedStatement.executeUpdate();
 
             connectionPool.releaseConnection(connection);
-
         } catch (SQLException ex) {
 
         }
@@ -109,5 +108,23 @@ public class SQLUserDAOImpl implements UserDAO {
 
         }
         return resultSet;
+    }
+
+    @Override
+    public void updateRating(String login, int newRating) {
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_USERS_RATING);
+
+            preparedStatement.setInt(1, newRating);
+            preparedStatement.setString(2, login);
+
+            preparedStatement.executeUpdate();
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
     }
 }

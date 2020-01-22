@@ -11,7 +11,7 @@ public class User {
     private String password;
     private final Role role;
     private Status status;
-    private float averageRating;
+    private int averageRating;
 
     public User(int ID, String login, String password, Role role) {
         this.ID = ID;
@@ -22,7 +22,7 @@ public class User {
         this.averageRating = 0;
     }
 
-    public User(int ID, String login, String password, String role, String status, float averageRating) {
+    public User(int ID, String login, String password, String role, String status, int averageRating) {
         this.ID = ID;
         this.login = login;
         this.password = password;
@@ -67,11 +67,11 @@ public class User {
         this.status = status;
     }
 
-    public float getAverageRating() {
+    public int getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(float averageRating) {
+    public void setAverageRating(int averageRating) {
         this.averageRating = averageRating;
     }
 
