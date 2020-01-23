@@ -19,4 +19,9 @@ public class Statements {
 
     public static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userLogin, movieName, review) VALUES(NULL,?,?,?)";
     public static final String TAKE_ALL_MOVIES_REVIEW = "SELECT userLogin, review FROM review WHERE movieName = ?";
+
+    public static final String ADD_NEW_RATING = "INSERT INTO rating (id, userLogin, movieName, review) VALUES(NULL,?,?,?)";
+    public static final String TAKE_AVERAGE_RATING_OF_MOVIE = "SELECT AVG(rating) FROM rating WHERE movieName = ? " +
+            "AND userLogin = ?";
+    public static final String UPDATE_RATING = "UPDATE rating SET rating = ? WHERE movieName = ? AND userLogin = ?";
 }
