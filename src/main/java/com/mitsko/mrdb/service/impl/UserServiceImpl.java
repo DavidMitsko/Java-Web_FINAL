@@ -9,11 +9,10 @@ import com.mitsko.mrdb.service.UserService;
 import java.util.ArrayList;
 
 public class UserServiceImpl implements UserService {
-    private DAOFactory daoFactory;
     private UserDAO userDAO;
 
     public UserServiceImpl() {
-        daoFactory = DAOFactory.getInstance();
+        DAOFactory daoFactory = DAOFactory.getInstance();
         userDAO = daoFactory.getSQLUserDAO();
     }
 
@@ -23,7 +22,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong argument");
         }
 
-        String passwordInDB = userDAO.takeLogin(login);
+        String passwordInDB = userDAO.takePassword(login);
         if(!passwordInDB.equals(password) || passwordInDB == null) {
             throw new ServiceException("Wrong login or password");
         }
