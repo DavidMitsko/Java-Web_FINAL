@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SQLReviewDAOImpl implements ReviewDAO {
     ConnectionPool connectionPool = ConnectionPool.getInstance();
@@ -33,21 +34,49 @@ public class SQLReviewDAOImpl implements ReviewDAO {
     }
 
     @Override
-    public ResultSet takeAllMoviesReviews(String name) {
+    public ArrayList<Review> takeAllMoviesReviews(String name) {
         Connection connection = connectionPool.getConnection();
-        ResultSet resultSet = null;
+        ArrayList<Review> reviewList = new ArrayList<>();
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_ALL_MOVIES_REVIEW);
 
             preparedStatement.setString(1, name);
 
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            connectionPool.releaseConnection(connection);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String userLogin = resultSet.getString(2);
+                String movieName = resultSet.getString(3);
+                String review = resultSet.getString(4);
+
+                Review oldReview = new Review(id, userLogin, movieName, review);
+                reviewList.add(oldReview);
+            }
+        } catch (SQLException ex) {
+
+        }
+        return reviewList;
+    }
+
+    @Override
+    public void removeReview(String userLogin, String movieName) {
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.REMOVE_REVIEW);
+
+            preparedStatement.setString(1, userLogin);
+            preparedStatement.setString(2, movieName);
+
+            preparedStatement.executeUpdate();
 
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
         }
-        return resultSet;
     }
 }

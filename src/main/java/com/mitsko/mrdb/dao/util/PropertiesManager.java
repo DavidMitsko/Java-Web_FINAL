@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesManager {
+    private Properties properties = new Properties();
 
     public String getValue(String parameter) {
-        Properties properties = new Properties();
-
         try(FileInputStream fis = new FileInputStream(Parameter.PROPERTIES_PATH)){
             properties.load(fis);
 

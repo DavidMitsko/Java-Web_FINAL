@@ -16,7 +16,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     @Override
-    public String takeLogin(String login) {
+    public String takePassword(String login) {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet;
         try {

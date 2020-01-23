@@ -59,8 +59,8 @@ public class ConnectionPool {
         return connection;
     }
 
-    public boolean releaseConnection(Connection connection) {
+    public void releaseConnection(Connection connection) {
         connectionsQueue.add(connection);
-        return givenAwayConQueue.remove(connection);
+        givenAwayConQueue.remove(connection);
     }
 }

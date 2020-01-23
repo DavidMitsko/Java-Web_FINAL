@@ -2,9 +2,13 @@ package com.mitsko.mrdb.dao;
 
 import com.mitsko.mrdb.entity.Review;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public interface ReviewDAO {
     void addReview(Review review);
-    ResultSet takeAllMoviesReviews(String name);
+
+    ArrayList<Review> takeAllMoviesReviews(String movieName);
+
+    void removeReview(String userLogin, String movieName);
+
 }

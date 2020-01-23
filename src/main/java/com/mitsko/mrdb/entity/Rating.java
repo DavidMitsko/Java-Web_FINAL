@@ -8,6 +8,12 @@ public class Rating {
     private String nameOfMovie;
     private float rating;
 
+    public Rating(String usersLogin, String nameOfMovie, float rating) {
+        this.usersLogin = usersLogin;
+        this.nameOfMovie = nameOfMovie;
+        this.rating = rating;
+    }
+
     public Rating(int ID, String usersLogin, String nameOfMovie, float rating) {
         this.ID = ID;
         this.usersLogin = usersLogin;

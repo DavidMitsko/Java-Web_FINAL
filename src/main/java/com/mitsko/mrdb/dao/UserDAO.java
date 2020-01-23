@@ -11,7 +11,7 @@ public interface UserDAO {
 
     ArrayList takeAllLogins();
 
-    String takeLogin(String login);
+    String takePassword(String login);
 
     void updateRating(String login, int newRating);
 }

@@ -14,15 +14,18 @@ public class Statements {
 
     public static final String ADD_NEW_MOVIE = "INSERT INTO movie(id, name, averageRating, countOfRating) " +
             "VALUES(NULL,?,?,?)";
-    public static final String TAKE_ALL_MOVIES_NAME = "SELECT name FROM movie";
+    public static final String TAKE_ALL_MOVIES_NAME = "SELECT * FROM movie";
     public static final String UPDATE_MOVIES_RATING = "UPDATE movie SET averageRating = ? WHERE name = ?";
     public static final String UPDATE_COUNT_OF_RATING = "UPDATE movie SET countOfRating = ? WHERE name = ?";
+    public static final String TAKE_COUNT_OF_RATING = "SELECT countOfRating FROM movie WHERE name = ?";
+    public static final String TAKE_RATING_OF_MOVIE = "SELECT averageRating FROM movie WHERE name = ?";
 
     public static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userLogin, movieName, review) VALUES(NULL,?,?,?)";
     public static final String TAKE_ALL_MOVIES_REVIEW = "SELECT userLogin, review FROM review WHERE movieName = ?";
+    public static final String REMOVE_REVIEW = "DELETE review WHERE userLogin = ? AND movieName = ?";
 
     public static final String ADD_NEW_RATING = "INSERT INTO rating (id, userLogin, movieName, review) VALUES(NULL,?,?,?)";
-    public static final String TAKE_AVERAGE_RATING_OF_MOVIE = "SELECT AVG(rating) FROM rating WHERE movieName = ? " +
-            "AND userLogin = ?";
+    public static final String TAKE_AVERAGE_RATING_OF_MOVIE = "SELECT AVG(rating) FROM rating WHERE movieName = ?";
     public static final String UPDATE_RATING = "UPDATE rating SET rating = ? WHERE movieName = ? AND userLogin = ?";
+    public static final String REMOVE_RATING = "DELETE rating WHERE userLogin = ? AND movieName = ?";
 }

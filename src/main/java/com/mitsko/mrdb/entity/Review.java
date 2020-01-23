@@ -8,6 +8,12 @@ public class Review {
     private String movieName;
     private String review;
 
+    public Review(String userLogin, String movieName, String review) {
+        this.userLogin = userLogin;
+        this.movieName = movieName;
+        this.review = review;
+    }
+
     public Review(int ID, String userLogin, String movieName, String review) {
         this.ID = ID;
         this.userLogin = userLogin;
