@@ -7,6 +7,7 @@ public class Statements {
     public static final String SELECT_USERS_LOGIN = "SELECT login FROM user WHERE login = ?";
     public static final String SELECT_USER = "SELECT * FROM user WHERE login = ? AND password = ?";
     public static final String UPDATE_USERS_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";
+    public static final String TAKE_USERS_ID = "SELECT id FROM user WHERE login = ?";
 
     public static final String NEW_STATUS = "UPDATE user SET status = ? WHERE login = ?";
     public static final String NEW_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SQLUserDAOImpl implements UserDAO {
 
@@ -69,45 +70,55 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void registration(User newUser) {
+    public int registration(User newUser) {
         Connection connection = connectionPool.getConnection();
+        int id = -1;
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_USER);
 
             preparedStatement.setString(1, newUser.getLogin());
             preparedStatement.setString(2, newUser.getPassword());
-
             String role = newUser.getRole().toString();
             preparedStatement.setString(3, role);
-
             String status = newUser.getStatus().toString();
             preparedStatement.setString(4, status);
-
             preparedStatement.setInt(5, newUser.getAverageRating());
 
             preparedStatement.executeUpdate();
+
+            preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_ID);
+
+            preparedStatement.setString(1, newUser.getLogin());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            id = resultSet.getInt(1);
 
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
         }
+        return id;
     }
 
     @Override
-    public ResultSet takeAllLogins() {
+    public ArrayList takeAllLogins() {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet = null;
+        ArrayList<String> logins = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_ALL_LOGINS);
 
             resultSet = preparedStatement.executeQuery();
 
+            while(resultSet.next()) {
+                logins.add(resultSet.getString(1));
+            }
+
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
         }
-        return resultSet;
+        return logins;
     }
 
     @Override

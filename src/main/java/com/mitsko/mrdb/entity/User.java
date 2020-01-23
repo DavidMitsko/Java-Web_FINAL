@@ -22,6 +22,15 @@ public class User {
         this.averageRating = 0;
     }
 
+    public User(String login, String password) {
+
+        this.login = login;
+        this.password = password;
+        this.role = Role.USER;
+        this.status = Status.NO_LIMITS;
+        this.averageRating = 0;
+    }
+
     public User(int ID, String login, String password, String role, String status, int averageRating) {
         this.ID = ID;
         this.login = login;
