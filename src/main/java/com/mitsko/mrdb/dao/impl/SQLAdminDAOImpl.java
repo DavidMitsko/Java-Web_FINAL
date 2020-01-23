@@ -32,13 +32,13 @@ public class SQLAdminDAOImpl implements AdminDAO {
     }
 
     @Override
-    public void refreshAverageRating(float newRating, String login) {
+    public void refreshAverageRating(int newRating, String login) {
         Connection connection = connectionPool.getConnection();
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.NEW_RATING);
 
-            preparedStatement.setFloat(1, newRating);
+            preparedStatement.setInt(1, newRating);
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
