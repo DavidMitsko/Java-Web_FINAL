@@ -5,15 +5,19 @@ import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.UserService;
+import com.mitsko.mrdb.service.util.Crypto;
 
 import java.util.ArrayList;
 
 public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
+    private Crypto crypto;
 
     public UserServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         userDAO = daoFactory.getSQLUserDAO();
+
+        crypto = new Crypto();
     }
 
     @Override
@@ -23,7 +27,10 @@ public class UserServiceImpl implements UserService {
         }
 
         String passwordInDB = userDAO.takePassword(login);
-        if(!passwordInDB.equals(password) || passwordInDB == null) {
+
+        String hashPassword = crypto.encode(password);
+
+        if(!passwordInDB.equals(hashPassword) || passwordInDB == null) {
             throw new ServiceException("Wrong login or password");
         }
 
