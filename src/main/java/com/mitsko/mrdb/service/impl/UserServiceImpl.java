@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signIn(String login, String password) throws ServiceException {
         if(login.equals("") || password.equals("")) {
-            throw new ServiceException("Wrong argument");
+            throw new ServiceException("Wrong parameter");
         }
 
         String passwordInDB = userDAO.takePassword(login);
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registration(String login, String password) throws ServiceException{
         if(login.equals("") || password.equals("")) {
-            throw new ServiceException("Wrong argument");
+            throw new ServiceException("Wrong parameter");
         }
 
         ArrayList<String> logins = userDAO.takeAllLogins();
@@ -52,7 +52,9 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Already exist a user with this name");
         }
 
-        User user = new User(login, password);
+        String hashPassword = crypto.encode(password);
+
+        User user = new User(login, hashPassword);
         int id = userDAO.registration(user);
         if(id == -1) {
             throw new ServiceException();
