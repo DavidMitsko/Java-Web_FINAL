@@ -21,7 +21,7 @@ public class ConnectionPool {
     private BlockingQueue<Connection> givenAwayConQueue;
 
     private ConnectionPool() {
-        manager = new PropertiesManager();
+        manager = new PropertiesManager(Parameter.PROPERTIES_PATH);
 
         driverName = manager.getValue(Parameter.DB_DRIVER);
         url = manager.getValue(Parameter.DB_URL);

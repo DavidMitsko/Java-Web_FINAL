@@ -29,6 +29,8 @@ public class SignIn implements Command {
 
             if(user.getRole() == Role.ADMIN) {
                 page = Constants.ADMIN;
+            } else {
+                page = Constants.MAIN;
             }
         } catch (ServiceException ex) {
 

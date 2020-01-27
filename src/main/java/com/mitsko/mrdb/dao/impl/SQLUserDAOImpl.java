@@ -29,10 +29,11 @@ public class SQLUserDAOImpl implements UserDAO {
             connectionPool.releaseConnection(connection);
 
             if (resultSet.isBeforeFirst()) {
+                resultSet.next();
                 return resultSet.getString(1);
             }
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return null;
     }
@@ -53,6 +54,7 @@ public class SQLUserDAOImpl implements UserDAO {
             if (!resultSet.isBeforeFirst()) {
                 return null;
             }
+            resultSet.next();
 
             int id = resultSet.getInt(1);
             String role = resultSet.getString(4);

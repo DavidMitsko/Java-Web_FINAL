@@ -15,17 +15,12 @@ public class RatingServiceImpl implements RatingService {
     private RatingDAO ratingDAO;
     private UserDAO userDAO;
     private MovieDAO movieDAO;
-    private MovieService movieService;
 
     public RatingServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         ratingDAO = daoFactory.getSQLRatingDAO();
         userDAO = daoFactory.getSQLUserDAO();
         movieDAO = daoFactory.getSQLMovieDAO();
-
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        movieService = serviceFactory.getMovieService();
-
     }
 
     @Override
@@ -33,6 +28,8 @@ public class RatingServiceImpl implements RatingService {
         if (movieName.equals("") || rating < 0) {
             throw new ServiceException("Wrong parameter");
         }
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        MovieService movieService = serviceFactory.getMovieService();
 
         Rating newRating = new Rating(user.getLogin(), movieName, rating);
         ratingDAO.addNewRating(newRating);

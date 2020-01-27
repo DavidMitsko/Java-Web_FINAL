@@ -4,7 +4,7 @@ public class Statements {
     public static final String ADD_NEW_USER = "INSERT INTO user (id, login, password, role," +
             "status, averageRating) VALUES(NULL,?,?,?,?,?)";
     public static final String TAKE_ALL_LOGINS = "SELECT login FROM user";
-    public static final String SELECT_USERS_LOGIN = "SELECT login FROM user WHERE login = ?";
+    public static final String SELECT_USERS_LOGIN = "SELECT password FROM user WHERE login = ?";
     public static final String SELECT_USER = "SELECT * FROM user WHERE login = ? AND password = ?";
     public static final String UPDATE_USERS_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";
     public static final String TAKE_USERS_ID = "SELECT id FROM user WHERE login = ?";

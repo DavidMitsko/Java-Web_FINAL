@@ -8,10 +8,11 @@ public class CommandProvider {
 
     public CommandProvider() {
         repository.put(CommandName.SIGN_IN, new SignIn());
+        repository.put(CommandName.REGISTRATION, new Registration());
     }
 
     public Command getCommand(String name) {
-        CommandName commandName = CommandName.valueOf(name);
+        CommandName commandName = CommandName.valueOf(name.toUpperCase());
         Command command = repository.get(commandName);
         return command;
     }

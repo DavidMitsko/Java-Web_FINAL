@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong login or password");
         }
 
-        User user = userDAO.signIn(login, password);
+        User user = userDAO.signIn(login, hashPassword);
         if(user == null) {
             throw new ServiceException();
         }

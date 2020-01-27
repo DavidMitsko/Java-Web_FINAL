@@ -1,8 +1,6 @@
 package com.mitsko.mrdb.service;
 
-import com.mitsko.mrdb.service.impl.MovieServiceImpl;
-import com.mitsko.mrdb.service.impl.RatingServiceImpl;
-import com.mitsko.mrdb.service.impl.UserServiceImpl;
+import com.mitsko.mrdb.service.impl.*;
 
 public class ServiceFactory {
     private final static ServiceFactory instance = new ServiceFactory();
@@ -10,6 +8,8 @@ public class ServiceFactory {
     private final UserService userService = new UserServiceImpl();
     private final MovieService movieService = new MovieServiceImpl();
     private final RatingService ratingService = new RatingServiceImpl();
+    private final ReviewService reviewService = new ReviewServiceImpl();
+    private final AdminService adminService = new AdminServiceImpl();
 
     private ServiceFactory() {}
 
@@ -27,5 +27,13 @@ public class ServiceFactory {
 
     public RatingService getRatingService() {
         return ratingService;
+    }
+
+    public ReviewService getReviewService() {
+        return reviewService;
+    }
+
+    public AdminService getAdminService() {
+        return adminService;
     }
 }

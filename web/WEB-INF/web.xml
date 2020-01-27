@@ -10,6 +10,6 @@
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/Registration</url-pattern>
-        <url-pattern>/SignIn</url-pattern>
+        <url-pattern>/Sign_In</url-pattern>
     </servlet-mapping>
 </web-app>

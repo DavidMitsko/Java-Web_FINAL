@@ -17,7 +17,7 @@ public class Controller extends HttpServlet {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
-        Command executionCommand =commandProvider.getCommand(commandName);
+        Command executionCommand = commandProvider.getCommand(commandName);
 
         String page = executionCommand.execute(req);
 

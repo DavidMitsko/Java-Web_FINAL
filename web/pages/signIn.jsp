@@ -11,7 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" action="${pageContext.request.contextPath}/SignIn">
+<form method="post" action="${pageContext.request.contextPath}/Sign_In">
     <label>
         Введите свой логин:
         <input type="text" name="login"/>
