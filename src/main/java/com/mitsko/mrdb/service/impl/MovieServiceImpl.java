@@ -57,4 +57,11 @@ public class MovieServiceImpl implements MovieService {
 
         return movieList;
     }
+
+    @Override
+    public void addMovie(String movieName) {
+        Movie movie = new Movie(movieName);
+
+        movieDAO.addMovie(movie);
+    }
 }

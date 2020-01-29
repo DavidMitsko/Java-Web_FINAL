@@ -10,4 +10,6 @@ public interface MovieService {
     float takeAverageRating(String movieName) throws ServiceException;
 
     ArrayList<Movie> takeAllMovies() throws ServiceException;
+
+    void addMovie(String movieName);
 }

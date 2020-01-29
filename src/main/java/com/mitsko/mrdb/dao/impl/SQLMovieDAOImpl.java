@@ -72,8 +72,8 @@ public class SQLMovieDAOImpl implements MovieDAO {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_MOVIES_RATING);
 
-            preparedStatement.setString(1, name);
-            preparedStatement.setFloat(2, newRating);
+            preparedStatement.setString(2, name);
+            preparedStatement.setFloat(1, newRating);
 
             preparedStatement.executeUpdate();
 
@@ -90,14 +90,14 @@ public class SQLMovieDAOImpl implements MovieDAO {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_COUNT_OF_RATING);
 
-            preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, newCountOfRating);
+            preparedStatement.setString(2, name);
+            preparedStatement.setInt(1, newCountOfRating);
 
             preparedStatement.executeUpdate();
 
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
     }
 
@@ -114,9 +114,10 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             connectionPool.releaseConnection(connection);
 
+            resultSet.next();
             count = resultSet.getInt(1);
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
         return count;
     }
@@ -133,6 +134,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             connectionPool.releaseConnection(connection);
 
+            resultSet.next();
             rating = resultSet.getFloat(1);
         } catch (SQLException ex) {
 

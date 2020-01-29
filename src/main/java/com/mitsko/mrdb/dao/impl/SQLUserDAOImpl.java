@@ -4,6 +4,7 @@ import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.dao.util.ConnectionPool;
 import com.mitsko.mrdb.dao.util.Statements;
 import com.mitsko.mrdb.entity.User;
+import com.mitsko.mrdb.entity.util.Status;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,6 +94,8 @@ public class SQLUserDAOImpl implements UserDAO {
 
             preparedStatement.setString(1, newUser.getLogin());
             ResultSet resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
             id = resultSet.getInt(1);
 
             connectionPool.releaseConnection(connection);
@@ -139,5 +142,48 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (SQLException ex) {
 
         }
+    }
+
+    @Override
+    public int takeRating(String login) {
+        int rating = -1;
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_RATING);
+
+            preparedStatement.setString(1, login);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            rating = resultSet.getInt(1);
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return rating;
+    }
+
+    @Override
+    public Status takeStatus(String login) {
+        Connection connection = connectionPool.getConnection();
+        Status status = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_STATUS);
+
+            preparedStatement.setString(1, login);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            String temp = resultSet.getString(1);
+            status = Status.valueOf(temp);
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return status;
     }
 }

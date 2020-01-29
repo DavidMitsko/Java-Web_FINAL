@@ -45,6 +45,7 @@ public class SQLRatingDAOImpl implements RatingDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
+            resultSet.next();
             averageRating = resultSet.getFloat(1);
         } catch (SQLException ex) {
 
@@ -87,5 +88,27 @@ public class SQLRatingDAOImpl implements RatingDAO {
         } catch (SQLException ex) {
 
         }
+    }
+
+    @Override
+    public float takeUsersRatingOfMovie(String userLogin, String movieName) {
+        Connection connection = connectionPool.getConnection();
+        float rating = -1;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_RATING_OF_MOVIE);
+
+            preparedStatement.setString(1, userLogin);
+            preparedStatement.setString(2, movieName);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+            rating = resultSet.getFloat(1);
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return rating;
     }
 }

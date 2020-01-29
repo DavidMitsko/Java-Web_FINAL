@@ -3,6 +3,7 @@ package com.mitsko.mrdb.service.impl;
 import com.mitsko.mrdb.dao.DAOFactory;
 import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.entity.User;
+import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.UserService;
 import com.mitsko.mrdb.service.util.Crypto;
@@ -62,5 +63,19 @@ public class UserServiceImpl implements UserService {
         user.setID(id);
 
         return user;
+    }
+
+    @Override
+    public ArrayList<String> takeAllLogins() throws ServiceException {
+
+        return userDAO.takeAllLogins();
+    }
+
+    @Override
+    public Status takeStatus(String login) throws ServiceException {
+        if(login.equals("")) {
+            throw new ServiceException("Wrong parameter");
+        }
+        return userDAO.takeStatus(login);
     }
 }

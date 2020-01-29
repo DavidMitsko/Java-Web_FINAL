@@ -11,5 +11,11 @@
         <servlet-name>Controller</servlet-name>
         <url-pattern>/Registration</url-pattern>
         <url-pattern>/Sign_In</url-pattern>
+        <url-pattern>/Take_Reviews</url-pattern>
+        <url-pattern>/Add_Review</url-pattern>
+        <url-pattern>/Rating</url-pattern>
+        <url-pattern>/Add_Rating</url-pattern>
+        <url-pattern>/Add_Movie</url-pattern>
+        <url-pattern>/Change_Status</url-pattern>
     </servlet-mapping>
 </web-app>

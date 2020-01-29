@@ -11,6 +11,8 @@ import com.mitsko.mrdb.service.RatingService;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
 
+import java.util.ArrayList;
+
 public class RatingServiceImpl implements RatingService {
     private RatingDAO ratingDAO;
     private UserDAO userDAO;
@@ -28,6 +30,12 @@ public class RatingServiceImpl implements RatingService {
         if (movieName.equals("") || rating < 0) {
             throw new ServiceException("Wrong parameter");
         }
+        float oldRating = ratingDAO.takeUsersRatingOfMovie(user.getLogin(), movieName);
+        if(oldRating != -1) {
+            updateRating(user.getLogin(), movieName, rating);
+            return;
+        }
+
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
@@ -36,20 +44,43 @@ public class RatingServiceImpl implements RatingService {
 
         movieService.updateRating(movieName);
 
-        if (movieDAO.takeCountOfRating(movieName) == 5) {
-            int userRating = user.getAverageRating();
-            float movieRating = movieDAO.takeRatingOfMovie(movieName);
-            float difference = movieRating - userRating;
-            if (difference > 2 || difference < -2) {
-                if (userRating != 0) {
-                    user.setAverageRating(userRating - 1);
-                    userDAO.updateRating(user.getLogin(), user.getAverageRating());
+        ArrayList<String> usersLogin = userDAO.takeAllLogins();
+        updateRating(movieName, usersLogin);
+    }
+
+    private boolean checkForUpdate(String movieName) {
+        int countOfRating = movieDAO.takeCountOfRating(movieName);
+        if (countOfRating >= 5) {
+            countOfRating = 0;
+            movieDAO.updateCountOfRating(countOfRating, movieName);
+            return true;
+        } else {
+            countOfRating++;
+            movieDAO.updateCountOfRating(countOfRating, movieName);
+            return false;
+        }
+    }
+
+    private void updateRating(String movieName, ArrayList<String> userLogin) {
+        float movieRating = movieDAO.takeRatingOfMovie(movieName);
+
+        if (checkForUpdate(movieName)) {
+            for (String login : userLogin) {
+                float usersRatingOfMovie = ratingDAO.takeUsersRatingOfMovie(login, movieName);
+                if(usersRatingOfMovie == -1) {
+                    continue;
                 }
-            }
-            if (difference < 1 || difference > -1) {
-                if (userRating != 10) {
-                    user.setAverageRating(userRating + 1);
-                    userDAO.updateRating(user.getLogin(), user.getAverageRating());
+                int userRating = userDAO.takeRating(login);
+                float difference = movieRating - usersRatingOfMovie;
+                if (difference > 3 || difference < -3) {
+                    if (userRating != 0) {
+                        userDAO.updateRating(login, --userRating);
+                    }
+                }
+                if (difference < 1 && difference > -1) {
+                    if (userRating != 10) {
+                        userDAO.updateRating(login, ++userRating);
+                    }
                 }
             }
         }
@@ -61,7 +92,12 @@ public class RatingServiceImpl implements RatingService {
             throw new ServiceException("Wrong parameter");
         }
 
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        MovieService movieService = serviceFactory.getMovieService();
+
         Rating newRating = new Rating(userLogin, movieName, rating);
         ratingDAO.updateRating(newRating);
+
+        movieService.updateRating(movieName);
     }
 }

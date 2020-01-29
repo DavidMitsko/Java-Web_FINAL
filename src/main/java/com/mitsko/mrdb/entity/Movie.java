@@ -8,6 +8,12 @@ public class Movie {
     private float averageRating;
     private int countOfRatings;
 
+    public Movie(String name) {
+        this.averageRating = 0;
+        this.countOfRatings = 0;
+        this.name = name;
+    }
+
     public Movie(int ID, String name, float averageRating, int countOfRatings) {
         this.ID = ID;
         this.name = name;

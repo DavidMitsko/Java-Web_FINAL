@@ -48,12 +48,12 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connectionPool.releaseConnection(connection);
 
             while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String userLogin = resultSet.getString(2);
-                String movieName = resultSet.getString(3);
-                String review = resultSet.getString(4);
+                //int id = resultSet.getInt(1);
+                String userLogin = resultSet.getString(1);
+                //String movieName = resultSet.getString(3);
+                String review = resultSet.getString(2);
 
-                Review oldReview = new Review(id, userLogin, movieName, review);
+                Review oldReview = new Review(userLogin, name, review);
                 reviewList.add(oldReview);
             }
         } catch (SQLException ex) {
