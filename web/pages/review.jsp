@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="reviewList" type="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="reviewList" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <jsp:useBean id="movieName" type="java.lang.String" scope="session"/>
 <html>
 <head>
@@ -24,12 +24,12 @@
         <c:forEach var="review" items="${reviewList}">
             <tr>
                 <td>
-                        ${review.userLogin}
+                        ${review.key}
                 <td>
             </tr>
             <tr>
                 <td class="layer">
-                        ${review.review}
+                        ${review.value.review}
                 <td>
             </tr>
         </c:forEach>

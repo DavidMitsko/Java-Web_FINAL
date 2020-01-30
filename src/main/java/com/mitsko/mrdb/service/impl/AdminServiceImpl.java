@@ -17,12 +17,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void refreshStatus(User user, String userLogin, Status newStatus) throws ServiceException {
-        if(user == null || userLogin.equals("") || newStatus == null) {
+    public void refreshStatus(Role userRole, String userLogin, Status newStatus) throws ServiceException {
+        if(userRole == null || userLogin.equals("") || newStatus == null) {
             throw new ServiceException();
         }
 
-        if(user.getRole() != Role.ADMIN) {
+        if(userRole != Role.ADMIN) {
             throw new ServiceException("You have low access");
         }
 
@@ -30,12 +30,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void refreshAverageRating(User user, String userLogin, int newRating) throws ServiceException {
-        if(user == null || userLogin.equals("") || newRating < 0) {
+    public void refreshAverageRating(Role userRole, String userLogin, int newRating) throws ServiceException {
+        if(userRole == null || userLogin.equals("") || newRating < 0) {
             throw new ServiceException();
         }
 
-        if(user.getRole() != Role.ADMIN) {
+        if(userRole != Role.ADMIN) {
             throw new ServiceException("You have low access");
         }
 

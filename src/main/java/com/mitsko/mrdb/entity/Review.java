@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Review {
     private int ID;
-    private String userLogin;
-    private String movieName;
+    private int userID;
+    private int movieID;
     private String review;
 
-    public Review(String userLogin, String movieName, String review) {
-        this.userLogin = userLogin;
-        this.movieName = movieName;
+    public Review(int userID, int movieID, String review) {
+        this.userID = userID;
+        this.movieID = movieID;
         this.review = review;
     }
 
-    public Review(int ID, String userLogin, String movieName, String review) {
+    public Review(int ID, int userID, int movieID, String review) {
         this.ID = ID;
-        this.userLogin = userLogin;
-        this.movieName = movieName;
+        this.userID = userID;
+        this.movieID = movieID;
         this.review = review;
     }
 
@@ -29,20 +29,20 @@ public class Review {
         this.ID = ID;
     }
 
-    public String getUserLogin() {
-        return userLogin;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public int getMovieID() {
+        return movieID;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
     }
 
     public String getReview() {
@@ -59,22 +59,22 @@ public class Review {
         if (o == null || getClass() != o.getClass()) return false;
         Review review1 = (Review) o;
         return ID == review1.ID &&
-                userLogin.equals(review1.userLogin) &&
-                movieName.equals(review1.movieName) &&
+                userID == review1.userID &&
+                movieID == review1.movieID &&
                 review.equals(review1.review);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, userLogin, movieName, review);
+        return Objects.hash(ID, userID, movieID, review);
     }
 
     @Override
     public String toString() {
         return "Review{" +
                 "ID=" + ID +
-                ", userLogin='" + userLogin + '\'' +
-                ", movieName='" + movieName + '\'' +
+                ", userLogin='" + userID + '\'' +
+                ", movieName='" + movieID + '\'' +
                 ", review='" + review + '\'' +
                 '}';
     }

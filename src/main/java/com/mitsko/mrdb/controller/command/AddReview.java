@@ -16,7 +16,8 @@ public class AddReview implements Command {
         ReviewService reviewService = serviceFactory.getReviewService();
 
         HttpSession session = req.getSession();
-        User user = (User)session.getAttribute("user");
+        //User user = (User)session.getAttribute("user");
+        int userID = (int)session.getAttribute("userID");
         String movieName = (String)session.getAttribute("movieName");
         String review = req.getParameter("usersReview");
 
@@ -24,7 +25,7 @@ public class AddReview implements Command {
         String page = Constants.MAIN;
 
         try {
-            reviewService.addNewReview(user.getLogin(), movieName, review);
+            reviewService.addNewReview(userID, movieName, review);
         } catch (ServiceException ex) {
             ex.printStackTrace();
             page = Constants.REVIEW;

@@ -13,15 +13,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLUserDAOImpl implements UserDAO {
-
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+    private static final String FIND_LOGIN = "SELECT login FROM user WHERE login = ?";
+    private static final String TAKE_ALL_USERS_ID = "SELECT id FROM user";
+    public static final String ADD_NEW_USER = "INSERT INTO user (id, login, password, role," +
+            "status, averageRating) VALUES(NULL,?,?,?,?,?)";
+    public static final String TAKE_ALL_LOGINS = "SELECT login FROM user";
+    public static final String SELECT_USERS_LOGIN = "SELECT password FROM user WHERE login = ?";
+    public static final String SELECT_USER = "SELECT * FROM user WHERE login = ? AND password = ?";
+    public static final String UPDATE_USERS_RATING = "UPDATE user SET averageRating = ? WHERE id = ?";
+    public static final String TAKE_USERS_ID = "SELECT id FROM user WHERE login = ?";
+    public static final String TAKE_USERS_RATING = "SELECT averageRating FROM user WHERE id = ?";
+    public static final String TAKE_STATUS = "SELECT status FROM user WHERE id = ?";
+    public static final String TAKE_USERS_LOGIN = "SELECT login FROM user WHERE id = ?";
 
     @Override
     public String takePassword(String login) {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.SELECT_USERS_LOGIN);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USERS_LOGIN);
 
             preparedStatement.setString(1, login);
 
@@ -40,12 +52,12 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User signIn(String login, String password) {
+    public User takeUserByLoginAndPassword(String login, String password) {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.SELECT_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER);
 
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
@@ -78,7 +90,7 @@ public class SQLUserDAOImpl implements UserDAO {
         int id = -1;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_USER);
 
             preparedStatement.setString(1, newUser.getLogin());
             preparedStatement.setString(2, newUser.getPassword());
@@ -90,13 +102,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
             preparedStatement.executeUpdate();
 
-            preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_ID);
-
-            preparedStatement.setString(1, newUser.getLogin());
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            resultSet.next();
-            id = resultSet.getInt(1);
+            id = takeID(newUser.getLogin());
 
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
@@ -106,12 +112,12 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public ArrayList takeAllLogins() {
+    public ArrayList<String> takeAllLogins() {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet = null;
         ArrayList<String> logins = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_ALL_LOGINS);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_LOGINS);
 
             resultSet = preparedStatement.executeQuery();
 
@@ -127,14 +133,14 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateRating(String login, int newRating) {
+    public void updateRating(int userID, int newRating) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_USERS_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS_RATING);
 
             preparedStatement.setInt(1, newRating);
-            preparedStatement.setString(2, login);
+            preparedStatement.setInt(2, userID);
 
             preparedStatement.executeUpdate();
 
@@ -145,14 +151,14 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int takeRating(String login) {
+    public int takeRating(int userID) {
         int rating = -1;
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_RATING);
 
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -166,14 +172,14 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Status takeStatus(String login) {
+    public Status takeStatus(int userID) {
         Connection connection = connectionPool.getConnection();
         Status status = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_STATUS);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_STATUS);
 
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -185,5 +191,88 @@ public class SQLUserDAOImpl implements UserDAO {
 
         }
         return status;
+    }
+
+    @Override
+    public boolean findLogin(String login) {
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_LOGIN);
+
+            preparedStatement.setString(1, login);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            connectionPool.releaseConnection(connection);
+
+            return resultSet.isBeforeFirst();
+        } catch (SQLException ex) {
+
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<Integer> takeAllUsersID() {
+        Connection connection = connectionPool.getConnection();
+        ResultSet resultSet;
+        ArrayList<Integer> usersID = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_ID);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                usersID.add(resultSet.getInt(1));
+            }
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return usersID;
+    }
+
+    @Override
+    public int takeID(String login) {
+        int id = -1;
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_ID);
+
+            preparedStatement.setString(1, login);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            id = resultSet.getInt(1);
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return id;
+    }
+
+    @Override
+    public String takeLogin(int userID) {
+        Connection connection = connectionPool.getConnection();
+        String login = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_LOGIN);
+
+            preparedStatement.setInt(1, userID);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            login = resultSet.getString(1);
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+        return login;
     }
 }

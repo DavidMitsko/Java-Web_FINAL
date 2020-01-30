@@ -5,11 +5,11 @@ import com.mitsko.mrdb.entity.Rating;
 public interface RatingDAO {
     void addNewRating(Rating newRating);
 
-    float takeAverageRatingOfMovie(String movieName);
+    float takeAverageRatingOfMovie(int movieID);
 
     void updateRating(Rating newRating);
 
-    void removeRating(String userLogin, String movieName);
+    void removeRating(int userID, int movieID);
 
-    float takeUsersRatingOfMovie(String userLogin, String movieName);
+    float takeUsersRatingOfMovie(int userID, int movieID);
 }

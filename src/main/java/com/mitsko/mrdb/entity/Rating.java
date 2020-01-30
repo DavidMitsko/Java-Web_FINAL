@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Rating {
     private int ID;
-    private String usersLogin;
-    private String nameOfMovie;
+    private int userID;
+    private int movieID;
     private float rating;
 
-    public Rating(String usersLogin, String nameOfMovie, float rating) {
-        this.usersLogin = usersLogin;
-        this.nameOfMovie = nameOfMovie;
+    public Rating(int userID, int movieID, float rating) {
+        this.userID = userID;
+        this.movieID = movieID;
         this.rating = rating;
     }
 
-    public Rating(int ID, String usersLogin, String nameOfMovie, float rating) {
+    public Rating(int ID, int userID, int movieID, float rating) {
         this.ID = ID;
-        this.usersLogin = usersLogin;
-        this.nameOfMovie = nameOfMovie;
+        this.userID = userID;
+        this.movieID = movieID;
         this.rating = rating;
     }
 
@@ -29,20 +29,20 @@ public class Rating {
         this.ID = ID;
     }
 
-    public String getUsersLogin() {
-        return usersLogin;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setUsersLogin(String usersLogin) {
-        this.usersLogin = usersLogin;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
-    public String getNameOfMovie() {
-        return nameOfMovie;
+    public int getMovieID() {
+        return movieID;
     }
 
-    public void setNameOfMovie(String nameOfMovie) {
-        this.nameOfMovie = nameOfMovie;
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
     }
 
     public float getRating() {
@@ -60,21 +60,21 @@ public class Rating {
         Rating rating1 = (Rating) o;
         return ID == rating1.ID &&
                 Float.compare(rating1.rating, rating) == 0 &&
-                usersLogin.equals(rating1.usersLogin) &&
-                nameOfMovie.equals(rating1.nameOfMovie);
+                userID == rating1.userID &&
+                movieID == rating1.movieID;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, usersLogin, nameOfMovie, rating);
+        return Objects.hash(ID, userID, movieID, rating);
     }
 
     @Override
     public String toString() {
         return "Rating{" +
                 "ID=" + ID +
-                ", usersLogin='" + usersLogin + '\'' +
-                ", nameOfMovie='" + nameOfMovie + '\'' +
+                ", usersLogin='" + userID + '\'' +
+                ", nameOfMovie='" + movieID + '\'' +
                 ", rating=" + rating +
                 '}';
     }

@@ -11,17 +11,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLRatingDAOImpl implements RatingDAO {
-    ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+    public static final String ADD_NEW_RATING = "INSERT INTO rating (id, userID, movieID, rating) VALUES(NULL,?,?,?)";
+    public static final String TAKE_AVERAGE_RATING_OF_MOVIE = "SELECT AVG(rating) FROM rating WHERE movieID = ?";
+    public static final String UPDATE_RATING = "UPDATE rating SET rating = ? WHERE movieID = ? AND userID = ?";
+    public static final String REMOVE_RATING = "DELETE FROM rating WHERE userID = ? AND movieID = ?";
+    public static final String TAKE_USERS_RATING_OF_MOVIE = "SELECT rating FROM rating WHERE userID = ? AND movieID = ?";
 
     @Override
     public void addNewRating(Rating newRating) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_RATING);
 
-            preparedStatement.setString(1, newRating.getUsersLogin());
-            preparedStatement.setString(2, newRating.getNameOfMovie());
+            preparedStatement.setInt(1, newRating.getUserID());
+            preparedStatement.setInt(2, newRating.getMovieID());
             preparedStatement.setFloat(3, newRating.getRating());
 
             preparedStatement.executeUpdate();
@@ -33,14 +39,14 @@ public class SQLRatingDAOImpl implements RatingDAO {
     }
 
     @Override
-    public float takeAverageRatingOfMovie(String movieName) {
+    public float takeAverageRatingOfMovie(int movieID) {
         Connection connection = connectionPool.getConnection();
         float averageRating = -1;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_AVERAGE_RATING_OF_MOVIE);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_AVERAGE_RATING_OF_MOVIE);
 
-            preparedStatement.setString(1, movieName);
+            preparedStatement.setInt(1, movieID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
@@ -58,11 +64,11 @@ public class SQLRatingDAOImpl implements RatingDAO {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_RATING);
 
             preparedStatement.setFloat(1, newRating.getRating());
-            preparedStatement.setString(2, newRating.getNameOfMovie());
-            preparedStatement.setString(3, newRating.getUsersLogin());
+            preparedStatement.setInt(2, newRating.getMovieID());
+            preparedStatement.setInt(3, newRating.getUserID());
 
             preparedStatement.executeUpdate();
 
@@ -73,14 +79,14 @@ public class SQLRatingDAOImpl implements RatingDAO {
     }
 
     @Override
-    public void removeRating(String userLogin, String movieName) {
+    public void removeRating(int userID, int movieID) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.REMOVE_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_RATING);
 
-            preparedStatement.setString(1, userLogin);
-            preparedStatement.setString(1, movieName);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, movieID);
 
             preparedStatement.executeUpdate();
 
@@ -91,15 +97,15 @@ public class SQLRatingDAOImpl implements RatingDAO {
     }
 
     @Override
-    public float takeUsersRatingOfMovie(String userLogin, String movieName) {
+    public float takeUsersRatingOfMovie(int userID, int movieID) {
         Connection connection = connectionPool.getConnection();
         float rating = -1;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_USERS_RATING_OF_MOVIE);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_RATING_OF_MOVIE);
 
-            preparedStatement.setString(1, userLogin);
-            preparedStatement.setString(2, movieName);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, movieID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 

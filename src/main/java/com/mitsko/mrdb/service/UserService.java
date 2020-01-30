@@ -13,4 +13,6 @@ public interface UserService {
     ArrayList<String> takeAllLogins() throws ServiceException;
 
     Status takeStatus(String login) throws ServiceException;
+
+    String takeLogin(int UserID) throws ServiceException;
 }

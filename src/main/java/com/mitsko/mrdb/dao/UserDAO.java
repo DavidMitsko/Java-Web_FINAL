@@ -5,18 +5,26 @@ import com.mitsko.mrdb.entity.util.Status;
 
 import java.util.ArrayList;
 
-public interface UserDAO {
-    User signIn(String login, String password);
+public interface UserDAO{
+    User takeUserByLoginAndPassword(String login, String password);
 
     int registration(User newUser);
 
-    ArrayList takeAllLogins();
+    ArrayList<String> takeAllLogins();
 
     String takePassword(String login);
 
-    void updateRating(String login, int newRating);
+    void updateRating(int userID, int newRating);
 
-    int takeRating(String login);
+    int takeRating(int userID);
 
-    Status takeStatus(String login);
+    Status takeStatus(int userID);
+
+    boolean findLogin(String login);
+
+    ArrayList<Integer> takeAllUsersID();
+
+    int takeID(String login);
+
+    String takeLogin(int userID);
 }

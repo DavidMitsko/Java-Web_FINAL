@@ -26,78 +26,79 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void addNewRating(User user, String movieName, float rating) throws ServiceException {
+    public void addNewRating(int userID, String movieName, float rating) throws ServiceException {
         if (movieName.equals("") || rating < 0) {
             throw new ServiceException("Wrong parameter");
         }
-        float oldRating = ratingDAO.takeUsersRatingOfMovie(user.getLogin(), movieName);
+        int movieID = movieDAO.takeID(movieName);
+
+        float oldRating = ratingDAO.takeUsersRatingOfMovie(userID, movieID);
         if(oldRating != -1) {
-            updateRating(user.getLogin(), movieName, rating);
+            updateRating(userID, movieID, rating);
             return;
         }
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
-        Rating newRating = new Rating(user.getLogin(), movieName, rating);
+        Rating newRating = new Rating(userID, movieID, rating);
         ratingDAO.addNewRating(newRating);
 
-        movieService.updateRating(movieName);
+        movieService.updateRating(movieID);
 
-        ArrayList<String> usersLogin = userDAO.takeAllLogins();
-        updateRating(movieName, usersLogin);
+        ArrayList<Integer> usersID = userDAO.takeAllUsersID();
+        updateRating(movieID, usersID);
     }
 
-    private boolean checkForUpdate(String movieName) {
-        int countOfRating = movieDAO.takeCountOfRating(movieName);
+    private boolean checkForUpdate(int movieID) {
+        int countOfRating = movieDAO.takeCountOfRating(movieID);
         if (countOfRating >= 5) {
             countOfRating = 0;
-            movieDAO.updateCountOfRating(countOfRating, movieName);
+            movieDAO.updateCountOfRating(countOfRating, movieID);
             return true;
         } else {
             countOfRating++;
-            movieDAO.updateCountOfRating(countOfRating, movieName);
+            movieDAO.updateCountOfRating(countOfRating, movieID);
             return false;
         }
     }
 
-    private void updateRating(String movieName, ArrayList<String> userLogin) {
-        float movieRating = movieDAO.takeRatingOfMovie(movieName);
+    private void updateRating(int movieID, ArrayList<Integer> usersID) {
+        float movieRating = movieDAO.takeRatingOfMovie(movieID);
 
-        if (checkForUpdate(movieName)) {
-            for (String login : userLogin) {
-                float usersRatingOfMovie = ratingDAO.takeUsersRatingOfMovie(login, movieName);
+        if (checkForUpdate(movieID)) {
+            for (int userID : usersID) {
+                float usersRatingOfMovie = ratingDAO.takeUsersRatingOfMovie(userID, movieID);
                 if(usersRatingOfMovie == -1) {
                     continue;
                 }
-                int userRating = userDAO.takeRating(login);
+                int userRating = userDAO.takeRating(userID);
                 float difference = movieRating - usersRatingOfMovie;
                 if (difference > 3 || difference < -3) {
                     if (userRating != 0) {
-                        userDAO.updateRating(login, --userRating);
+                        userDAO.updateRating(userID, --userRating);
                     }
                 }
                 if (difference < 1 && difference > -1) {
                     if (userRating != 10) {
-                        userDAO.updateRating(login, ++userRating);
+                        userDAO.updateRating(userID, ++userRating);
                     }
                 }
             }
         }
     }
 
-    @Override
-    public void updateRating(String userLogin, String movieName, float rating) throws ServiceException {
-        if (userLogin.equals("") || movieName.equals("") || rating < 0) {
+    private void updateRating(int userID, int movieID, float rating) throws ServiceException {
+        /*if (userLogin.equals("") || movieID.equals("") || rating < 0) {
             throw new ServiceException("Wrong parameter");
-        }
+        }*/
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
-        Rating newRating = new Rating(userLogin, movieName, rating);
+        Rating newRating = new Rating(userID, movieID, rating);
         ratingDAO.updateRating(newRating);
 
-        movieService.updateRating(movieName);
+        movieService.updateRating(movieID);
     }
 }

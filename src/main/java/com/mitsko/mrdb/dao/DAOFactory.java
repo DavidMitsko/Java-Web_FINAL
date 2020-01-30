@@ -11,7 +11,8 @@ public class DAOFactory {
     private final RatingDAO SQLRatingDAO = new SQLRatingDAOImpl();
     private final ReviewDAO SQLReviewDAO = new SQLReviewDAOImpl();
 
-    private DAOFactory(){}
+    private DAOFactory() {
+    }
 
     public static DAOFactory getInstance() {
         return instance;

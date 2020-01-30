@@ -12,15 +12,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLMovieDAOImpl implements MovieDAO {
+    private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-    ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private static final String TAKE_ID = "SELECT id FROM movie WHERE name = ?";
+    public static final String ADD_NEW_MOVIE = "INSERT INTO movie(id, name, averageRating, countOfRatings) " +
+            "VALUES(NULL,?,?,?)";
+    public static final String TAKE_ALL_MOVIES = "SELECT * FROM movie";
+    public static final String UPDATE_MOVIES_RATING = "UPDATE movie SET averageRating = ? WHERE id = ?";
+    public static final String UPDATE_COUNT_OF_RATING = "UPDATE movie SET countOfRatings = ? WHERE id = ?";
+    public static final String TAKE_COUNT_OF_RATING = "SELECT countOfRatings FROM movie WHERE id = ?";
+    public static final String TAKE_RATING_OF_MOVIE = "SELECT averageRating FROM movie WHERE id = ?";
 
     @Override
     public void addMovie(Movie movie) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.ADD_NEW_MOVIE);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_MOVIE);
 
             preparedStatement.setString(1, movie.getName());
             preparedStatement.setFloat(2, movie.getAverageRating());
@@ -44,7 +52,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
         Connection connection = connectionPool.getConnection();
         ArrayList<Movie> movieList = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_ALL_MOVIES_NAME);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -66,13 +74,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public void updateRating(float newRating, String name) {
+    public void updateRating(float newRating, int movieID) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_MOVIES_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_MOVIES_RATING);
 
-            preparedStatement.setString(2, name);
+            preparedStatement.setInt(2, movieID);
             preparedStatement.setFloat(1, newRating);
 
             preparedStatement.executeUpdate();
@@ -84,13 +92,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public void updateCountOfRating(int newCountOfRating, String name) {
+    public void updateCountOfRating(int newCountOfRating, int movieID) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.UPDATE_COUNT_OF_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COUNT_OF_RATING);
 
-            preparedStatement.setString(2, name);
+            preparedStatement.setInt(2, movieID);
             preparedStatement.setInt(1, newCountOfRating);
 
             preparedStatement.executeUpdate();
@@ -102,14 +110,14 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public int takeCountOfRating(String name) {
+    public int takeCountOfRating(int movieID) {
         Connection connection = connectionPool.getConnection();
         int count = -1;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_COUNT_OF_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_COUNT_OF_RATING);
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setInt(1, movieID);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             connectionPool.releaseConnection(connection);
@@ -123,13 +131,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public float takeRatingOfMovie(String name) {
+    public float takeRatingOfMovie(int movieId) {
         Connection connection = connectionPool.getConnection();
         float rating = -1;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.TAKE_RATING_OF_MOVIE);
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_RATING_OF_MOVIE);
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setInt(1, movieId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             connectionPool.releaseConnection(connection);
@@ -140,5 +148,25 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
         }
         return rating;
+    }
+
+    @Override
+    public int takeID(String movieName) {
+        Connection connection = connectionPool.getConnection();
+        int id = -1;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ID);
+
+            preparedStatement.setString(1, movieName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            connectionPool.releaseConnection(connection);
+
+            resultSet.next();
+            id = resultSet.getInt(1);
+        } catch (SQLException ex) {
+
+        }
+        return id;
     }
 }

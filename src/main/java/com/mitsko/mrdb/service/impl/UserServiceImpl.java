@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong login or password");
         }
 
-        User user = userDAO.signIn(login, hashPassword);
+        User user = userDAO.takeUserByLoginAndPassword(login, hashPassword);
         if(user == null) {
             throw new ServiceException();
         }
@@ -48,8 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong parameter");
         }
 
-        ArrayList<String> logins = userDAO.takeAllLogins();
-        if(logins.contains(login)) {
+        if(userDAO.findLogin(login)) {
             throw new ServiceException("Already exist a user with this name");
         }
 
@@ -76,6 +75,12 @@ public class UserServiceImpl implements UserService {
         if(login.equals("")) {
             throw new ServiceException("Wrong parameter");
         }
-        return userDAO.takeStatus(login);
+        int id = userDAO.takeID(login);
+        return userDAO.takeStatus(id);
+    }
+
+    @Override
+    public String takeLogin(int userID) throws ServiceException {
+        return userDAO.takeLogin(userID);
     }
 }

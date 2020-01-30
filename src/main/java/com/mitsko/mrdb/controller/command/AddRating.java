@@ -19,11 +19,12 @@ public class AddRating implements Command {
 
         HttpSession session =  req.getSession();
         String movieName = (String)session.getAttribute("movieName");
-        User user = (User)session.getAttribute("user");
+        //User user = (User)session.getAttribute("user");
+        int userID = (int)session.getAttribute("userID");
         float newRating = Float.parseFloat(req.getParameter("newRating"));
 
         try {
-            ratingService.addNewRating(user, movieName, newRating);
+            ratingService.addNewRating(userID, movieName, newRating);
         } catch (ServiceException ex) {
 
         }

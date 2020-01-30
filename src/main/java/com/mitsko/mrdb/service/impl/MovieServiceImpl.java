@@ -20,17 +20,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void updateRating(String movieName) throws ServiceException {
-        if(movieName.equals("")) {
+    public void updateRating(int movieID) throws ServiceException {
+        /*if(movieID.equals("")) {
             throw new ServiceException("Wrong parameter");
-        }
+        }*/
 
-        float newRating = ratingDAO.takeAverageRatingOfMovie(movieName);
+        float newRating = ratingDAO.takeAverageRatingOfMovie(movieID);
         if(newRating == -1) {
             throw new ServiceException();
         }
 
-        movieDAO.updateRating(newRating, movieName);
+        movieDAO.updateRating(newRating, movieID);
     }
 
     @Override
@@ -39,7 +39,8 @@ public class MovieServiceImpl implements MovieService {
             throw new ServiceException("Wrong parameter");
         }
 
-        float rating = movieDAO.takeRatingOfMovie(movieName);
+        int id = movieDAO.takeID(movieName);
+        float rating = movieDAO.takeRatingOfMovie(id);
 
         if(rating == -1) {
             throw new ServiceException();

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public interface ReviewDAO {
     void addReview(Review review);
 
-    ArrayList<Review> takeAllMoviesReviews(String movieName);
+    ArrayList<Review> takeAllMoviesReviews(int movieID);
 
-    void removeReview(String userLogin, String movieName);
+    void removeReview(int userID, int movieID);
 
 }

@@ -24,7 +24,10 @@ public class Registration implements Command {
             User user = userService.registration(login, password);
 
             HttpSession session = req.getSession();
-            session.setAttribute("user", user);
+            //session.setAttribute("user", user);
+            session.setAttribute("userID", user.getID());
+            session.setAttribute("role", user.getRole());
+            session.setAttribute("status", user.getStatus());
 
             if(user != null) {
                 page = Constants.MAIN;
