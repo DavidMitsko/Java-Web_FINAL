@@ -1,9 +1,6 @@
 package com.mitsko.mrdb.service.impl;
 
-import com.mitsko.mrdb.dao.DAOFactory;
-import com.mitsko.mrdb.dao.MovieDAO;
-import com.mitsko.mrdb.dao.RatingDAO;
-import com.mitsko.mrdb.dao.UserDAO;
+import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Rating;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.service.MovieService;
@@ -13,16 +10,20 @@ import com.mitsko.mrdb.service.ServiceFactory;
 
 import java.util.ArrayList;
 
+import static java.lang.Float.NaN;
+
 public class RatingServiceImpl implements RatingService {
     private RatingDAO ratingDAO;
     private UserDAO userDAO;
     private MovieDAO movieDAO;
+    private RecountDAO recountDAO;
 
     public RatingServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         ratingDAO = daoFactory.getSQLRatingDAO();
         userDAO = daoFactory.getSQLUserDAO();
         movieDAO = daoFactory.getSQLMovieDAO();
+        recountDAO = daoFactory.getSQLRecountDAO();
     }
 
     @Override
@@ -63,17 +64,25 @@ public class RatingServiceImpl implements RatingService {
         }
     }
 
-    private void updateRating(int movieID, ArrayList<Integer> usersID) {
+    private float calculateDifferenceInRatings(int userID, int movieID) {
         float movieRating = movieDAO.takeRatingOfMovie(movieID);
+        float usersRatingOfMovie = ratingDAO.takeUsersRatingOfMovie(userID, movieID);
+        if(usersRatingOfMovie == -1) {
+            return NaN;
+        }
+        return movieRating - usersRatingOfMovie;
+    }
 
+    private void updateRating(int movieID, ArrayList<Integer> usersID) {
         if (checkForUpdate(movieID)) {
             for (int userID : usersID) {
-                float usersRatingOfMovie = ratingDAO.takeUsersRatingOfMovie(userID, movieID);
-                if(usersRatingOfMovie == -1) {
+                int userRating = userDAO.takeRating(userID);
+                float difference = calculateDifferenceInRatings(userID, movieID);
+
+                if(recountDAO.find(userID, movieID) || Float.isNaN(difference)) {
                     continue;
                 }
-                int userRating = userDAO.takeRating(userID);
-                float difference = movieRating - usersRatingOfMovie;
+
                 if (difference > 3 || difference < -3) {
                     if (userRating != 0) {
                         userDAO.updateRating(userID, --userRating);
@@ -84,6 +93,7 @@ public class RatingServiceImpl implements RatingService {
                         userDAO.updateRating(userID, ++userRating);
                     }
                 }
+                recountDAO.add(userID, movieID);
             }
         }
     }

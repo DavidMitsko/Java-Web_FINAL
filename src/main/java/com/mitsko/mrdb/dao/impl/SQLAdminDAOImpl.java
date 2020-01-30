@@ -10,14 +10,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLAdminDAOImpl implements AdminDAO {
-    ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+    public static final String NEW_STATUS = "UPDATE user SET status = ? WHERE login = ?";
+    public static final String NEW_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";
 
     @Override
     public void refreshStatus(Status newStatus, String login) {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.NEW_STATUS);
+            PreparedStatement preparedStatement = connection.prepareStatement(NEW_STATUS);
 
             String status = newStatus.toString();
             preparedStatement.setString(1, status);
@@ -36,7 +39,7 @@ public class SQLAdminDAOImpl implements AdminDAO {
         Connection connection = connectionPool.getConnection();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Statements.NEW_RATING);
+            PreparedStatement preparedStatement = connection.prepareStatement(NEW_RATING);
 
             preparedStatement.setInt(1, newRating);
             preparedStatement.setString(2, login);
