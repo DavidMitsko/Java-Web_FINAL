@@ -9,7 +9,7 @@ public interface RatingDAO {
 
     void updateRating(Rating newRating);
 
-    void removeRating(int userID, int movieID);
+    void removeAllRatings(int movieID);
 
     float takeUsersRatingOfMovie(int userID, int movieID);
 }

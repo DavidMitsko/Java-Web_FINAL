@@ -11,6 +11,8 @@ public enum CommandName {
     ADD_MOVIE,
     TAKE_USERS,
     CHANGE_STATUS,
+    REMOVE_MOVIE,
+    SIGN_OUT,
 
     WRONG_REQUEST
 }

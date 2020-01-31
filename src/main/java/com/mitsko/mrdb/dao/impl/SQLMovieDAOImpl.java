@@ -2,7 +2,6 @@ package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.MovieDAO;
 import com.mitsko.mrdb.dao.util.ConnectionPool;
-import com.mitsko.mrdb.dao.util.Statements;
 import com.mitsko.mrdb.entity.Movie;
 
 import java.sql.Connection;
@@ -22,6 +21,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
     public static final String UPDATE_COUNT_OF_RATING = "UPDATE movie SET countOfRatings = ? WHERE id = ?";
     public static final String TAKE_COUNT_OF_RATING = "SELECT countOfRatings FROM movie WHERE id = ?";
     public static final String TAKE_RATING_OF_MOVIE = "SELECT averageRating FROM movie WHERE id = ?";
+    public static final String REMOVE_MOVIE = "DELETE FROM movie WHERE name = ?";
 
     @Override
     public void addMovie(Movie movie) {
@@ -44,7 +44,18 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
     @Override
     public void removeMovie(String movieName) {
+        Connection connection = connectionPool.getConnection();
 
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_MOVIE);
+
+            preparedStatement.setString(1, movieName);
+            preparedStatement.executeUpdate();
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -55,7 +66,6 @@ public class SQLMovieDAOImpl implements MovieDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-
             connectionPool.releaseConnection(connection);
 
             while (resultSet.next()) {
@@ -118,12 +128,14 @@ public class SQLMovieDAOImpl implements MovieDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(TAKE_COUNT_OF_RATING);
 
             preparedStatement.setInt(1, movieID);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
+            ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            resultSet.next();
-            count = resultSet.getInt(1);
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                count = resultSet.getInt(1);
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -139,11 +151,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.setInt(1, movieId);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             connectionPool.releaseConnection(connection);
 
-            resultSet.next();
-            rating = resultSet.getFloat(1);
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                rating = resultSet.getFloat(1);
+            }
         } catch (SQLException ex) {
 
         }
@@ -159,11 +172,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.setString(1, movieName);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             connectionPool.releaseConnection(connection);
 
-            resultSet.next();
-            id = resultSet.getInt(1);
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                id = resultSet.getInt(1);
+            }
         } catch (SQLException ex) {
 
         }

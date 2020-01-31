@@ -2,7 +2,6 @@ package com.mitsko.mrdb.service.impl;
 
 import com.mitsko.mrdb.dao.AdminDAO;
 import com.mitsko.mrdb.dao.DAOFactory;
-import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.AdminService;

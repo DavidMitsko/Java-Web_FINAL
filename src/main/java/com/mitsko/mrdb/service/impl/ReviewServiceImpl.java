@@ -67,4 +67,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewList;
     }
+
+    @Override
+    public void removeAllMoviesReview(String movieName) throws ServiceException {
+        int movieID = movieDAO.takeID(movieName);
+        reviewDAO.removeAllReviews(movieID);
+    }
 }

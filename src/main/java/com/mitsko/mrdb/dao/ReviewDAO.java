@@ -11,4 +11,5 @@ public interface ReviewDAO {
 
     void removeReview(int userID, int movieID);
 
+    void removeAllReviews(int movieID);
 }

@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.service.impl;
 
 import com.mitsko.mrdb.dao.DAOFactory;
+import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Status;
@@ -12,11 +13,13 @@ import java.util.ArrayList;
 
 public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
+    private RecountDAO recountDAO;
     private Crypto crypto;
 
     public UserServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         userDAO = daoFactory.getSQLUserDAO();
+        recountDAO = daoFactory.getSQLRecountDAO();
 
         crypto = new Crypto();
     }
@@ -82,5 +85,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public String takeLogin(int userID) throws ServiceException {
         return userDAO.takeLogin(userID);
+    }
+
+    @Override
+    public int reestablishUsersRating(int userID, int movieID) {
+        int usersRating = userDAO.takeRating(userID);
+        int direct = recountDAO.takeDirect(userID, movieID);
+        if (usersRating == 0 && direct == -1) {
+            return usersRating;
+        }
+        if (usersRating == 10 && direct == 1) {
+            return usersRating;
+        }
+        return usersRating + direct;
+    }
+
+    @Override
+    public int takeAverageRating(String userLogin) {
+        int userID = userDAO.takeID(userLogin);
+        return userDAO.takeRating(userID);
     }
 }

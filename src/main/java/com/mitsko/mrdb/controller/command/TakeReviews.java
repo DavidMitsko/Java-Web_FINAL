@@ -13,14 +13,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TakeReviews implements Command {
-    private ServiceFactory serviceFactory;
     private ReviewService reviewService;
     private UserService userService;
 
+    private HashMap<String, Review> reviewMap;
+    private HashMap<String, Integer> usersRatingMap;
+
     public TakeReviews() {
-        serviceFactory = ServiceFactory.getInstance();
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
         reviewService = serviceFactory.getReviewService();
         userService = serviceFactory.getUserService();
+
+        reviewMap = new HashMap<>();
+        usersRatingMap = new HashMap<>();
     }
 
     @Override
@@ -31,7 +36,10 @@ public class TakeReviews implements Command {
             String movieName = req.getParameter("Review");
             ArrayList<Review> reviewList = reviewService.takeAllReview(movieName);
 
-            req.setAttribute("reviewList", takeLogins(reviewList));
+            takeLogins(reviewList);
+
+            req.setAttribute("review", reviewMap);
+            req.setAttribute("user", usersRatingMap);
 
             HttpSession session = req.getSession();
             session.setAttribute("movieName", movieName);
@@ -41,16 +49,16 @@ public class TakeReviews implements Command {
         return page;
     }
 
-    private HashMap<String, Review> takeLogins(ArrayList<Review> reviewList) {
-        HashMap<String, Review> usersLoginMap = new HashMap();
+    private void takeLogins(ArrayList<Review> reviewList) {
         try {
             for (Review review : reviewList) {
                 String login = userService.takeLogin(review.getUserID());
-                usersLoginMap.put(login, review);
+                reviewMap.put(login, review);
+                int rating = userService.takeAverageRating(login);
+                usersRatingMap.put(login, rating);
             }
         } catch (ServiceException ex) {
 
         }
-        return usersLoginMap;
     }
 }

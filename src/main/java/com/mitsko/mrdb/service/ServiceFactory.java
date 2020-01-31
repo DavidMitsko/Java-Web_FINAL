@@ -7,9 +7,9 @@ public class ServiceFactory {
 
     private final UserService userService = new UserServiceImpl();
     private final MovieService movieService = new MovieServiceImpl();
-    private final RatingService ratingService = new RatingServiceImpl();
     private final ReviewService reviewService = new ReviewServiceImpl();
     private final AdminService adminService = new AdminServiceImpl();
+    private final RatingService ratingService = new RatingServiceImpl();
 
     private ServiceFactory() {}
 

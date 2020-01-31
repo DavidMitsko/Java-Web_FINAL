@@ -15,7 +15,8 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
     private static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userID, movieID, review) VALUES(NULL,?,?,?)";
     private static final String TAKE_ALL_MOVIES_REVIEW = "SELECT userID, review FROM review WHERE movieID = ?";
-    public static final String REMOVE_REVIEW = "DELETE review WHERE userID = ? AND movieID = ?";
+    public static final String REMOVE_REVIEW = "DELETE FROM review WHERE userID = ? AND movieID = ?";
+    public static final String REMOVE_ALL_REVIEW = "DELETE  FROM review WHERE movieID = ?";
 
     @Override
     public void addReview(Review review) {
@@ -74,6 +75,23 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, movieID);
+
+            preparedStatement.executeUpdate();
+
+            connectionPool.releaseConnection(connection);
+        } catch (SQLException ex) {
+
+        }
+    }
+
+    @Override
+    public void removeAllReviews(int movieID) {
+        Connection connection = connectionPool.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_ALL_REVIEW);
+
+            preparedStatement.setInt(1, movieID);
 
             preparedStatement.executeUpdate();
 

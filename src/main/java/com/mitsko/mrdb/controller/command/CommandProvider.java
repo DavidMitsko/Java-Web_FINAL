@@ -17,6 +17,8 @@ public class CommandProvider {
         repository.put(CommandName.ADD_MOVIE, new AddMovie());
         repository.put(CommandName.TAKE_USERS, new TakeUsers());
         repository.put(CommandName.CHANGE_STATUS, new ChangeStatus());
+        repository.put(CommandName.REMOVE_MOVIE, new RemoveMovie());
+        repository.put(CommandName.SIGN_OUT, new SignOut());
     }
 
     public Command getCommand(String name) {

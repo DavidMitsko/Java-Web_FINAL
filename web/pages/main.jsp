@@ -34,5 +34,8 @@
 
     </c:forEach>
 </table>
+<form method="get" action="${pageContext.request.contextPath}/Sign_Out">
+    <input type="submit" value="SignOut"/>
+</form>
 </body>
 </html>

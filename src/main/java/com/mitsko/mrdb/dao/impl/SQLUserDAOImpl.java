@@ -2,7 +2,6 @@ package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.dao.util.ConnectionPool;
-import com.mitsko.mrdb.dao.util.Statements;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Status;
 
@@ -63,20 +62,19 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, password);
 
             resultSet = preparedStatement.executeQuery();
-
-            if (!resultSet.isBeforeFirst()) {
-                return null;
-            }
-            resultSet.next();
-
-            int id = resultSet.getInt(1);
-            String role = resultSet.getString(4);
-            String status = resultSet.getString(5);
-            int averageRating = resultSet.getInt(6);
-
             connectionPool.releaseConnection(connection);
 
-            return new User(id, login, password, role, status, averageRating);
+            if (resultSet.isBeforeFirst()) {
+
+                resultSet.next();
+
+                int id = resultSet.getInt(1);
+                String role = resultSet.getString(4);
+                String status = resultSet.getString(5);
+                int averageRating = resultSet.getInt(6);
+
+                return new User(id, login, password, role, status, averageRating);
+            }
         } catch (SQLException ex) {
 
         }
@@ -161,10 +159,14 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            rating = resultSet.getInt(1);
-
             connectionPool.releaseConnection(connection);
+
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                rating = resultSet.getInt(1);
+            }
+
+
         } catch (SQLException ex) {
 
         }
@@ -182,11 +184,13 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            String temp = resultSet.getString(1);
-            status = Status.valueOf(temp);
-
             connectionPool.releaseConnection(connection);
+
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                String temp = resultSet.getString(1);
+                status = Status.valueOf(temp);
+            }
         } catch (SQLException ex) {
 
         }
@@ -222,12 +226,11 @@ public class SQLUserDAOImpl implements UserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_ID);
 
             resultSet = preparedStatement.executeQuery();
+            connectionPool.releaseConnection(connection);
 
             while(resultSet.next()) {
                 usersID.add(resultSet.getInt(1));
             }
-
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
         }
@@ -245,10 +248,12 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(1, login);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            id = resultSet.getInt(1);
-
             connectionPool.releaseConnection(connection);
+
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                id = resultSet.getInt(1);
+            }
         } catch (SQLException ex) {
 
         }
@@ -266,10 +271,12 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            login = resultSet.getString(1);
-
             connectionPool.releaseConnection(connection);
+
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                login = resultSet.getString(1);
+            }
         } catch (SQLException ex) {
 
         }

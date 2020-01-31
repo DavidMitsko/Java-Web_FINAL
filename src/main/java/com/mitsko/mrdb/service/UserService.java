@@ -15,4 +15,8 @@ public interface UserService {
     Status takeStatus(String login) throws ServiceException;
 
     String takeLogin(int UserID) throws ServiceException;
+
+    int reestablishUsersRating(int userID, int movieID);
+
+    int takeAverageRating(String userLogin);
 }

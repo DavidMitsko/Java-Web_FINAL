@@ -2,7 +2,6 @@ package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.RatingDAO;
 import com.mitsko.mrdb.dao.util.ConnectionPool;
-import com.mitsko.mrdb.dao.util.Statements;
 import com.mitsko.mrdb.entity.Rating;
 
 import java.sql.Connection;
@@ -16,7 +15,7 @@ public class SQLRatingDAOImpl implements RatingDAO {
     public static final String ADD_NEW_RATING = "INSERT INTO rating (id, userID, movieID, rating) VALUES(NULL,?,?,?)";
     public static final String TAKE_AVERAGE_RATING_OF_MOVIE = "SELECT AVG(rating) FROM rating WHERE movieID = ?";
     public static final String UPDATE_RATING = "UPDATE rating SET rating = ? WHERE movieID = ? AND userID = ?";
-    public static final String REMOVE_RATING = "DELETE FROM rating WHERE userID = ? AND movieID = ?";
+    public static final String REMOVE_RATING = "DELETE FROM rating WHERE movieID = ?";
     public static final String TAKE_USERS_RATING_OF_MOVIE = "SELECT rating FROM rating WHERE userID = ? AND movieID = ?";
 
     @Override
@@ -51,8 +50,10 @@ public class SQLRatingDAOImpl implements RatingDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            resultSet.next();
-            averageRating = resultSet.getFloat(1);
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                averageRating = resultSet.getFloat(1);
+            }
         } catch (SQLException ex) {
 
         }
@@ -79,14 +80,13 @@ public class SQLRatingDAOImpl implements RatingDAO {
     }
 
     @Override
-    public void removeRating(int userID, int movieID) {
+    public void removeAllRatings(int movieID) {
         Connection connection = connectionPool.getConnection();
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_RATING);
 
-            preparedStatement.setInt(1, userID);
-            preparedStatement.setInt(2, movieID);
+            preparedStatement.setInt(1, movieID);
 
             preparedStatement.executeUpdate();
 
@@ -109,9 +109,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            resultSet.next();
-            rating = resultSet.getFloat(1);
             connectionPool.releaseConnection(connection);
+            if(resultSet.isBeforeFirst()) {
+                resultSet.next();
+                rating = resultSet.getFloat(1);
+            }
+
         } catch (SQLException ex) {
 
         }

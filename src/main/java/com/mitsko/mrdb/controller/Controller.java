@@ -30,14 +30,18 @@ public class Controller extends HttpServlet {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
-        if(user != null) {
-            if (user.getStatus() == Status.BAN) {
+        /*HttpSession session = req.getSession();
+        Status userStatus = (Status) session.getAttribute("status");
+        Integer id = (Integer)session.getAttribute("userID");
+        if(id == null && !(commandName.equals("Sign_In") || commandName.equals("Registration"))) {
+            return;
+        }
+        if(userStatus != null) {
+            if (userStatus == Status.BAN) {
                 resp.sendRedirect(Constants.BAN_HTML);
                 return;
             }
-        }
+        }*/
 
         Command executionCommand = commandProvider.getCommand(commandName);
 
@@ -56,7 +60,12 @@ public class Controller extends HttpServlet {
             executionCommand.execute(req);
         }
 
-        page = "pages/" + page + ".jsp";
+        if(!page.equals(Constants.INDEX)) {
+            page = "pages/" + page + ".jsp";
+        }
+        else {
+            page = page + ".jsp";
+        }
 
         req.getRequestDispatcher(page).forward(req, resp);
     }

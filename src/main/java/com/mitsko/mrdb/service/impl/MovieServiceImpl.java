@@ -1,22 +1,23 @@
 package com.mitsko.mrdb.service.impl;
 
-import com.mitsko.mrdb.dao.DAOFactory;
-import com.mitsko.mrdb.dao.MovieDAO;
-import com.mitsko.mrdb.dao.RatingDAO;
+import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Movie;
-import com.mitsko.mrdb.service.MovieService;
-import com.mitsko.mrdb.service.ServiceException;
+import com.mitsko.mrdb.service.*;
 
 import java.util.ArrayList;
 
 public class MovieServiceImpl implements MovieService {
     private RatingDAO ratingDAO;
     private MovieDAO movieDAO;
+    private RecountDAO recountDAO;
+    private UserDAO userDAO;
 
     public MovieServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         ratingDAO = daoFactory.getSQLRatingDAO();
         movieDAO = daoFactory.getSQLMovieDAO();
+        userDAO = daoFactory.getSQLUserDAO();
+        recountDAO = daoFactory.getSQLRecountDAO();
     }
 
     @Override
@@ -64,5 +65,34 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = new Movie(movieName);
 
         movieDAO.addMovie(movie);
+    }
+
+    @Override
+    public void removeMovie(String movieName) {
+        int movieID = movieDAO.takeID(movieName);
+
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        UserService userService = serviceFactory.getUserService();
+
+        ArrayList<Integer> usersID = userDAO.takeAllUsersID();
+        for(int userID : usersID) {
+            if(!recountDAO.find(userID, movieID)) {
+                continue;
+            }
+            int userRating = userService.reestablishUsersRating(userID, movieID);
+            userDAO.updateRating(userID, userRating);
+        }
+
+        try {
+            RatingService ratingService = serviceFactory.getRatingService();
+            ratingService.removeAllMoviesRatings(movieName);
+
+            ReviewService reviewService = serviceFactory.getReviewService();
+            reviewService.removeAllMoviesReview(movieName);
+
+            movieDAO.removeMovie(movieName);
+        } catch (ServiceException ex) {
+
+        }
     }
 }

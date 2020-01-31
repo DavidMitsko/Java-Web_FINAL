@@ -10,5 +10,7 @@ public interface ReviewService {
 
     void removeReview(User user, int userID, String movieName) throws ServiceException;
 
+    void removeAllMoviesReview(String movieID) throws ServiceException;
+
     ArrayList<Review> takeAllReview(String movieName) throws ServiceException;
 }

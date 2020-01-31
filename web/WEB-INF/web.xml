@@ -17,5 +17,34 @@
         <url-pattern>/Add_Rating</url-pattern>
         <url-pattern>/Add_Movie</url-pattern>
         <url-pattern>/Change_Status</url-pattern>
+        <url-pattern>/Remove_Movie</url-pattern>
+        <url-pattern>/Sign_Out</url-pattern>
     </servlet-mapping>
+
+    <filter>
+        <filter-name>AuthorizationFilter</filter-name>
+        <filter-class>com.mitsko.mrdb.controller.util.AuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthorizationFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>RoleFilter</filter-name>
+        <filter-class>com.mitsko.mrdb.controller.util.RoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RoleFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>StatusFilter</filter-name>
+        <filter-class>com.mitsko.mrdb.controller.util.StatusFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>StatusFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
 </web-app>

@@ -20,6 +20,13 @@
     </label>
     <button type="submit" name="addMovie">Добавить фильм</button>
     <br>
+</form>
+<form method="post" action="${pageContext.request.contextPath}/Remove_Movie">
+    <label>
+        Удалите фильм:
+        <input type="text" name="movieName"/>
+    </label>
+    <button type="submit">Удалить</button>
     <br>
 </form>
 <table>
