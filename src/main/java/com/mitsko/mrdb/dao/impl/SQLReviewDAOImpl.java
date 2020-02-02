@@ -1,7 +1,8 @@
 package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.ReviewDAO;
-import com.mitsko.mrdb.dao.util.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Review;
 
 import java.sql.Connection;
@@ -20,10 +21,12 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
     @Override
     public void addReview(Review review) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_REVIEW);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(ADD_NEW_REVIEW);
 
             preparedStatement.setInt(1, review.getUserID());
             preparedStatement.setInt(2, review.getMovieID());
@@ -34,20 +37,27 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
     public ArrayList<Review> takeAllMoviesReviews(int movieID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         ArrayList<Review> reviewList = new ArrayList<>();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES_REVIEW);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES_REVIEW);
 
             preparedStatement.setInt(1, movieID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             connectionPool.releaseConnection(connection);
 
@@ -62,16 +72,22 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return reviewList;
     }
 
     @Override
     public void removeReview(int userID, int movieID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_REVIEW);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(REMOVE_REVIEW);
 
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, movieID);
@@ -81,15 +97,21 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
     public void removeAllReviews(int movieID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_ALL_REVIEW);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(REMOVE_ALL_REVIEW);
 
             preparedStatement.setInt(1, movieID);
 
@@ -98,6 +120,10 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 }

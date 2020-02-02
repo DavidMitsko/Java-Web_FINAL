@@ -1,7 +1,8 @@
 package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.UserDAO;
-import com.mitsko.mrdb.dao.util.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Status;
 
@@ -29,10 +30,13 @@ public class SQLUserDAOImpl implements UserDAO {
 
     @Override
     public String takePassword(String login) {
-        Connection connection = connectionPool.getConnection();
-        ResultSet resultSet;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USERS_LOGIN);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USERS_LOGIN);
 
             preparedStatement.setString(1, login);
 
@@ -46,17 +50,23 @@ public class SQLUserDAOImpl implements UserDAO {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return null;
     }
 
     @Override
     public User takeUserByLoginAndPassword(String login, String password) {
-        Connection connection = connectionPool.getConnection();
-        ResultSet resultSet;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER);
 
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
@@ -77,6 +87,10 @@ public class SQLUserDAOImpl implements UserDAO {
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
 
         return null;
@@ -84,11 +98,13 @@ public class SQLUserDAOImpl implements UserDAO {
 
     @Override
     public int registration(User newUser) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         int id = -1;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_USER);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(ADD_NEW_USER);
 
             preparedStatement.setString(1, newUser.getLogin());
             preparedStatement.setString(2, newUser.getPassword());
@@ -105,37 +121,50 @@ public class SQLUserDAOImpl implements UserDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
         return id;
     }
 
     @Override
     public ArrayList<String> takeAllLogins() {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         ArrayList<String> logins = new ArrayList<>();
+
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_LOGINS);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_ALL_LOGINS);
 
             resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 logins.add(resultSet.getString(1));
             }
 
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return logins;
     }
 
     @Override
     public void updateRating(int userID, int newRating) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS_RATING);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_USERS_RATING);
 
             preparedStatement.setInt(1, newRating);
             preparedStatement.setInt(2, userID);
@@ -145,23 +174,30 @@ public class SQLUserDAOImpl implements UserDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
     public int takeRating(int userID) {
         int rating = -1;
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_RATING);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_USERS_RATING);
 
             preparedStatement.setInt(1, userID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            if(resultSet.isBeforeFirst()) {
+            if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 rating = resultSet.getInt(1);
             }
@@ -169,70 +205,95 @@ public class SQLUserDAOImpl implements UserDAO {
 
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return rating;
     }
 
     @Override
     public Status takeStatus(int userID) {
-        Connection connection = connectionPool.getConnection();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
         Status status = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_STATUS);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_STATUS);
 
             preparedStatement.setInt(1, userID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            if(resultSet.isBeforeFirst()) {
+            if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 String temp = resultSet.getString(1);
                 status = Status.valueOf(temp);
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return status;
     }
 
     @Override
     public boolean findLogin(String login) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_LOGIN);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(FIND_LOGIN);
 
             preparedStatement.setString(1, login);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             connectionPool.releaseConnection(connection);
 
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return false;
     }
 
     @Override
     public ArrayList<Integer> takeAllUsersID() {
-        Connection connection = connectionPool.getConnection();
-        ResultSet resultSet;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
         ArrayList<Integer> usersID = new ArrayList<>();
+
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_ID);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_ID);
 
             resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 usersID.add(resultSet.getInt(1));
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return usersID;
     }
@@ -240,45 +301,59 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public int takeID(String login) {
         int id = -1;
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_ID);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_USERS_ID);
 
             preparedStatement.setString(1, login);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            if(resultSet.isBeforeFirst()) {
+            if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 id = resultSet.getInt(1);
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return id;
     }
 
     @Override
     public String takeLogin(int userID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         String login = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_USERS_LOGIN);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_USERS_LOGIN);
 
             preparedStatement.setInt(1, userID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
-            if(resultSet.isBeforeFirst()) {
+            if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 login = resultSet.getString(1);
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return login;
     }

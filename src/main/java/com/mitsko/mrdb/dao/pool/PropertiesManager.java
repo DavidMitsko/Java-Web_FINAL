@@ -1,4 +1,4 @@
-package com.mitsko.mrdb.dao.util;
+package com.mitsko.mrdb.dao.pool;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package com.mitsko.mrdb.dao.util;
+package com.mitsko.mrdb.dao.pool;
 
 public class Parameter {
     public static final String DB_DRIVER = "db.driver";

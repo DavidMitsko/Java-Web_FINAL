@@ -1,8 +1,8 @@
 package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.AdminDAO;
-import com.mitsko.mrdb.dao.util.ConnectionPool;
-import com.mitsko.mrdb.dao.util.Statements;
+import com.mitsko.mrdb.dao.pool.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.util.Status;
 
 import java.sql.Connection;
@@ -17,10 +17,12 @@ public class SQLAdminDAOImpl implements AdminDAO {
 
     @Override
     public void refreshStatus(Status newStatus, String login) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(NEW_STATUS);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(NEW_STATUS);
 
             String status = newStatus.toString();
             preparedStatement.setString(1, status);
@@ -29,17 +31,23 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.executeUpdate();
 
             connectionPool.releaseConnection(connection);
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
     public void refreshAverageRating(int newRating, String login) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(NEW_RATING);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(NEW_RATING);
 
             preparedStatement.setInt(1, newRating);
             preparedStatement.setString(2, login);
@@ -47,8 +55,12 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.executeUpdate();
 
             connectionPool.releaseConnection(connection);
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 }

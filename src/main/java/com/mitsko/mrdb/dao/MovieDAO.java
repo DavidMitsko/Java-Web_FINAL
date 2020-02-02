@@ -20,4 +20,6 @@ public interface MovieDAO {
     float takeRatingOfMovie(int movieID);
 
     int takeID(String movieName);
+
+    String takeDescription(int movieID);
 }

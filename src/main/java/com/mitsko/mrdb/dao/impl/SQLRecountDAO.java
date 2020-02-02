@@ -1,7 +1,8 @@
 package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.RecountDAO;
-import com.mitsko.mrdb.dao.util.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPool;
+import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,10 +18,12 @@ public class SQLRecountDAO implements RecountDAO {
 
     @Override
     public void add(int userID, int movieID, int direct) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USERS_RATING);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(ADD_USERS_RATING);
 
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, movieID);
@@ -30,41 +33,55 @@ public class SQLRecountDAO implements RecountDAO {
             connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
     public boolean find(int userID, int movieID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USERS_RATING);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(FIND_USERS_RATING);
 
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, movieID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return false;
     }
 
     @Override
     public int takeDirect(int userID, int movieID) {
-        Connection connection = connectionPool.getConnection();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         int direct = -2;
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(TAKE_DIRECT);
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_DIRECT);
 
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, movieID);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
 
             if (resultSet.isBeforeFirst()) {
@@ -73,6 +90,10 @@ public class SQLRecountDAO implements RecountDAO {
             }
         } catch (SQLException ex) {
 
+        } catch (ConnectionPoolException ex) {
+
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return direct;
     }
