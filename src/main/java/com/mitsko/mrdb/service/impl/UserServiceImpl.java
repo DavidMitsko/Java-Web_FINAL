@@ -32,13 +32,11 @@ public class UserServiceImpl implements UserService {
 
         String passwordInDB = userDAO.takePassword(login);
 
-        String hashPassword = crypto.encode(password);
-
-        if(!passwordInDB.equals(hashPassword) || passwordInDB == null) {
+        if(!crypto.checkPassword(password, passwordInDB)) {
             throw new ServiceException("Wrong login or password");
         }
 
-        User user = userDAO.takeUserByLoginAndPassword(login, hashPassword);
+        User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
         if(user == null) {
             throw new ServiceException();
         }

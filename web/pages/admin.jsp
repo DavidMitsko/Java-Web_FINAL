@@ -13,14 +13,16 @@
     <title>Admin</title>
 </head>
 <body>
-<form method="post" action="${pageContext.request.contextPath}/Add_Movie">
-    <label>
-        Добавьте фильм:
-        <input type="text" name="movieName"/>
-    </label>
+<%--<form method="post" action="${pageContext.request.contextPath}/Add_Movie">--%>
+<%--    <label>--%>
+<%--        Добавьте фильм:--%>
+<%--        <input type="text" name="movieName"/>--%>
+<%--    </label>--%>
+<form method="get" action="${pageContext.request.contextPath}pages/addMovie.jsp">
     <button type="submit" name="addMovie">Добавить фильм</button>
     <br>
 </form>
+<%--</form>--%>
 <form method="post" action="${pageContext.request.contextPath}/Remove_Movie">
     <label>
         Удалите фильм:

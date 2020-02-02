@@ -56,13 +56,19 @@ public class MovieServiceImpl implements MovieService {
         if(movieList.size() == 0) {
             throw new ServiceException();
         }
+        for(Movie movie : movieList) {
+            if(movie.getImageName() != null) {
+                String imagePath = "../images/" + movie.getImageName();
+                movie.setImageName(imagePath);
+            }
+        }
 
         return movieList;
     }
 
     @Override
-    public void addMovie(String movieName) {
-        Movie movie = new Movie(movieName);
+    public void addMovie(String movieName, String imageName, String description) {
+        Movie movie = new Movie(movieName, imageName, description);
 
         movieDAO.addMovie(movie);
     }
@@ -94,5 +100,12 @@ public class MovieServiceImpl implements MovieService {
         } catch (ServiceException ex) {
 
         }
+    }
+
+    @Override
+    public String takeDescription(String movieName) {
+        int movieID = movieDAO.takeID(movieName);
+
+        return movieDAO.takeDescription(movieID);
     }
 }

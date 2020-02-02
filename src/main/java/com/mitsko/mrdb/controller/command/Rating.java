@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 public class Rating implements Command {
     @Override
     public String execute(HttpServletRequest req) {
-        String movieName = req.getParameter("Rating");
+        String movieName = req.getParameter("movieNameForRating");
 
         HttpSession session = req.getSession();
         session.setAttribute("movieName", movieName);

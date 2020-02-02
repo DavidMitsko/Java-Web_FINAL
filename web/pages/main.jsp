@@ -15,19 +15,25 @@
 <body>
 <table>
     <tr>
+        <th>Image</th>
         <th>Name</th>
         <th>Average Rating</th>
     </tr>
     <c:forEach var="movie" items="${movieList}">
         <tr>
+            <td>
+                <c:if test="${movie.imageName != null}">
+                    <img src="${movie.imageName}" width="187" height="287" alt="Noooooooo"/>
+                </c:if>
+            </td>
             <form method="get" action="${pageContext.request.contextPath}/Take_Reviews">
                 <td>
-                    <button type="submit" name="Review" value="${movie.name}"> ${movie.name} </button>
+                    <button type="submit" name="movieNameForReview" value="${movie.name}"> ${movie.name} </button>
                 </td>
             </form>
             <form method="post" action="${pageContext.request.contextPath}/Rating">
                 <td>
-                    <button type="submit" name="Rating" value="${movie.name}"> ${movie.averageRating} </button>
+                    <button type="submit" name="movieNameForRating" value="${movie.name}"> ${movie.averageRating} </button>
                 </td>
             </form>
         </tr>

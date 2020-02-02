@@ -7,12 +7,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%--<jsp:useBean id="reviewList" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>--%>
 <jsp:useBean id="movieName" type="java.lang.String" scope="session"/>
-
-
 <jsp:useBean id="review" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <jsp:useBean id="user" type="java.util.HashMap<java.lang.String, java.lang.Integer>" scope="request"/>
+<jsp:useBean id="description" type="java.lang.String" scope="request"/>
+
 <%@ taglib prefix="v" uri="http://MRDb.mitsko.com" %>
 <c:import url="star.svg" var="star"/>
 <html>
@@ -41,6 +40,12 @@
 <%--        </c:forEach>--%>
 <%--    </c:if>--%>
 <%--</table>--%>
+<label>
+    <c:if test="${description != null}">
+        ${description}
+        <br>
+    </c:if>
+</label>
 <v:ReviewTag reviewHashMap="${review}" usersRatingHashMap="${user}" star="${star}"/>
 <br>
 <form method="post" action="${pageContext.request.contextPath}/Add_Review">

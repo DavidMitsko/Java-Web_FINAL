@@ -7,6 +7,8 @@ public class Movie {
     private String name;
     private float averageRating;
     private int countOfRatings;
+    private String imageName;
+    private String description;
 
     public Movie(String name) {
         this.averageRating = 0;
@@ -19,6 +21,21 @@ public class Movie {
         this.name = name;
         this.averageRating = averageRating;
         this.countOfRatings = countOfRatings;
+    }
+
+    public Movie(String name, String imageName, String description) {
+        this.name = name;
+        this.imageName = imageName;
+        this.description = description;
+    }
+
+    public Movie(int ID, String name, float averageRating, int countOfRatings, String imageName, String description) {
+        this.ID = ID;
+        this.name = name;
+        this.averageRating = averageRating;
+        this.countOfRatings = countOfRatings;
+        this.imageName = imageName;
+        this.description = description;
     }
 
     public int getID() {
@@ -53,6 +70,22 @@ public class Movie {
         this.countOfRatings = countOfRatings;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,12 +94,14 @@ public class Movie {
         return ID == movie.ID &&
                 Float.compare(movie.averageRating, averageRating) == 0 &&
                 countOfRatings == movie.countOfRatings &&
-                name.equals(movie.name);
+                name.equals(movie.name) &&
+                imageName.equals(movie.imageName) &&
+                description.equals(movie.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, name, averageRating, countOfRatings);
+        return Objects.hash(ID, name, averageRating, countOfRatings, imageName, description);
     }
 
     @Override
@@ -76,6 +111,8 @@ public class Movie {
                 ", name='" + name + '\'' +
                 ", averageRating=" + averageRating +
                 ", countOfRatings=" + countOfRatings +
+                ", imagePath='" + imageName + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

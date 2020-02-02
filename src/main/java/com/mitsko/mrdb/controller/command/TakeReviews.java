@@ -2,10 +2,7 @@ package com.mitsko.mrdb.controller.command;
 
 import com.mitsko.mrdb.controller.command.util.Constants;
 import com.mitsko.mrdb.entity.Review;
-import com.mitsko.mrdb.service.ReviewService;
-import com.mitsko.mrdb.service.ServiceException;
-import com.mitsko.mrdb.service.ServiceFactory;
-import com.mitsko.mrdb.service.UserService;
+import com.mitsko.mrdb.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,6 +12,7 @@ import java.util.HashMap;
 public class TakeReviews implements Command {
     private ReviewService reviewService;
     private UserService userService;
+    private MovieService movieService;
 
     private HashMap<String, Review> reviewMap;
     private HashMap<String, Integer> usersRatingMap;
@@ -23,6 +21,7 @@ public class TakeReviews implements Command {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         reviewService = serviceFactory.getReviewService();
         userService = serviceFactory.getUserService();
+        movieService = serviceFactory.getMovieService();
 
         reviewMap = new HashMap<>();
         usersRatingMap = new HashMap<>();
@@ -33,13 +32,15 @@ public class TakeReviews implements Command {
         String page = Constants.REVIEW;
 
         try {
-            String movieName = req.getParameter("Review");
+            String movieName = req.getParameter("movieNameForReview");
             ArrayList<Review> reviewList = reviewService.takeAllReview(movieName);
-
             takeLogins(reviewList);
+
+            String description = movieService.takeDescription(movieName);
 
             req.setAttribute("review", reviewMap);
             req.setAttribute("user", usersRatingMap);
+            req.setAttribute("description", description);
 
             HttpSession session = req.getSession();
             session.setAttribute("movieName", movieName);

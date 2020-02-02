@@ -24,5 +24,6 @@
     <br>
     <button type="submit">Войти</button>
 </form>
+<%--<img src="../images/Frozen.jpg" height="287" width="187">--%>
 </body>
 </html>
