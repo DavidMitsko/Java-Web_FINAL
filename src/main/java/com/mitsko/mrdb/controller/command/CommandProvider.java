@@ -19,6 +19,9 @@ public class CommandProvider {
         repository.put(CommandName.CHANGE_STATUS, new ChangeStatus());
         repository.put(CommandName.REMOVE_MOVIE, new RemoveMovie());
         repository.put(CommandName.SIGN_OUT, new SignOut());
+        repository.put(CommandName.TAKE_HISTORY, new TakeHistory());
+        repository.put(CommandName.REMOVE_REVIEW, new RemoveReview());
+        repository.put(CommandName.LOCALE, new ChangeLocale());
     }
 
     public Command getCommand(String name) {

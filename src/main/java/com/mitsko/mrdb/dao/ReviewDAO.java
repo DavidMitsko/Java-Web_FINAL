@@ -5,11 +5,15 @@ import com.mitsko.mrdb.entity.Review;
 import java.util.ArrayList;
 
 public interface ReviewDAO {
-    void addReview(Review review);
+    void addReview(Review review) throws DAOException;
 
-    ArrayList<Review> takeAllMoviesReviews(int movieID);
+    ArrayList<Review> takeAllMoviesReviews(int movieID) throws DAOException;
 
-    void removeReview(int userID, int movieID);
+    void removeReview(int reviewID) throws DAOException;
 
-    void removeAllReviews(int movieID);
+    void removeAllReviews(int movieID) throws DAOException;
+
+    ArrayList<Review> takeAllUsersReviews(int userID) throws DAOException;
+
+    Review takeByID(int reviewID) throws DAOException;
 }

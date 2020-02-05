@@ -3,7 +3,7 @@ package com.mitsko.mrdb.dao;
 import com.mitsko.mrdb.entity.util.Status;
 
 public interface AdminDAO {
-    void refreshStatus(Status newStatus, String login);
+    void refreshStatus(Status newStatus, String login) throws DAOException;
 
-    void refreshAverageRating(int newRating, String login);
+    void refreshAverageRating(int newRating, String login) throws DAOException;
 }

@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.dao.impl;
 
 import com.mitsko.mrdb.dao.AdminDAO;
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.util.Status;
@@ -16,7 +17,7 @@ public class SQLAdminDAOImpl implements AdminDAO {
     public static final String NEW_RATING = "UPDATE user SET averageRating = ? WHERE login = ?";
 
     @Override
-    public void refreshStatus(Status newStatus, String login) {
+    public void refreshStatus(Status newStatus, String login) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -29,19 +30,17 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
-
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public void refreshAverageRating(int newRating, String login) {
+    public void refreshAverageRating(int newRating, String login) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -53,12 +52,10 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
-
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }

@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.dao.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
@@ -17,7 +18,7 @@ public class SQLRecountDAO implements RecountDAO {
     private static final String TAKE_DIRECT = "SELECT direct FROM recount WHERE userID = ? AND movieID = ?";
 
     @Override
-    public void add(int userID, int movieID, int direct) {
+    public void add(int userID, int movieID, int direct) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -30,18 +31,18 @@ public class SQLRecountDAO implements RecountDAO {
             preparedStatement.setInt(3, direct);
 
             preparedStatement.executeUpdate();
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public boolean find(int userID, int movieID) {
+    public boolean find(int userID, int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -54,21 +55,20 @@ public class SQLRecountDAO implements RecountDAO {
             preparedStatement.setInt(2, movieID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
-        return false;
     }
 
     @Override
-    public int takeDirect(int userID, int movieID) {
+    public int takeDirect(int userID, int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -82,16 +82,16 @@ public class SQLRecountDAO implements RecountDAO {
             preparedStatement.setInt(2, movieID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 direct = resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }

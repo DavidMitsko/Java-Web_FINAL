@@ -26,24 +26,33 @@ public class MovieServiceImpl implements MovieService {
             throw new ServiceException("Wrong parameter");
         }*/
 
-        float newRating = ratingDAO.takeAverageRatingOfMovie(movieID);
-        if(newRating == -1) {
-            throw new ServiceException();
-        }
+        try {
+            float newRating = ratingDAO.takeAverageRatingOfMovie(movieID);
+            if (newRating == -1) {
+                throw new ServiceException();
+            }
 
-        movieDAO.updateRating(newRating, movieID);
+            movieDAO.updateRating(newRating, movieID);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 
     @Override
     public float takeAverageRating(String movieName) throws ServiceException {
-        if(movieName.equals("")) {
+        if (movieName.equals("")) {
             throw new ServiceException("Wrong parameter");
         }
 
-        int id = movieDAO.takeID(movieName);
-        float rating = movieDAO.takeRatingOfMovie(id);
+        float rating = 0;
+        try {
+            int id = movieDAO.takeID(movieName);
+            rating = movieDAO.takeRatingOfMovie(id);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
 
-        if(rating == -1) {
+        if (rating == -1) {
             throw new ServiceException();
         }
         return rating;
@@ -51,13 +60,18 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ArrayList<Movie> takeAllMovies() throws ServiceException {
-        ArrayList<Movie> movieList = movieDAO.takeAllMovies();
+        ArrayList<Movie> movieList;
+        try {
+            movieList = movieDAO.takeAllMovies();
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
 
-        if(movieList.size() == 0) {
+        if (movieList.size() == 0) {
             throw new ServiceException();
         }
-        for(Movie movie : movieList) {
-            if(movie.getImageName() != null) {
+        for (Movie movie : movieList) {
+            if (movie.getImageName() != null) {
                 String imagePath = "../images/" + movie.getImageName();
                 movie.setImageName(imagePath);
             }
@@ -67,29 +81,33 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void addMovie(String movieName, String imageName, String description) {
+    public void addMovie(String movieName, String imageName, String description) throws ServiceException {
         Movie movie = new Movie(movieName, imageName, description);
 
-        movieDAO.addMovie(movie);
+        try {
+            movieDAO.addMovie(movie);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 
     @Override
-    public void removeMovie(String movieName) {
-        int movieID = movieDAO.takeID(movieName);
-
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        UserService userService = serviceFactory.getUserService();
-
-        ArrayList<Integer> usersID = userDAO.takeAllUsersID();
-        for(int userID : usersID) {
-            if(!recountDAO.find(userID, movieID)) {
-                continue;
-            }
-            int userRating = userService.reestablishUsersRating(userID, movieID);
-            userDAO.updateRating(userID, userRating);
-        }
-
+    public void removeMovie(String movieName) throws ServiceException {
         try {
+            int movieID = movieDAO.takeID(movieName);
+
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            UserService userService = serviceFactory.getUserService();
+
+            ArrayList<Integer> usersID = userDAO.takeAllUsersID();
+            for (int userID : usersID) {
+                if (!recountDAO.find(userID, movieID)) {
+                    continue;
+                }
+                int userRating = userService.reestablishUsersRating(userID, movieID);
+                userDAO.updateRating(userID, userRating);
+            }
+
             RatingService ratingService = serviceFactory.getRatingService();
             ratingService.removeAllMoviesRatings(movieName);
 
@@ -99,13 +117,30 @@ public class MovieServiceImpl implements MovieService {
             movieDAO.removeMovie(movieName);
         } catch (ServiceException ex) {
 
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
         }
     }
 
     @Override
-    public String takeDescription(String movieName) {
-        int movieID = movieDAO.takeID(movieName);
+    public String takeDescription(String movieName) throws ServiceException {
+        String description = null;
+        try {
+            int movieID = movieDAO.takeID(movieName);
 
-        return movieDAO.takeDescription(movieID);
+            description = movieDAO.takeDescription(movieID);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
+        return description;
+    }
+
+    @Override
+    public String takeNameByID(int movieID) throws ServiceException {
+        try {
+            return movieDAO.takeName(movieID);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 }

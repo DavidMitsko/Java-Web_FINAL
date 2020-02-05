@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.dao.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.MovieDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
@@ -24,9 +25,10 @@ public class SQLMovieDAOImpl implements MovieDAO {
     public static final String TAKE_RATING_OF_MOVIE = "SELECT averageRating FROM movie WHERE id = ?";
     public static final String REMOVE_MOVIE = "DELETE FROM movie WHERE name = ?";
     public static final String TAKE_DESCRIPTION = "SELECT description FROM movie WHERE id = ?";
+    private static final String TAKE_NAME = "SELECT name FROM movie WHERE id = ?";
 
     @Override
-    public void addMovie(Movie movie) {
+    public void addMovie(Movie movie) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -42,18 +44,17 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public void removeMovie(String movieName) {
+    public void removeMovie(String movieName) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -64,18 +65,17 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setString(1, movieName);
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public ArrayList<Movie> takeAllMovies() {
+    public ArrayList<Movie> takeAllMovies() throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -86,7 +86,6 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
@@ -101,9 +100,9 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 movieList.add(film);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -111,7 +110,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public void updateRating(float newRating, int movieID) {
+    public void updateRating(float newRating, int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -124,18 +123,17 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public void updateCountOfRating(int newCountOfRating, int movieID) {
+    public void updateCountOfRating(int newCountOfRating, int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -148,18 +146,17 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public int takeCountOfRating(int movieID) {
+    public int takeCountOfRating(int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -172,16 +169,15 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setInt(1, movieID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
                 count = resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -189,7 +185,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public float takeRatingOfMovie(int movieId) {
+    public float takeRatingOfMovie(int movieId) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -201,16 +197,15 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.setInt(1, movieId);
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
                 rating = resultSet.getFloat(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -218,7 +213,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public int takeID(String movieName) {
+    public int takeID(String movieName) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -230,16 +225,15 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.setString(1, movieName);
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
                 id = resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -247,31 +241,39 @@ public class SQLMovieDAOImpl implements MovieDAO {
     }
 
     @Override
-    public String takeDescription(int movieID) {
+    public String takeDescription(int movieID) throws DAOException {
+        return getString(movieID, TAKE_DESCRIPTION);
+    }
+
+    @Override
+    public String takeName(int movieID) throws DAOException {
+        return getString(movieID, TAKE_NAME);
+    }
+
+    private String getString(int movieID, String takeName) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        String description = null;
+        String name = null;
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(TAKE_DESCRIPTION);
+            preparedStatement = connection.prepareStatement(takeName);
 
             preparedStatement.setInt(1, movieID);
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
-                description = resultSet.getString(1);
+                name = resultSet.getString(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
-        return description;
+        return name;
     }
 }

@@ -2,6 +2,7 @@ package com.mitsko.mrdb.controller.command;
 
 import com.mitsko.mrdb.controller.command.util.Constants;
 import com.mitsko.mrdb.service.MovieService;
+import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +13,13 @@ public class RemoveMovie implements Command {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
-        String movieName = req.getParameter("movieName");
+        String movieName = req.getParameter("movieForRemove");
 
-        movieService.removeMovie(movieName);
+        try {
+            movieService.removeMovie(movieName);
+        } catch (ServiceException ex) {
+
+        }
 
         return Constants.ADMIN;
     }

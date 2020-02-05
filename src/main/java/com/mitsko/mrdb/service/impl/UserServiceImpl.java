@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.service.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.DAOFactory;
 import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.UserDAO;
@@ -30,15 +31,20 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong parameter");
         }
 
-        String passwordInDB = userDAO.takePassword(login);
+        User user = null;
+        try {
+            String passwordInDB = userDAO.takePassword(login);
 
-        if(!crypto.checkPassword(password, passwordInDB)) {
-            throw new ServiceException("Wrong login or password");
-        }
+            if (!crypto.checkPassword(password, passwordInDB)) {
+                throw new ServiceException("Wrong login or password");
+            }
 
-        User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
-        if(user == null) {
-            throw new ServiceException();
+            user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
+            if (user == null) {
+                throw new ServiceException();
+            }
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
         }
         return user;
     }
@@ -49,26 +55,33 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Wrong parameter");
         }
 
-        if(userDAO.findLogin(login)) {
-            throw new ServiceException("Already exist a user with this name");
+        User user = null;
+        try {
+            if (userDAO.findLogin(login)) {
+                throw new ServiceException("Already exist a user with this name");
+            }
+
+            String hashPassword = crypto.encode(password);
+
+            user = new User(login, hashPassword);
+            int id = userDAO.registration(user);
+            if (id == -1) {
+                throw new ServiceException();
+            }
+            user.setID(id);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
         }
-
-        String hashPassword = crypto.encode(password);
-
-        User user = new User(login, hashPassword);
-        int id = userDAO.registration(user);
-        if(id == -1) {
-            throw new ServiceException();
-        }
-        user.setID(id);
-
         return user;
     }
 
     @Override
     public ArrayList<String> takeAllLogins() throws ServiceException {
-
-        return userDAO.takeAllLogins();
+        try {
+            return userDAO.takeAllLogins();
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 
     @Override
@@ -76,31 +89,47 @@ public class UserServiceImpl implements UserService {
         if(login.equals("")) {
             throw new ServiceException("Wrong parameter");
         }
-        int id = userDAO.takeID(login);
-        return userDAO.takeStatus(id);
+        try {
+            int id = userDAO.takeID(login);
+            return userDAO.takeStatus(id);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 
     @Override
     public String takeLogin(int userID) throws ServiceException {
-        return userDAO.takeLogin(userID);
+        try {
+            return userDAO.takeLogin(userID);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 
     @Override
-    public int reestablishUsersRating(int userID, int movieID) {
-        int usersRating = userDAO.takeRating(userID);
-        int direct = recountDAO.takeDirect(userID, movieID);
-        if (usersRating == 0 && direct == -1) {
-            return usersRating;
+    public int reestablishUsersRating(int userID, int movieID) throws ServiceException {
+        try {
+            int usersRating = userDAO.takeRating(userID);
+            int direct = recountDAO.takeDirect(userID, movieID);
+            if (usersRating == 0 && direct == -1) {
+                return usersRating;
+            }
+            if (usersRating == 10 && direct == 1) {
+                return usersRating;
+            }
+            return usersRating + direct;
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
         }
-        if (usersRating == 10 && direct == 1) {
-            return usersRating;
-        }
-        return usersRating + direct;
     }
 
     @Override
-    public int takeAverageRating(String userLogin) {
-        int userID = userDAO.takeID(userLogin);
-        return userDAO.takeRating(userID);
+    public int takeAverageRating(String userLogin) throws ServiceException {
+        try {
+            int userID = userDAO.takeID(userLogin);
+            return userDAO.takeRating(userID);
+        } catch (DAOException ex) {
+            throw new ServiceException(ex);
+        }
     }
 }

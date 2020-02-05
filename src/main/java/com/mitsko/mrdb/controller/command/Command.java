@@ -5,5 +5,5 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public interface Command {
-    String execute(HttpServletRequest req) throws IOException, ServletException;
+    String execute(HttpServletRequest req);
 }

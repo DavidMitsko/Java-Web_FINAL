@@ -1,10 +1,13 @@
 package com.mitsko.mrdb.dao.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Status;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,13 +16,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLUserDAOImpl implements UserDAO {
+    private final static Logger logger = LogManager.getLogger(SQLUserDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String FIND_LOGIN = "SELECT login FROM user WHERE login = ?";
     private static final String TAKE_ALL_USERS_ID = "SELECT id FROM user";
     public static final String ADD_NEW_USER = "INSERT INTO user (id, login, password, role," +
             "status, averageRating) VALUES(NULL,?,?,?,?,?)";
-    public static final String TAKE_ALL_LOGINS = "SELECT login FROM user";
+    public static final String TAKE_ALL_LOGINS = "SELECT login FROM user WHERE id != 1";
     public static final String SELECT_USERS_LOGIN = "SELECT password FROM user WHERE login = ?";
     public static final String SELECT_USER = "SELECT * FROM user WHERE login = ? AND password = ?";
     public static final String UPDATE_USERS_RATING = "UPDATE user SET averageRating = ? WHERE id = ?";
@@ -29,7 +33,7 @@ public class SQLUserDAOImpl implements UserDAO {
     public static final String TAKE_USERS_LOGIN = "SELECT login FROM user WHERE id = ?";
 
     @Override
-    public String takePassword(String login) {
+    public String takePassword(String login) throws DAOException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -42,16 +46,16 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 return resultSet.getString(1);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -59,7 +63,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User takeUserByLoginAndPassword(String login, String password) {
+    public User takeUserByLoginAndPassword(String login, String password) throws DAOException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -72,7 +76,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, password);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
 
@@ -86,9 +90,9 @@ public class SQLUserDAOImpl implements UserDAO {
                 return new User(id, login, password, role, status, averageRating);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -97,7 +101,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int registration(User newUser) {
+    public int registration(User newUser) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         int id = -1;
@@ -118,11 +122,11 @@ public class SQLUserDAOImpl implements UserDAO {
 
             id = takeID(newUser.getLogin());
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
@@ -130,7 +134,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public ArrayList<String> takeAllLogins() {
+    public ArrayList<String> takeAllLogins() throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -146,11 +150,11 @@ public class SQLUserDAOImpl implements UserDAO {
                 logins.add(resultSet.getString(1));
             }
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -158,7 +162,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateRating(int userID, int newRating) {
+    public void updateRating(int userID, int newRating) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -171,18 +175,18 @@ public class SQLUserDAOImpl implements UserDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public int takeRating(int userID) {
+    public int takeRating(int userID) throws DAOException {
         int rating = -1;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -195,7 +199,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
@@ -204,9 +208,9 @@ public class SQLUserDAOImpl implements UserDAO {
 
 
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -214,7 +218,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Status takeStatus(int userID) {
+    public Status takeStatus(int userID) throws DAOException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Connection connection = null;
@@ -227,7 +231,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
@@ -235,9 +239,9 @@ public class SQLUserDAOImpl implements UserDAO {
                 status = Status.valueOf(temp);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -245,7 +249,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean findLogin(String login) {
+    public boolean findLogin(String login) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -258,21 +262,20 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-            connectionPool.releaseConnection(connection);
+
 
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
-        return false;
     }
 
     @Override
-    public ArrayList<Integer> takeAllUsersID() {
+    public ArrayList<Integer> takeAllUsersID() throws DAOException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -283,15 +286,15 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_ID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             while (resultSet.next()) {
                 usersID.add(resultSet.getInt(1));
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -299,7 +302,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int takeID(String login) {
+    public int takeID(String login) throws DAOException {
         int id = -1;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -312,16 +315,16 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(1, login);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 id = resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -329,7 +332,7 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public String takeLogin(int userID) {
+    public String takeLogin(int userID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -342,16 +345,16 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
+
 
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 login = resultSet.getString(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }

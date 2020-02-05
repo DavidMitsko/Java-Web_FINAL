@@ -59,11 +59,6 @@ public class ConnectionPool {
         }
     }
 
-    public void releaseConnection(Connection connection) {
-        connectionQueue.add(connection);
-        givenAwayConnectionQueue.remove(connection);
-    }
-
     public void dispose() {
         clearConnectionQueue();
     }

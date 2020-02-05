@@ -1,14 +1,13 @@
-package com.mitsko.mrdb.controller.util;
-
-import com.mitsko.mrdb.entity.util.Status;
+package com.mitsko.mrdb.controller.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Enumeration;
 
-public class StatusFilter implements Filter {
+public class AuthorizationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -16,14 +15,16 @@ public class StatusFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
 
         HttpSession session = req.getSession();
-        Status status = (Status)session.getAttribute("status");
+        Integer userID = (Integer) session.getAttribute("userID");
 
-        if(status == Status.BAN) {
-            RequestDispatcher requestDispatcher = request.getServletContext()
-                    .getRequestDispatcher("/pages/ban.html");
+        String path = req.getServletPath();
+        Enumeration<String> names = req.getParameterNames();
+        if (names.hasMoreElements() && (path.equals("/Sign_In") || path.equals("/Registration"))) {
+            chain.doFilter(request, response);
+        } else if (userID == null) {
+            RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");
             requestDispatcher.forward(req, resp);
         }
-
         chain.doFilter(request, response);
     }
 

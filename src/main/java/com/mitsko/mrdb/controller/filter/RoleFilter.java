@@ -1,32 +1,31 @@
-package com.mitsko.mrdb.controller.util;
+package com.mitsko.mrdb.controller.filter;
+
+import com.mitsko.mrdb.entity.util.Role;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Enumeration;
 
-public class AuthorizationFilter implements Filter {
+public class RoleFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        System.out.println("AutoFilter");
-
         HttpSession session = req.getSession();
-        Integer userID = (Integer) session.getAttribute("userID");
+        Role role = (Role)session.getAttribute("role");
 
         String path = req.getServletPath();
-        Enumeration<String> names = req.getParameterNames();
-        if (names.hasMoreElements() && (path.equals("/Sign_In") || path.equals("/Registration"))) {//&& userID == null) {
-            chain.doFilter(request, response);
-        } else if (userID == null) {
-            RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");
+        if(role == Role.USER && (path.equals("/Add_Movie") || path.equals("/Remove_Movie") ||
+                path.equals("/Change_Status") || path.equals("admin.jsp"))) {
+            RequestDispatcher requestDispatcher = request.getServletContext()
+                    .getRequestDispatcher("/pages/lowAccess.html");
             requestDispatcher.forward(req, resp);
         }
+
         chain.doFilter(request, response);
     }
 

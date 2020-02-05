@@ -6,5 +6,5 @@ public class Parameter {
     public static final String DB_USER = "db.user";
     public static final String DB_PASSWORD = "db.password";
     public static final String DB_POOL_SIZE = "db.poolSize";
-    public static final String PROPERTIES_PATH = "src/main/resources/db.properties";
+    public static final String PROPERTIES_PATH = "db";
 }

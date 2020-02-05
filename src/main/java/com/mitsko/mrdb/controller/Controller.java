@@ -17,6 +17,8 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
     private final CommandProvider commandProvider = new CommandProvider();
 
+    private String previousRequest;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequest(req, resp);
@@ -31,21 +33,18 @@ public class Controller extends HttpServlet {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
+        if(commandName.equals("Next") || commandName.equals("Previous")) {
+            commandName = Constants.TAKE_MOVIE;
+        }
         Command executionCommand = commandProvider.getCommand(commandName);
 
         String page = executionCommand.execute(req);
 
-        boolean flag = false;
-        if (page.equals(Constants.MAIN)) {
-            flag = true;
-            commandName = Constants.TAKE_MOVIE;
-        } else if (page.equals(Constants.ADMIN)) {
-            flag = true;
-            commandName = Constants.TAKE_USERS;
-        }
-        if (flag) {
-            executionCommand = commandProvider.getCommand(commandName);
-            executionCommand.execute(req);
+        if(page.equals(Constants.MAKE_REDIRECT)) {
+            executionCommand = commandProvider.getCommand(previousRequest);
+            page = executionCommand.execute(req);
+        } else {
+            previousRequest = commandName;
         }
 
         req.getRequestDispatcher(page).forward(req, resp);

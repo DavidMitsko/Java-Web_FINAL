@@ -42,12 +42,23 @@ public class ReviewTag extends TagSupport {
     public int doStartTag() throws JspException {
         Set<Map.Entry<String, Review>> reviewSet = reviewHashMap.entrySet();
         try {
+            pageContext.getOut().print("<table class=\"table table-striped\">");
+
+
             for (Map.Entry<String, Review> entry : reviewSet) {
+                String login = entry.getKey();
+                login = login.replaceAll("\\s+","");
+                pageContext.getOut().print("<tr><td>");
+                pageContext.getOut().print(login);
                 int rating = usersRatingHashMap.get(entry.getKey());
-                pageContext.getOut().print(entry.getKey());
                 outStars(rating);
-                pageContext.getOut().print("<br>" + entry.getValue().getReview() + "<br>");
+                pageContext.getOut().print("</td></tr>");
+                pageContext.getOut().print("<tr><td>");
+                pageContext.getOut().print(entry.getValue().getReview());
+                pageContext.getOut().print("</td></tr>");
             }
+
+            pageContext.getOut().print("</table>");
         } catch (IOException ex) {
 
         }

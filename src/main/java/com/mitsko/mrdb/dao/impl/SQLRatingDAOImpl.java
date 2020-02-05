@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.dao.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.RatingDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
@@ -20,7 +21,7 @@ public class SQLRatingDAOImpl implements RatingDAO {
     public static final String TAKE_USERS_RATING_OF_MOVIE = "SELECT rating FROM rating WHERE userID = ? AND movieID = ?";
 
     @Override
-    public void addNewRating(Rating newRating) {
+    public void addNewRating(Rating newRating) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -34,18 +35,17 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public float takeAverageRatingOfMovie(int movieID) {
+    public float takeAverageRatingOfMovie(int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -58,16 +58,15 @@ public class SQLRatingDAOImpl implements RatingDAO {
             preparedStatement.setInt(1, movieID);
 
             resultSet = preparedStatement.executeQuery();
-            connectionPool.releaseConnection(connection);
 
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
                 averageRating = resultSet.getFloat(1);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -75,7 +74,7 @@ public class SQLRatingDAOImpl implements RatingDAO {
     }
 
     @Override
-    public void updateRating(Rating newRating) {
+    public void updateRating(Rating newRating) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -89,18 +88,17 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public void removeAllRatings(int movieID) {
+    public void removeAllRatings(int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -112,18 +110,17 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public float takeUsersRatingOfMovie(int userID, int movieID) {
+    public float takeUsersRatingOfMovie(int userID, int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -138,16 +135,15 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-            connectionPool.releaseConnection(connection);
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
                 rating = resultSet.getFloat(1);
             }
 
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }

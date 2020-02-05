@@ -11,9 +11,11 @@ public interface MovieService {
 
     ArrayList<Movie> takeAllMovies() throws ServiceException;
 
-    void addMovie(String movieName, String imageName, String description);
+    void addMovie(String movieName, String imageName, String description) throws ServiceException;
 
-    void removeMovie(String movieName);
+    void removeMovie(String movieName) throws ServiceException;
 
-    String takeDescription(String movieName);
+    String takeDescription(String movieName) throws ServiceException;
+
+    String takeNameByID(int movieID) throws ServiceException;
 }

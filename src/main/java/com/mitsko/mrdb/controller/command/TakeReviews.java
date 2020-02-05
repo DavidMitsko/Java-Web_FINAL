@@ -22,21 +22,22 @@ public class TakeReviews implements Command {
         reviewService = serviceFactory.getReviewService();
         userService = serviceFactory.getUserService();
         movieService = serviceFactory.getMovieService();
-
-        reviewMap = new HashMap<>();
-        usersRatingMap = new HashMap<>();
     }
 
     @Override
     public String execute(HttpServletRequest req) {
         String page = Constants.REVIEW;
-
+        reviewMap = new HashMap<>();
+        usersRatingMap = new HashMap<>();
         try {
             String movieName = req.getParameter("movieNameForReview");
-            ArrayList<Review> reviewList = reviewService.takeAllReview(movieName);
+            ArrayList<Review> reviewList = reviewService.takeAllMoviesReview(movieName);
             takeLogins(reviewList);
 
             String description = movieService.takeDescription(movieName);
+            /*if(description == null) {
+                description = "This film havn't description";
+            }*/
 
             req.setAttribute("review", reviewMap);
             req.setAttribute("user", usersRatingMap);
@@ -54,8 +55,11 @@ public class TakeReviews implements Command {
         try {
             for (Review review : reviewList) {
                 String login = userService.takeLogin(review.getUserID());
-                reviewMap.put(login, review);
                 int rating = userService.takeAverageRating(login);
+                while (reviewMap.containsKey(login)) {
+                    login = login + " ";
+                }
+                reviewMap.put(login, review);
                 usersRatingMap.put(login, rating);
             }
         } catch (ServiceException ex) {

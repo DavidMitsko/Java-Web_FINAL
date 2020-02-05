@@ -9,8 +9,13 @@ public class Constants {
     public static final String BAN_HTML = "pages/ban.html";
     public static final String INDEX = "index.jsp";
     public static final String RATING = "pages/rating.jsp";
+    public static final String ERROR = "pages/error.jsp";
+    public static final String HISTORY = "pages/userHistory.jsp";
+    public static final String REMOVE = "pages/removeMovie.jsp";
 
     public static final String TAKE_MOVIE = "take_movies";
     public static final String TAKE_USERS = "take_users";
+
+    public static final String MAKE_REDIRECT = "redirect";
 
 }

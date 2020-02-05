@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.dao.impl;
 
+import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.ReviewDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
@@ -16,11 +17,13 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
     private static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userID, movieID, review) VALUES(NULL,?,?,?)";
     private static final String TAKE_ALL_MOVIES_REVIEW = "SELECT userID, review FROM review WHERE movieID = ?";
-    public static final String REMOVE_REVIEW = "DELETE FROM review WHERE userID = ? AND movieID = ?";
-    public static final String REMOVE_ALL_REVIEW = "DELETE  FROM review WHERE movieID = ?";
+    private static final String REMOVE_REVIEW = "DELETE FROM review WHERE ID = ?";
+    private static final String REMOVE_ALL_REVIEW = "DELETE  FROM review WHERE movieID = ?";
+    private static final String TAKE_ALL_USERS_REVIEW = "SELECT * FROM review WHERE userID = ?";
+    private static final String TAKE_REVIEW = "SELECT * FROM review WHERE id = ?";
 
     @Override
-    public void addReview(Review review) {
+    public void addReview(Review review) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -34,18 +37,18 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public ArrayList<Review> takeAllMoviesReviews(int movieID) {
+    public ArrayList<Review> takeAllMoviesReviews(int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -55,11 +58,13 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES_REVIEW);
 
+
+
             preparedStatement.setInt(1, movieID);
 
             resultSet = preparedStatement.executeQuery();
 
-            connectionPool.releaseConnection(connection);
+
 
             while (resultSet.next()) {
                 //int id = resultSet.getInt(1);
@@ -71,9 +76,9 @@ public class SQLReviewDAOImpl implements ReviewDAO {
                 reviewList.add(oldReview);
             }
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -81,7 +86,7 @@ public class SQLReviewDAOImpl implements ReviewDAO {
     }
 
     @Override
-    public void removeReview(int userID, int movieID) {
+    public void removeReview(int reviewID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -89,23 +94,22 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(REMOVE_REVIEW);
 
-            preparedStatement.setInt(1, userID);
-            preparedStatement.setInt(2, movieID);
+            preparedStatement.setInt(1, reviewID);
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 
     @Override
-    public void removeAllReviews(int movieID) {
+    public void removeAllReviews(int movieID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -117,13 +121,81 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.executeUpdate();
 
-            connectionPool.releaseConnection(connection);
+
         } catch (SQLException ex) {
-
+            throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
-
+            throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
+    }
+
+    @Override
+    public ArrayList<Review> takeAllUsersReviews(int userID) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        ArrayList<Review> reviewList = new ArrayList<>();
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_ALL_USERS_REVIEW);
+
+            preparedStatement.setInt(1, userID);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int ID = resultSet.getInt(1);
+                int movieID = resultSet.getInt(3);
+                String review = resultSet.getString(4);
+
+                Review oldReview = new Review(ID, userID, movieID, review);
+                reviewList.add(oldReview);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException(ex);
+        } catch (ConnectionPoolException ex) {
+            throw new DAOException(ex);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return reviewList;
+    }
+
+    @Override
+    public Review takeByID(int reviewID) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Review reviewFromDB = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_REVIEW);
+
+            preparedStatement.setInt(1, reviewID);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.isBeforeFirst()) {
+                resultSet.next();
+
+                int id = resultSet.getInt(1);
+                int userID = resultSet.getInt(2);
+                int movieID = resultSet.getInt(3);
+                String review = resultSet.getString(3);
+
+                reviewFromDB = new Review(id, userID, movieID, review);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException(ex);
+        } catch (ConnectionPoolException ex) {
+            throw new DAOException(ex);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return reviewFromDB;
     }
 }
