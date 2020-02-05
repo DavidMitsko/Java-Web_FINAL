@@ -19,11 +19,18 @@
         <url-pattern>/Change_Status</url-pattern>
         <url-pattern>/Remove_Movie</url-pattern>
         <url-pattern>/Sign_Out</url-pattern>
+        <url-pattern>/Take_Movies</url-pattern>
+        <url-pattern>/Take_Users</url-pattern>
+        <url-pattern>/Take_History</url-pattern>
+        <url-pattern>/Remove_Review</url-pattern>
+        <url-pattern>/Locale</url-pattern>
+        <url-pattern>/Previous</url-pattern>
+        <url-pattern>/Next</url-pattern>
     </servlet-mapping>
 
     <filter>
         <filter-name>AuthorizationFilter</filter-name>
-        <filter-class>com.mitsko.mrdb.controller.util.AuthorizationFilter</filter-class>
+        <filter-class>com.mitsko.mrdb.controller.filter.AuthorizationFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthorizationFilter</filter-name>
@@ -32,7 +39,7 @@
 
     <filter>
         <filter-name>RoleFilter</filter-name>
-        <filter-class>com.mitsko.mrdb.controller.util.RoleFilter</filter-class>
+        <filter-class>com.mitsko.mrdb.controller.filter.RoleFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>RoleFilter</filter-name>
@@ -41,7 +48,7 @@
 
     <filter>
         <filter-name>StatusFilter</filter-name>
-        <filter-class>com.mitsko.mrdb.controller.util.StatusFilter</filter-class>
+        <filter-class>com.mitsko.mrdb.controller.filter.StatusFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>StatusFilter</filter-name>
