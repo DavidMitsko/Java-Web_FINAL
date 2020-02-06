@@ -10,6 +10,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="bootstrap.jsp" %>
+<c:import url="header/adminNavbar.jsp" var="navbar"/>
 
 <jsp:useBean id="movieList" type="java.util.ArrayList<com.mitsko.mrdb.entity.Movie>" scope="request"/>
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
@@ -20,44 +21,7 @@
 </head>
 <body>
 <div class="container">
-    <ul class="nav nav-tabs">
-        <form method="get" action="${pageContext.request.contextPath}/Take_Users">
-            <li class="nav-item">
-                <button type="submit" class="nav-link btn">
-                    <fmt:message key="navbar.admin.users" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}pages/addMovie.jsp">
-            <li>
-                <button type="submit" class="nav-link btn">
-                    <fmt:message key="navbar.admin.addMovie" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Take_Movies">
-            <li>
-                <button type="submit" class="btn nav-link">
-                    <fmt:message key="navbar.admin.removeMovie" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Sign_Out">
-            <li>
-                <button type="submit" class="btn float-right">
-                    <fmt:message key="navbar.admin.signOut" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Locale">
-            <li>
-                <button type="submit" class="btn float-right">
-                    <fmt:message key="navbar.admin.local" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-    </ul>
-
+    ${navbar}
 
     <ul class="list-group">
         <c:forEach var="movie" items="${movieList}">

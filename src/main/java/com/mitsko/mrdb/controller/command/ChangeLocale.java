@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
 import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.resource.ResourceManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,13 @@ public class ChangeLocale implements Command {
             resourceManager.changeResource(EN);
             session.setAttribute("locale", EN);
         }
-        return Constants.MAKE_REDIRECT;
+
+        Role role = (Role) session.getAttribute("role");
+        if (role == Role.USER) {
+            return Constants.MAIN;
+        } else {
+            return Constants.ADMIN;
+        }
+        //return Constants.MAKE_REDIRECT;
     }
 }

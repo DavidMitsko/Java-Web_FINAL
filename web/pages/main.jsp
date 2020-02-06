@@ -14,6 +14,8 @@
 <jsp:useBean id="movieList" class="java.util.ArrayList" scope="request"/>
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
+
+<c:import url="header/mainNavbar.jsp" var="navbar"/>
 <html>
 <head>
     <title>
@@ -23,37 +25,7 @@
 <body>
 
 <div class="container">
-    <ul class="nav nav-tabs">
-        <form method="get" action="${pageContext.request.contextPath}/Take_Movies">
-            <li class="nav-item">
-                <button type="submit" class="nav-link btn">
-                    <fmt:message key="navbar.main.main" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Take_History">
-            <li>
-                <button type="submit" class="nav-link btn">
-                    <fmt:message key="navbar.main.history" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Sign_Out">
-            <li>
-                <button type="submit" class="btn float-right">
-                    <fmt:message key="navbar.main.signOut" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/Locale">
-            <li>
-                <input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
-                <button type="submit" class="btn float-right">
-                    <fmt:message key="navbar.main.local" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-    </ul>
+    ${navbar}
 
     <c:if test="${movieList.size() != 0}">
         <table class="table table-striped">

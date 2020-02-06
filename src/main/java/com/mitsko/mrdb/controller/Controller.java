@@ -21,15 +21,17 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
+        String page = processRequest(req, resp);
+        req.getRequestDispatcher(page).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
+        String page = processRequest(req, resp);
+        resp.sendRedirect(page);
     }
 
-    private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    private String processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
@@ -40,13 +42,14 @@ public class Controller extends HttpServlet {
 
         String page = executionCommand.execute(req);
 
-        if(page.equals(Constants.MAKE_REDIRECT)) {
-            executionCommand = commandProvider.getCommand(previousRequest);
-            page = executionCommand.execute(req);
-        } else {
-            previousRequest = commandName;
-        }
+//        if(page.equals(Constants.MAKE_REDIRECT)) {
+//            executionCommand = commandProvider.getCommand(previousRequest);
+//            page = executionCommand.execute(req);
+//        } else {
+//            previousRequest = commandName;
+//        }
 
-        req.getRequestDispatcher(page).forward(req, resp);
+        return page;
+        //req.getRequestDispatcher(page).forward(req, resp);
     }
 }

@@ -18,14 +18,16 @@ public class AuthorizationFilter implements Filter {
         Integer userID = (Integer) session.getAttribute("userID");
 
         String path = req.getServletPath();
+
         Enumeration<String> names = req.getParameterNames();
         if (names.hasMoreElements() && (path.equals("/Sign_In") || path.equals("/Registration"))) {
             chain.doFilter(request, response);
         } else if (userID == null) {
             RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");
             requestDispatcher.forward(req, resp);
+        } else {
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
     }
 
     @Override
