@@ -9,6 +9,7 @@ import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.UserService;
 import com.mitsko.mrdb.service.util.Crypto;
+import com.mitsko.mrdb.service.util.Validator;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
     private RecountDAO recountDAO;
     private Crypto crypto;
+    private Validator validator;
 
     public UserServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
@@ -23,11 +25,15 @@ public class UserServiceImpl implements UserService {
         recountDAO = daoFactory.getSQLRecountDAO();
 
         crypto = new Crypto();
+        validator = new Validator();
     }
 
     @Override
     public User signIn(String login, String password) throws ServiceException {
         if(login.equals("") || password.equals("")) {
+            throw new ServiceException("Wrong parameter");
+        }
+        if(!validator.checkLogin(login) & !validator.checkPassword(password)) {
             throw new ServiceException("Wrong parameter");
         }
 
@@ -52,6 +58,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registration(String login, String password) throws ServiceException{
         if(login.equals("") || password.equals("")) {
+            throw new ServiceException("Wrong parameter");
+        }
+
+        if(!validator.checkLogin(login) & !validator.checkPassword(password)) {
             throw new ServiceException("Wrong parameter");
         }
 

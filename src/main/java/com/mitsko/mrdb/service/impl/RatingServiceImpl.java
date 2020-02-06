@@ -3,6 +3,7 @@ package com.mitsko.mrdb.service.impl;
 import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Rating;
 import com.mitsko.mrdb.service.*;
+import com.mitsko.mrdb.service.util.Validator;
 
 import java.util.ArrayList;
 
@@ -12,12 +13,16 @@ public class RatingServiceImpl implements RatingService {
     private MovieDAO movieDAO;
     private RecountDAO recountDAO;
 
+    private Validator validator;
+
     public RatingServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         ratingDAO = daoFactory.getSQLRatingDAO();
         userDAO = daoFactory.getSQLUserDAO();
         movieDAO = daoFactory.getSQLMovieDAO();
         recountDAO = daoFactory.getSQLRecountDAO();
+
+        validator = new Validator();
     }
 
     @Override
@@ -26,6 +31,9 @@ public class RatingServiceImpl implements RatingService {
             throw new ServiceException("Wrong parameter");
         }
 
+        if(validator.checkRating(rating)) {
+            throw new ServiceException("Wrong parameter");
+        }
         try {
             int movieID = movieDAO.takeID(movieName);
 
