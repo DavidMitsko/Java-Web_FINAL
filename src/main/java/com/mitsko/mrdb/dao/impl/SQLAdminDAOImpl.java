@@ -5,12 +5,15 @@ import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.util.Status;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLAdminDAOImpl implements AdminDAO {
+    private final static Logger logger = LogManager.getLogger(SQLAdminDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     public static final String NEW_STATUS = "UPDATE user SET status = ? WHERE login = ?";
@@ -30,9 +33,12 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
+            logger.debug("Status of " + login + " updated(in db)");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -52,9 +58,12 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
+            logger.info("Rating of " +login + " updated(in db)");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);

@@ -5,6 +5,8 @@ import com.mitsko.mrdb.dao.ReviewDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Review;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLReviewDAOImpl implements ReviewDAO {
+    private final static Logger logger = LogManager.getLogger(SQLReviewDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userID, movieID, review) VALUES(NULL,?,?,?)";
@@ -37,10 +40,12 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.executeUpdate();
 
-
+            logger.debug("Added new review to movie in db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -58,26 +63,24 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(TAKE_ALL_MOVIES_REVIEW);
 
-
-
             preparedStatement.setInt(1, movieID);
 
             resultSet = preparedStatement.executeQuery();
 
-
-
             while (resultSet.next()) {
-                //int id = resultSet.getInt(1);
                 int userID = resultSet.getInt(1);
-                //String movieName = resultSet.getString(3);
                 String review = resultSet.getString(2);
 
                 Review oldReview = new Review(userID, movieID, review);
                 reviewList.add(oldReview);
             }
+
+            logger.debug("From db received all movies reviews");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -98,10 +101,12 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.executeUpdate();
 
-
+            logger.debug("From db removed movies review");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -121,10 +126,12 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
             preparedStatement.executeUpdate();
 
-
+            logger.debug("From db removed all movies reviews");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -154,9 +161,13 @@ public class SQLReviewDAOImpl implements ReviewDAO {
                 Review oldReview = new Review(ID, userID, movieID, review);
                 reviewList.add(oldReview);
             }
+
+            logger.debug("From db received all users reviews");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -189,9 +200,13 @@ public class SQLReviewDAOImpl implements ReviewDAO {
 
                 reviewFromDB = new Review(id, userID, movieID, review);
             }
+
+            logger.debug("From db received review bi ID");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

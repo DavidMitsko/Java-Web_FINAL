@@ -10,7 +10,7 @@ public class DAOFactory {
     private final MovieDAO SQLMovieDAO = new SQLMovieDAOImpl();
     private final RatingDAO SQLRatingDAO = new SQLRatingDAOImpl();
     private final ReviewDAO SQLReviewDAO = new SQLReviewDAOImpl();
-    private final RecountDAO SQLRecountDAO = new SQLRecountDAO();
+    private final RecountDAO SQLRecountDAO = new SQLRecountDAOImpl();
 
     private DAOFactory() {
     }

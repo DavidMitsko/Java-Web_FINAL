@@ -4,13 +4,16 @@ import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SQLRecountDAO implements RecountDAO {
+public class SQLRecountDAOImpl implements RecountDAO {
+    private final static Logger logger = LogManager.getLogger(SQLRecountDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String ADD_USERS_RATING = "INSERT INTO recount (id, userID, movieID, direct) VALUES(NULL, ?, ?, ?)";
@@ -32,9 +35,12 @@ public class SQLRecountDAO implements RecountDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.debug("Added new recount entry in db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -56,11 +62,13 @@ public class SQLRecountDAO implements RecountDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-
+            logger.debug("Found entry about users recount in db");
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -88,9 +96,13 @@ public class SQLRecountDAO implements RecountDAO {
                 resultSet.next();
                 direct = resultSet.getInt(1);
             }
+
+            logger.debug("Received from db direct of users recount");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

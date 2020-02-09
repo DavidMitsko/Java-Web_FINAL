@@ -46,15 +46,17 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-
-
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
                 return resultSet.getString(1);
             }
+
+            logger.debug("From db received users password for check");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -89,9 +91,13 @@ public class SQLUserDAOImpl implements UserDAO {
 
                 return new User(id, login, password, role, status, averageRating);
             }
+
+            logger.debug("From db received user with current login and password");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -122,10 +128,12 @@ public class SQLUserDAOImpl implements UserDAO {
 
             id = takeID(newUser.getLogin());
 
-
+            logger.debug("Add user to db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -150,10 +158,12 @@ public class SQLUserDAOImpl implements UserDAO {
                 logins.add(resultSet.getString(1));
             }
 
-
+            logger.debug("From dm received all users logins");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -175,10 +185,12 @@ public class SQLUserDAOImpl implements UserDAO {
 
             preparedStatement.executeUpdate();
 
-
+            logger.debug("In db updated user rating");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -206,10 +218,12 @@ public class SQLUserDAOImpl implements UserDAO {
                 rating = resultSet.getInt(1);
             }
 
-
+            logger.debug("From db received users rating");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -238,9 +252,13 @@ public class SQLUserDAOImpl implements UserDAO {
                 String temp = resultSet.getString(1);
                 status = Status.valueOf(temp);
             }
+
+            logger.debug("From db received users status");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -262,12 +280,14 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
 
-
+            logger.debug("Checked if there is a given login in db");
 
             return resultSet.isBeforeFirst();
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -291,9 +311,13 @@ public class SQLUserDAOImpl implements UserDAO {
             while (resultSet.next()) {
                 usersID.add(resultSet.getInt(1));
             }
+
+            logger.debug("From db received all users ID");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -321,9 +345,13 @@ public class SQLUserDAOImpl implements UserDAO {
                 resultSet.next();
                 id = resultSet.getInt(1);
             }
+
+            logger.debug("From db received users ID");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -351,9 +379,13 @@ public class SQLUserDAOImpl implements UserDAO {
                 resultSet.next();
                 login = resultSet.getString(1);
             }
+
+            logger.debug("From db received users login");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

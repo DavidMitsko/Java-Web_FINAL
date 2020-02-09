@@ -5,6 +5,8 @@ import com.mitsko.mrdb.dao.RatingDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Rating;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLRatingDAOImpl implements RatingDAO {
+    private final static Logger logger = LogManager.getLogger(SQLRatingDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     public static final String ADD_NEW_RATING = "INSERT INTO rating (id, userID, movieID, rating) VALUES(NULL,?,?,?)";
@@ -34,10 +37,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
             preparedStatement.setFloat(3, newRating.getRating());
 
             preparedStatement.executeUpdate();
-
+            logger.debug("Added new rating in db") ;
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -63,9 +68,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
                 resultSet.next();
                 averageRating = resultSet.getFloat(1);
             }
+            logger.debug("Tacked average rating of movie from db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -88,9 +96,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.debug("Updated movies rating in db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -110,9 +121,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.debug("Removed all ratings from db. Where movies ID: " + movieID);
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -140,9 +154,12 @@ public class SQLRatingDAOImpl implements RatingDAO {
                 rating = resultSet.getFloat(1);
             }
 
+            logger.debug("From db received users rating of movie");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement,resultSet);

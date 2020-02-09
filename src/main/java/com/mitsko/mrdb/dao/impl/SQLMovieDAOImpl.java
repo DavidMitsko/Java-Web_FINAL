@@ -5,6 +5,8 @@ import com.mitsko.mrdb.dao.MovieDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Movie;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLMovieDAOImpl implements MovieDAO {
+    private final static Logger logger = LogManager.getLogger(SQLMovieDAOImpl.class);
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String TAKE_ID = "SELECT id FROM movie WHERE name = ?";
@@ -44,9 +47,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.info("Added a " + movie.getName() + " in db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -65,9 +71,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setString(1, movieName);
             preparedStatement.executeUpdate();
 
+            logger.info(movieName + " removed from db");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -98,10 +107,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 Movie film = new Movie(id, name, averageRating, countOfRatings, imageName, description);
 
                 movieList.add(film);
+                logger.info("Tacked all movies from db");
             }
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -123,9 +135,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.debug("Movie with " + movieID + " id have new rating");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -146,9 +161,12 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
+            logger.debug("Movie with " + movieID + " id, have new count of ratings");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -174,9 +192,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 resultSet.next();
                 count = resultSet.getInt(1);
             }
+
+            logger.debug("From db received movies count of ratings");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -202,9 +224,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 resultSet.next();
                 rating = resultSet.getFloat(1);
             }
+
+            logger.debug("From db received rating of movie");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -230,9 +256,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 resultSet.next();
                 id = resultSet.getInt(1);
             }
+
+            logger.debug("From db received " + " ID");
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -250,7 +280,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
         return getString(movieID, TAKE_NAME);
     }
 
-    private String getString(int movieID, String takeName) throws DAOException {
+    private String getString(int movieID, String takeParameter) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -258,7 +288,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(takeName);
+            preparedStatement = connection.prepareStatement(takeParameter);
 
             preparedStatement.setInt(1, movieID);
             resultSet = preparedStatement.executeQuery();
@@ -267,9 +297,13 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 resultSet.next();
                 name = resultSet.getString(1);
             }
+
+            logger.debug("From db received parameter of movie with id " + movieID);
         } catch (SQLException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } catch (ConnectionPoolException ex) {
+            logger.error(ex);
             throw new DAOException(ex);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

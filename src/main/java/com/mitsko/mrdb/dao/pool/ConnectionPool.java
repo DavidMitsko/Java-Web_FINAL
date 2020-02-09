@@ -1,5 +1,6 @@
 package com.mitsko.mrdb.dao.pool;
 
+import com.mitsko.mrdb.dao.DAOException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -48,13 +49,13 @@ public class ConnectionPool {
             connectionQueue = new ArrayBlockingQueue<>(poolSize);
             givenAwayConnectionQueue = new ArrayBlockingQueue<>(poolSize);
 
-            for(int i = 0; i < poolSize; i++) {
+            for (int i = 0; i < poolSize; i++) {
                 Connection connection = DriverManager.getConnection(url, user, password);
                 PooledConnection pooledConnection = new PooledConnection(connection);
                 connectionQueue.add(pooledConnection);
             }
 
-        } catch(ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
     }
