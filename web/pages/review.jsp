@@ -39,16 +39,33 @@
 
     <v:ReviewTag reviewHashMap="${review}" usersRatingHashMap="${user}" star="${star}"/>
 
-    <form method="post" action="${pageContext.request.contextPath}/Add_Review">
+    <form id="form" method="post" action="${pageContext.request.contextPath}/Add_Review">
         <div class="form-group">
-            <label for="usr">
+            <label for="review">
                 <fmt:message key="text.review.addReview" bundle="${var}"/> ${movieName}:
             </label>
-            <input type="text" class="form-control" id="usr" name="usersReview">
-            <button type="submit" name="addReview">Добавить</button>
+            <input type="text" class="form-control" id="review" name="usersReview">
+            <button type="button" name="addReview" class="btn btn-primary" onclick="valid()">
+                <fmt:message key="button.review.add" bundle="${var}"/>
+            </button>
         </div>
     </form>
 
 </div>
 </body>
+
+<script>
+    function valid() {
+        const pattern = /^[a-zA-Z0-9]{1,1000}$/;
+
+        let review = document.getElementById("review").value;
+
+        if(pattern.exec(review)) {
+            document.getElementById("form").submit();
+        } else {
+            alert("<fmt:message key="addReview.message" bundle="${var}"/>");
+        }
+    }
+</script>
+
 </html>

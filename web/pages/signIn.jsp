@@ -19,7 +19,7 @@
     </title>
 </head>
 <body>
-<form method="post" action="${pageContext.request.contextPath}/Sign_In">
+<form id="form" method="post" action="${pageContext.request.contextPath}/Sign_In">
 
     <div class="form-group">
         <label for="uname">
@@ -28,8 +28,6 @@
         <input type="text" class="form-control" id="uname"
                placeholder=
                <fmt:message key="text.login.login.placeholder" bundle="${var}"/> name="login" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback">Please fill out this field.</div>
     </div>
     <div class="form-group">
         <label for="pwd">
@@ -38,12 +36,40 @@
         <input type="password" class="form-control" id="pwd"
                placeholder=
                <fmt:message key="text.login.password.placeholder" bundle="${var}"/> name="password" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback">Please fill out this field.</div>
     </div>
-    <button type="submit" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" onclick="valid()">
         <fmt:message key="button.login.enter" bundle="${var}"/>
     </button>
+    <p id="1"></p>
+    <p id="2"></p>
 </form>
 </body>
+
+<script>
+    function valid() {
+        let flag = true;
+
+        const loginPattern = /^[a-zA-Z]{1}[a-zA-Z\d\u002E\u005F]{3,20}$/;
+        const passwordPattern = /^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$/;
+
+        let login = document.getElementById("uname").value;
+        let password = document.getElementById("pwd").value;
+
+        if (!loginPattern.exec(login)) {
+            flag = false;
+        }
+
+        if(!passwordPattern.exec(password)) {
+            flag = false;
+        }
+
+        if(flag) {
+            document.getElementById("form").submit();
+        } else {
+            alert("<fmt:message key="signIn/reg.message" bundle="${var}"/>");
+        }
+
+    }
+</script>
+
 </html>

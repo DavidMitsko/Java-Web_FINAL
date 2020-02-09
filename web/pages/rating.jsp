@@ -20,17 +20,32 @@
 </head>
 <body>
 <div class="container">
-    <form method="post" action="${pageContext.request.contextPath}/Add_Rating">
+    <form id="form" method="post" action="${pageContext.request.contextPath}/Add_Rating">
         <div class="form-group">
             <label for="usr">
                 <fmt:message key="text.rating.addRating" bundle="${var}"/>
             </label>
             <input type="text" class="form-control" id="usr" name="newRating"/>
-            <button type="submit">
+            <button type="button" class="btn btn-primary" onclick="valid()">
                 <fmt:message key="button.review.add" bundle="${var}"/>
             </button>
         </div>
     </form>
 </div>
 </body>
+
+<script>
+    function valid() {
+        const pattern = /^[0-9]*[.,]?[0-9]+$/;
+
+        let rating = document.getElementById("usr").value;
+
+        if(pattern.exec(rating)) {
+            document.getElementById("form").submit();
+        } else {
+            alert("<fmt:message key="addRating.message" bundle="${var}"/>");
+        }
+    }
+</script>
+
 </html>

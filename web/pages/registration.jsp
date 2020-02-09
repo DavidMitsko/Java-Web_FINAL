@@ -20,7 +20,7 @@
     </title>
 </head>
 <body>
-<form method="post" action="${pageContext.request.contextPath}/Registration">
+<form id="form" method="post" action="${pageContext.request.contextPath}/Registration">
     <div class="form-group">
         <label for="uname">
             <fmt:message key="text.reg.login" bundle="${var}"/>
@@ -51,9 +51,45 @@
         <div class="valid-feedback">Valid.</div>
         <div class="invalid-feedback">Please fill out this field.</div>
     </div>
-    <button type="submit" class="btn btn-primary">
+    <button type="button" onclick="valid()" class="btn btn-primary">
         <fmt:message key="button.reg.enter" bundle="${var}"/>
     </button>
 </form>
 </body>
+
+<script>
+    function valid() {
+        let flag = true;
+        let equalsFlag = true;
+
+        const loginPattern = /^[a-zA-Z]{1}[a-zA-Z\d\u002E\u005F]{3,20}$/;
+        const passwordPattern = /^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$/;
+
+        let login = document.getElementById("uname").value;
+        let password = document.getElementById("password").value;
+        let passwordAgain = document.getElementById("pwd").value;
+
+        if (!loginPattern.exec(login)) {
+            flag = false;
+        }
+
+        if (password !== passwordAgain) {
+            equalsFlag = false;
+            flag = false;
+        }
+
+        if (!passwordPattern.exec(password)) {
+            flag = false;
+        }
+
+        if (flag) {
+            document.getElementById("form").submit();
+        } else if (!equalsFlag) {
+            alert("<fmt:message key="reg.message" bundle="${var}"/>");
+        } else {
+            alert("<fmt:message key="signIn/reg.message" bundle="${var}"/>");
+        }
+    }
+</script>
+
 </html>

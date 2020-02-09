@@ -40,7 +40,6 @@
         </form>
         <form method="post" action="${pageContext.request.contextPath}/Locale">
             <li>
-                <input type="hidden" name="page" value="${pageContext.request.requestURL}"/>
                 <button type="submit" class="btn float-right">
                     <fmt:message key="navbar.main.local" bundle="${var}"/>
                 </button>
