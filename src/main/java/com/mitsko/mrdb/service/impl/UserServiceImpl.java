@@ -30,14 +30,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signIn(String login, String password) throws ServiceException {
-        if(login.equals("") || password.equals("")) {
-            throw new ServiceException("Wrong parameter");
-        }
-        if(!validator.checkLogin(login) & !validator.checkPassword(password)) {
+        if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
             throw new ServiceException("Wrong parameter");
         }
 
-        User user = null;
         try {
             String passwordInDB = userDAO.takePassword(login);
 
@@ -45,27 +41,23 @@ public class UserServiceImpl implements UserService {
                 throw new ServiceException("Wrong login or password");
             }
 
-            user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
+            User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
             if (user == null) {
                 throw new ServiceException();
             }
+
+            return user;
         } catch (DAOException ex) {
             throw new ServiceException(ex);
         }
-        return user;
     }
 
     @Override
     public User registration(String login, String password) throws ServiceException{
-        if(login.equals("") || password.equals("")) {
+        if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
             throw new ServiceException("Wrong parameter");
         }
 
-        if(!validator.checkLogin(login) & !validator.checkPassword(password)) {
-            throw new ServiceException("Wrong parameter");
-        }
-
-        User user = null;
         try {
             if (userDAO.findLogin(login)) {
                 throw new ServiceException("Already exist a user with this name");
@@ -73,16 +65,18 @@ public class UserServiceImpl implements UserService {
 
             String hashPassword = crypto.encode(password);
 
-            user = new User(login, hashPassword);
+            User user = new User(login, hashPassword);
             int id = userDAO.registration(user);
             if (id == -1) {
                 throw new ServiceException();
             }
             user.setID(id);
+
+            return user;
         } catch (DAOException ex) {
             throw new ServiceException(ex);
         }
-        return user;
+
     }
 
     @Override

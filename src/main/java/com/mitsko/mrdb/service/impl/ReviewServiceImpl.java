@@ -7,6 +7,7 @@ import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.ReviewService;
 import com.mitsko.mrdb.service.ServiceException;
+import com.mitsko.mrdb.service.util.Validator;
 
 import java.util.ArrayList;
 
@@ -15,18 +16,22 @@ public class ReviewServiceImpl implements ReviewService {
     private UserDAO userDAO;
     private MovieDAO movieDAO;
 
+    private Validator validator;
+
     public ReviewServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
         reviewDAO = daoFactory.getSQLReviewDAO();
         userDAO = daoFactory.getSQLUserDAO();
         movieDAO = daoFactory.getSQLMovieDAO();
+
+        validator = new Validator();
     }
 
     @Override
     public void addNewReview(int userID, String movieName, String review) throws ServiceException {
-        /*if (userLogin.equals("") || movieName.equals("") || review.equals("")) {
+        if(!validator.checkReview(review)) {
             throw new ServiceException("Wrong parameter");
-        }*/
+        }
         try {
             int movieID = movieDAO.takeID(movieName);
 
@@ -39,9 +44,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void removeReview(int userID, int reviewID) throws ServiceException {
-        /*if (user == null || movieName.equals("") || userLogin.equals("")) {
-            throw new ServiceException("Wrong parameter");
-        }*/
         try {
             Review review = reviewDAO.takeByID(reviewID);
 
@@ -62,10 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
             int movieID = movieDAO.takeID(movieName);
             reviewList = reviewDAO.takeAllMoviesReviews(movieID);
 
-        /*if(reviewList.isEmpty()) {
-            throw new ServiceException();
-        }*/
-            for (int i = 0; i < reviewList.size(); i++) {//(Review review : reviewList) {
+            for (int i = 0; i < reviewList.size(); i++) {
                 Review review = reviewList.get(i);
                 int userID = review.getUserID();
                 Status status = userDAO.takeStatus(userID);

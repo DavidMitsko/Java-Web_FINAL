@@ -27,10 +27,6 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void addNewRating(int userID, String movieName, float rating) throws ServiceException {
-        if (movieName.equals("") || rating < 0) {
-            throw new ServiceException("Wrong parameter");
-        }
-
         if(validator.checkRating(rating)) {
             throw new ServiceException("Wrong parameter");
         }
@@ -116,10 +112,6 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void updateRating(int userID, int movieID, float rating) throws ServiceException {
-        /*if (userLogin.equals("") || movieID.equals("") || rating < 0) {
-            throw new ServiceException("Wrong parameter");
-        }*/
-
         try {
             Rating newRating = new Rating(userID, movieID, rating);
             ratingDAO.updateRating(newRating);

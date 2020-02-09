@@ -7,6 +7,8 @@ import com.mitsko.mrdb.service.*;
 import java.util.ArrayList;
 
 public class MovieServiceImpl implements MovieService {
+    private final static String imgaePath = "../images/";
+
     private RatingDAO ratingDAO;
     private MovieDAO movieDAO;
     private RecountDAO recountDAO;
@@ -22,10 +24,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void updateRating(int movieID) throws ServiceException {
-        /*if(movieID.equals("")) {
-            throw new ServiceException("Wrong parameter");
-        }*/
-
         try {
             float newRating = ratingDAO.takeAverageRatingOfMovie(movieID);
             if (newRating == -1) {
@@ -40,11 +38,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public float takeAverageRating(String movieName) throws ServiceException {
-        if (movieName.equals("")) {
-            throw new ServiceException("Wrong parameter");
-        }
-
-        float rating = 0;
+        float rating;
         try {
             int id = movieDAO.takeID(movieName);
             rating = movieDAO.takeRatingOfMovie(id);
@@ -72,7 +66,7 @@ public class MovieServiceImpl implements MovieService {
         }
         for (Movie movie : movieList) {
             if (movie.getImageName() != null) {
-                String imagePath = "../images/" + movie.getImageName();
+                String imagePath = imgaePath + movie.getImageName();
                 movie.setImageName(imagePath);
             }
         }

@@ -5,8 +5,9 @@ import java.util.regex.Pattern;
 
 public class Validator {
 
-    private Pattern loginPattern = Pattern.compile("[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]+");
-    private Pattern passwordPattern = Pattern.compile("[a-zA-Z]");
+    private Pattern loginPattern = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]{3,20}$");
+    private Pattern passwordPattern = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$");
+    private Pattern reviewPattern = Pattern.compile("^[a-zA-Z0-9]{1,1000}$");
 
     public boolean checkRating(float rating) {
         if (rating > 10 || rating < 0) {
@@ -24,14 +25,15 @@ public class Validator {
         return checkString(password, passwordPattern);
     }
 
-    private boolean checkString(String stringForChecking, Pattern passwordPattern) {
+    public boolean checkReview(String review) {
+        return checkString(review, reviewPattern);
+    }
+
+    private boolean checkString(String stringForChecking, Pattern patternForChecking) {
         if (stringForChecking == null) {
             return false;
         }
-        if (stringForChecking.length() < 4) {
-            return false;
-        }
-        Matcher matcher = passwordPattern.matcher(stringForChecking);
+        Matcher matcher = patternForChecking.matcher(stringForChecking);
         if (matcher.matches()) {
             return true;
         }
