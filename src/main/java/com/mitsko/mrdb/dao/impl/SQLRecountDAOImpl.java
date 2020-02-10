@@ -4,8 +4,8 @@ import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +19,7 @@ public class SQLRecountDAOImpl implements RecountDAO {
     private static final String ADD_USERS_RATING = "INSERT INTO recount (id, userID, movieID, direct) VALUES(NULL, ?, ?, ?)";
     private static final String FIND_USERS_RATING = "SELECT * FROM recount WHERE userID = ? AND movieID = ?";
     private static final String TAKE_DIRECT = "SELECT direct FROM recount WHERE userID = ? AND movieID = ?";
+    private static final String REMOVE = "DELETE FROM recount WHERE userID = ? AND movieID = ?";
 
     @Override
     public void add(int userID, int movieID, int direct) throws DAOException {
@@ -108,5 +109,32 @@ public class SQLRecountDAOImpl implements RecountDAO {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return direct;
+    }
+
+    @Override
+    public void removeRecount(int userID, int movieID) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(REMOVE);
+
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, movieID);
+
+            preparedStatement.executeUpdate();
+
+            logger.debug("Removed from db users recount");
+        } catch (SQLException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } catch (ConnectionPoolException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
     }
 }

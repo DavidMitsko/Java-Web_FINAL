@@ -6,4 +6,6 @@ public interface RecountDAO {
     boolean find(int userID, int movieID) throws DAOException;
 
     int takeDirect(int userID, int movieID) throws DAOException;
+
+    void removeRecount(int userID, int movieID) throws DAOException;
 }

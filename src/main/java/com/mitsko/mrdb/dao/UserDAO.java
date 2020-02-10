@@ -5,7 +5,7 @@ import com.mitsko.mrdb.entity.util.Status;
 
 import java.util.ArrayList;
 
-public interface UserDAO{
+public interface UserDAO {
     User takeUserByLoginAndPassword(String login, String password) throws DAOException;
 
     int registration(User newUser) throws DAOException;

@@ -1,8 +1,7 @@
 package com.mitsko.mrdb.dao.pool;
 
-import com.mitsko.mrdb.dao.DAOException;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,17 +20,17 @@ public class PropertiesManager {
             logger.info("Load db parameters");
         } catch (FileNotFoundException ex) {
             logger.error(ex);
-            System.exit(-1);
+            //System.exit(-1);
             //throw new DAOException(ex);
         } catch (IOException ex) {
             logger.error(ex);
-            System.exit(-1);
+            //System.exit(-1);
             //throw new DAOException(ex);
         }
     }
 
     public String getValue(String parameter) {
-        logger.info("Get db parameter " + parameter);
+        logger.debug("Get db parameter " + parameter);
         return properties.getProperty(parameter);
     }
 }

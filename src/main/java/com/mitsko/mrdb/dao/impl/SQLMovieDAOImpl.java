@@ -5,8 +5,8 @@ import com.mitsko.mrdb.dao.MovieDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Movie;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -107,8 +107,9 @@ public class SQLMovieDAOImpl implements MovieDAO {
                 Movie film = new Movie(id, name, averageRating, countOfRatings, imageName, description);
 
                 movieList.add(film);
-                logger.info("Tacked all movies from db");
             }
+
+            logger.debug("Tacked all movies from db");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);

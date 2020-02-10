@@ -5,8 +5,8 @@ import com.mitsko.mrdb.dao.RatingDAO;
 import com.mitsko.mrdb.dao.pool.ConnectionPool;
 import com.mitsko.mrdb.dao.pool.ConnectionPoolException;
 import com.mitsko.mrdb.entity.Rating;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,8 +1,7 @@
 package com.mitsko.mrdb.dao.pool;
 
-import com.mitsko.mrdb.dao.DAOException;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class ConnectionPool {
         return instance;
     }
 
-    private void initPoolData() {
+    public void initPoolData() {
         try {
             Class.forName(driverName);
 
