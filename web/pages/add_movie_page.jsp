@@ -25,7 +25,7 @@
 <div class="container">
     ${navbar}
 
-    <form method="post" action="${pageContext.request.contextPath}/Add_Movie" enctype="multipart/form-data">
+    <form method="post" action="${pageContext.request.contextPath}/add_movie" enctype="multipart/form-data">
         <div class="form-group">
             <label for="usr">
                 <fmt:message key="text.addMovie.name" bundle="${var}"/>

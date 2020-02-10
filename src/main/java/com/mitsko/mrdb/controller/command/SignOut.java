@@ -10,11 +10,14 @@ public class SignOut implements Command {
     @Override
     public String execute(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        Enumeration<String> names = session.getAttributeNames();
+        /*Enumeration<String> names = session.getAttributeNames();
 
         while(names.hasMoreElements()) {
             session.removeAttribute(names.nextElement());
-        }
+        }*/
+        session.removeAttribute("userID");
+        session.removeAttribute("role");
+        session.removeAttribute("status");
 
         return Constants.INDEX;
     }

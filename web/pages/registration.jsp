@@ -7,7 +7,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fmr" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="bootstrap.jsp" %>
 
@@ -20,16 +19,14 @@
     </title>
 </head>
 <body>
-<form id="form" method="post" action="${pageContext.request.contextPath}/Registration">
+<form id="form" method="post" action="${pageContext.request.contextPath}/registration">
     <div class="form-group">
         <label for="uname">
             <fmt:message key="text.reg.login" bundle="${var}"/>
         </label>
         <input type="text" class="form-control" id="uname"
                placeholder=
-               <fmr:message key="text.reg.login.placeholder" bundle="${var}"/> name="login" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback">Please fill out this field.</div>
+               <fmt:message key="text.reg.login.placeholder" bundle="${var}"/> name="login" required>
     </div>
     <div class="form-group">
         <label for="password">
@@ -38,8 +35,6 @@
         <input type="password" class="form-control" id="password"
                placeholder=
                <fmt:message key="text.reg.password.placeholder" bundle="${var}"/> name="password" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback">Please fill out this field.</div>
     </div>
     <div class="form-group">
         <label for="pwd">
@@ -48,8 +43,6 @@
         <input type="password" class="form-control" id="pwd"
                placeholder=
                <fmt:message key="text.reg.password.placeholder" bundle="${var}"/> name="passwordAgain" required>
-        <div class="valid-feedback">Valid.</div>
-        <div class="invalid-feedback">Please fill out this field.</div>
     </div>
     <button type="button" onclick="valid()" class="btn btn-primary">
         <fmt:message key="button.reg.enter" bundle="${var}"/>

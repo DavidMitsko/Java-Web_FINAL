@@ -3,6 +3,7 @@ package com.mitsko.mrdb.controller;
 import com.mitsko.mrdb.controller.command.Command;
 import com.mitsko.mrdb.controller.command.CommandProvider;
 import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.entity.util.Role;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -17,8 +18,6 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
     private final CommandProvider commandProvider = new CommandProvider();
 
-    private String previousRequest;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page = processRequest(req, resp);
@@ -27,29 +26,23 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = processRequest(req, resp);
-        resp.sendRedirect(page);
+        String request = processRequest(req, resp);
+        resp.sendRedirect(request);
     }
 
-    private String processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    private String processRequest(HttpServletRequest req, HttpServletResponse resp) {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
-        if(commandName.equals("Next") || commandName.equals("Previous")) {
-            commandName = Constants.TAKE_MOVIE;
+        if(commandName.equals("next") || commandName.equals("previous")) {
+            if(req.getSession().getAttribute("role") == Role.USER) {
+                commandName = Constants.TAKE_MOVIE;
+            } else {
+                commandName = Constants.TAKE_MOVIES_FOR_REMOVE;
+            }
         }
         Command executionCommand = commandProvider.getCommand(commandName);
 
-        String page = executionCommand.execute(req);
-
-//        if(page.equals(Constants.MAKE_REDIRECT)) {
-//            executionCommand = commandProvider.getCommand(previousRequest);
-//            page = executionCommand.execute(req);
-//        } else {
-//            previousRequest = commandName;
-//        }
-
-        return page;
-        //req.getRequestDispatcher(page).forward(req, resp);
+        return executionCommand.execute(req);
     }
 }

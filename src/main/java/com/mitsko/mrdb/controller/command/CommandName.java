@@ -13,9 +13,11 @@ public enum CommandName {
     CHANGE_STATUS,
     REMOVE_MOVIE,
     SIGN_OUT,
-    TAKE_HISTORY,
+    USER_HISTORY,
     REMOVE_REVIEW,
     LOCALE,
+    TAKE_MOVIES_FOR_REMOVE,
+    ADD_MOVIE_PAGE,
 
     WRONG_REQUEST
 }

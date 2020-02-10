@@ -9,23 +9,25 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
-        <url-pattern>/Registration</url-pattern>
-        <url-pattern>/Sign_In</url-pattern>
-        <url-pattern>/Take_Reviews</url-pattern>
-        <url-pattern>/Add_Review</url-pattern>
-        <url-pattern>/Rating</url-pattern>
-        <url-pattern>/Add_Rating</url-pattern>
-        <url-pattern>/Add_Movie</url-pattern>
-        <url-pattern>/Change_Status</url-pattern>
-        <url-pattern>/Remove_Movie</url-pattern>
-        <url-pattern>/Sign_Out</url-pattern>
-        <url-pattern>/Take_Movies</url-pattern>
-        <url-pattern>/Take_Users</url-pattern>
-        <url-pattern>/Take_History</url-pattern>
-        <url-pattern>/Remove_Review</url-pattern>
-        <url-pattern>/Locale</url-pattern>
-        <url-pattern>/Previous</url-pattern>
-        <url-pattern>/Next</url-pattern>
+        <url-pattern>/registration</url-pattern>
+        <url-pattern>/sign_in</url-pattern>
+        <url-pattern>/take_reviews</url-pattern>
+        <url-pattern>/add_review</url-pattern>
+        <url-pattern>/rating</url-pattern>
+        <url-pattern>/add_rating</url-pattern>
+        <url-pattern>/add_movie</url-pattern>
+        <url-pattern>/change_status</url-pattern>
+        <url-pattern>/remove_movie</url-pattern>
+        <url-pattern>/sign_out</url-pattern>
+        <url-pattern>/take_movies</url-pattern>
+        <url-pattern>/take_users</url-pattern>
+        <url-pattern>/user_history</url-pattern>
+        <url-pattern>/remove_review</url-pattern>
+        <url-pattern>/locale</url-pattern>
+        <url-pattern>/previous</url-pattern>
+        <url-pattern>/next</url-pattern>
+        <url-pattern>/take_movies_for_remove</url-pattern>
+        <url-pattern>/add_movie_page</url-pattern>
     </servlet-mapping>
 
     <filter>

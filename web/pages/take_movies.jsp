@@ -48,13 +48,13 @@
                             <img src="${movie.imageName}" width="187" height="287" alt="Noooooooo"/>
                         </c:if>
                     </td>
-                    <form method="get" action="${pageContext.request.contextPath}/Take_Reviews">
+                    <form method="get" action="${pageContext.request.contextPath}/take_reviews">
                         <td>
                             <button type="submit" name="movieNameForReview" value="${movie.name}"
                                     class="btn"> ${movie.name} </button>
                         </td>
                     </form>
-                    <form method="post" action="${pageContext.request.contextPath}/Rating">
+                    <form method="get" action="${pageContext.request.contextPath}/rating">
                         <td>
                             <button type="submit" name="movieNameForRating"
                                     value="${movie.name}" class="btn"> ${movie.averageRating} </button>
@@ -67,14 +67,14 @@
         </table>
 
         <ul class="pagination justify-content-center" style="margin:20px 0">
-            <form method="get" action="${pageContext.request.contextPath}/Previous">
+            <form method="get" action="${pageContext.request.contextPath}/previous">
                 <li class="page-item">
                     <button type="submit" class="page-link" name="previous">
                         <fmt:message key="button.main.previous" bundle="${var}"/>
                     </button>
                 </li>
             </form>
-            <form method="get" action="${pageContext.request.contextPath}/Next">
+            <form method="get" action="${pageContext.request.contextPath}/next">
                 <li class="page-item">
                     <button type="submit" class="page-link" name="next">
                         <fmt:message key="button.main.next" bundle="${var}"/>

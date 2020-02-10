@@ -115,13 +115,14 @@ public class UserServiceImpl implements UserService {
         try {
             int usersRating = userDAO.takeRating(userID);
             int direct = recountDAO.takeDirect(userID, movieID);
+            recountDAO.removeRecount(userID, movieID);
             if (usersRating == 0 && direct == -1) {
                 return usersRating;
             }
             if (usersRating == 10 && direct == 1) {
                 return usersRating;
             }
-            return usersRating + direct;
+            return usersRating - direct;
         } catch (DAOException ex) {
             throw new ServiceException(ex);
         }

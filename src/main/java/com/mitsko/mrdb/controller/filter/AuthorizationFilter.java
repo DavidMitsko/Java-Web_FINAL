@@ -20,7 +20,7 @@ public class AuthorizationFilter implements Filter {
         String path = req.getServletPath();
 
         Enumeration<String> names = req.getParameterNames();
-        if (names.hasMoreElements() && (path.equals("/Sign_In") || path.equals("/Registration"))) {
+        if (names.hasMoreElements() && (path.equals("/sign_in") || path.equals("/registration"))) {
             chain.doFilter(request, response);
         } else if (userID == null) {
             RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");

@@ -7,8 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ include file="bootstrap.jsp"%>
+<c:import url="header/mainNavbar.jsp" var="navbar"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
@@ -20,7 +22,9 @@
 </head>
 <body>
 <div class="container">
-    <form id="form" method="post" action="${pageContext.request.contextPath}/Add_Rating">
+    ${navbar}
+
+    <form id="form" method="post" action="${pageContext.request.contextPath}/add_rating">
         <div class="form-group">
             <label for="usr">
                 <fmt:message key="text.rating.addRating" bundle="${var}"/>

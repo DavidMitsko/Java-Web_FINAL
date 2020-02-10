@@ -17,39 +17,41 @@
 
 <div class="container">
     <ul class="nav nav-tabs">
-        <form method="get" action="${pageContext.request.contextPath}/Take_Users">
+        <form method="get" action="${pageContext.request.contextPath}/take_users">
             <li class="nav-item">
                 <button type="submit" class="nav-link btn">
                     <fmt:message key="navbar.admin.users" bundle="${var}"/>
                 </button>
             </li>
         </form>
-        <form method="get" action="${pageContext.request.contextPath}addMovie.jsp">
+        <form method="get" action="${pageContext.request.contextPath}/add_movie_page">
             <li>
                 <button type="submit" class="nav-link btn">
                     <fmt:message key="navbar.admin.addMovie" bundle="${var}"/>
                 </button>
             </li>
         </form>
-        <form method="get" action="${pageContext.request.contextPath}/Take_Movies">
+        <form method="get" action="${pageContext.request.contextPath}/take_movies_for_remove">
             <li>
                 <button type="submit" class="btn nav-link">
                     <fmt:message key="navbar.admin.removeMovie" bundle="${var}"/>
                 </button>
             </li>
         </form>
-        <form method="get" action="${pageContext.request.contextPath}/Sign_Out">
+        <form method="get" action="${pageContext.request.contextPath}/sign_out">
             <li>
                 <button type="submit" class="btn float-right">
                     <fmt:message key="navbar.admin.signOut" bundle="${var}"/>
                 </button>
             </li>
         </form>
-        <form method="post" action="${pageContext.request.contextPath}/Locale">
+        <form method="post" action="${pageContext.request.contextPath}/locale">
             <li>
                 <button type="submit" class="btn float-right">
                     <fmt:message key="navbar.admin.local" bundle="${var}"/>
                 </button>
+                <input type="hidden" value="${pageContext.request.queryString}" name="query">
+                <input type="hidden" value="${pageContext.request.servletPath}" name="path">
             </li>
         </form>
     </ul>

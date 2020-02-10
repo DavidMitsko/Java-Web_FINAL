@@ -11,16 +11,18 @@
 
 <%@ include file="bootstrap.jsp" %>
 
-<jsp:useBean id="movieName" type="java.lang.String" scope="session"/>
+<%--<jsp:useBean id="movieName" type="java.lang.String" scope="session"/>--%>
 <jsp:useBean id="review" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <jsp:useBean id="user" type="java.util.HashMap<java.lang.String, java.lang.Integer>" scope="request"/>
 <jsp:useBean id="description" class="java.lang.String" scope="request"/>
+
+<c:import url="header/mainNavbar.jsp" var="navbar"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
 
 <%@ taglib prefix="v" uri="http://MRDb.mitsko.com" %>
-<c:import url="star.svg" var="star"/>
+<c:import url="graphics/star.svg" var="star"/>
 <html>
 <head>
     <title>
@@ -29,6 +31,8 @@
 </head>
 <body>
 <div class="container">
+
+    ${navbar}
 
     <label>
         <c:if test="${description != null}">
@@ -39,10 +43,11 @@
 
     <v:ReviewTag reviewHashMap="${review}" usersRatingHashMap="${user}" star="${star}"/>
 
-    <form id="form" method="post" action="${pageContext.request.contextPath}/Add_Review">
+    <form id="form" method="post" action="${pageContext.request.contextPath}/add_review">
         <div class="form-group">
             <label for="review">
-                <fmt:message key="text.review.addReview" bundle="${var}"/> ${movieName}:
+                <fmt:message key="text.review.addReview" bundle="${var}"/>:
+<%--                ${movieName}:--%>
             </label>
             <input type="text" class="form-control" id="review" name="usersReview">
             <button type="button" name="addReview" class="btn btn-primary" onclick="valid()">

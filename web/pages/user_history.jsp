@@ -44,7 +44,7 @@
                         ${review.key}
                 </td>
                 <td>
-                    <form method="post" action="${pageContext.request.contextPath}/Remove_Review">
+                    <form method="post" action="${pageContext.request.contextPath}/remove_review">
                         <button type="submit" name="reviewForRemove" value="${review.value.ID}" class="btn">
                                 ${review.value.review}
                         </button>

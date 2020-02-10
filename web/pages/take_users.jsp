@@ -31,7 +31,7 @@
         <table class="table table-striped">
             <tbody>
             <c:forEach var="user" items="${userMap}">
-                <form method="post" action="${pageContext.request.contextPath}/Change_Status">
+                <form method="post" action="${pageContext.request.contextPath}/change_status">
                     <tr>
                         <td>
                             <button type="submit" class="btn" name="status" value="${user.key}">${user.key}</button>
@@ -44,23 +44,6 @@
             </c:forEach>
             </tbody>
         </table>
-
-        <ul class="pagination justify-content-center" style="margin:20px 0">
-            <form method="get" action="${pageContext.request.contextPath}/Previous">
-                <li class="page-item">
-                    <button type="submit" class="page-link" name="previous">
-                        <fmt:message key="button.main.previous" bundle="${var}"/>
-                    </button>
-                </li>
-            </form>
-            <form method="get" action="${pageContext.request.contextPath}/Next">
-                <li class="page-item">
-                    <button type="submit" class="page-link" name="next">
-                        <fmt:message key="button.main.next" bundle="${var}"/>
-                    </button>
-                </li>
-            </form>
-        </ul>
     </c:if>
 </div>
 </body>

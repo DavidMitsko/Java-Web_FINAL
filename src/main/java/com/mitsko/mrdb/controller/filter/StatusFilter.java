@@ -17,10 +17,15 @@ public class StatusFilter implements Filter {
 
         HttpSession session = req.getSession();
         Status status = (Status)session.getAttribute("status");
+        String path = req.getServletPath();
 
-        if(status == Status.BAN) {
+        if(status == Status.BAN && !path.equals("/Sign_Out")) {
+            session.removeAttribute("userID");
+            session.removeAttribute("role");
+            session.removeAttribute("status");
+
             RequestDispatcher requestDispatcher = request.getServletContext()
-                    .getRequestDispatcher("/pages/ban.html");
+                    .getRequestDispatcher("/pages/error/ban.html");
             requestDispatcher.forward(req, resp);
         }
 

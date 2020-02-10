@@ -11,9 +11,9 @@ public class Validator {
 
     public boolean checkRating(float rating) {
         if (rating > 10 || rating < 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

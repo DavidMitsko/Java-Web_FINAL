@@ -58,7 +58,7 @@ public class SQLAdminDAOImpl implements AdminDAO {
             preparedStatement.setString(2, login);
 
             preparedStatement.executeUpdate();
-            logger.info("Rating of " +login + " updated(in db)");
+            logger.debug("Rating of " +login + " updated(in db)");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);

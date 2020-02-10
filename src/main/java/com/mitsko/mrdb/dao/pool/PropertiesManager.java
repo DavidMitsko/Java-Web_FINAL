@@ -17,7 +17,7 @@ public class PropertiesManager {
             FileInputStream fis = new FileInputStream("F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\src\\main\\resources\\db.properties");
             properties = new Properties();
             properties.load(fis);
-            logger.info("Load db parameters");
+            logger.debug("Load db parameters");
         } catch (FileNotFoundException ex) {
             logger.error(ex);
             //System.exit(-1);

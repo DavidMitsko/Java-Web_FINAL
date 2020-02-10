@@ -43,7 +43,7 @@ public class AddMovie implements Command {
         String fileName = null;
         try {
             for (Part part : req.getParts()) {
-                fileName = part.getSubmittedFileName();//getFileName(part);
+                fileName = part.getSubmittedFileName();
                 if(fileName == null) {
                     continue;
                 }

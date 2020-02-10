@@ -25,15 +25,17 @@ public class SignIn implements Command {
             User user = userService.signIn(login, password);
 
             HttpSession session = req.getSession();
-            //session.setAttribute("user", user);
+
             session.setAttribute("userID", user.getID());
             session.setAttribute("role", user.getRole());
             session.setAttribute("status", user.getStatus());
 
-            if(user.getRole() == Role.ADMIN) {
-                page = Constants.ADMIN;
-            } else {
-                page = Constants.MAIN;
+            if(user != null) {
+                if (user.getRole() == Role.ADMIN) {
+                    page = Constants.TAKE_USERS;
+                } else {
+                    page = Constants.TAKE_MOVIE;
+                }
             }
         } catch (ServiceException ex) {
 

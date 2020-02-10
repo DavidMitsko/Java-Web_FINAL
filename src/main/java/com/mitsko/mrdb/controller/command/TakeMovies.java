@@ -40,16 +40,17 @@ public class TakeMovies implements Command {
     }
 
     private ArrayList<Movie> compileList(ArrayList<Movie> movieArrayList, HttpServletRequest req) {
-        if (req.getServletPath().equals("/Next") && begin + 1 <= movieArrayList.size()) {
+        if (req.getServletPath().equals("/next") && begin + 1 <= movieArrayList.size()) {
             begin += 3;
         }
-        if (req.getServletPath().equals("/Previous")) {
+        if (req.getServletPath().equals("/previous")) {
             begin -= 3;
             if(begin < 0) {
                 begin = 0;
             }
         }
-        if (req.getServletPath().equals("/Take_Movies")) {
+        if (req.getServletPath().equals("/take_movies") ||
+                req.getServletPath().equals("/take_movies_for_remove")) {
             begin = 0;
         }
 

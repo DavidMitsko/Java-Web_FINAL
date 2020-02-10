@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class TakeUsers implements Command {
     private UserService userService;
-    private int begin;
 
     public TakeUsers() {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -24,8 +23,6 @@ public class TakeUsers implements Command {
     public String execute(HttpServletRequest req) {
         try {
             ArrayList<String> usersLogin = userService.takeAllLogins();
-
-            usersLogin = compileList(usersLogin, req);
 
             HashMap<String, String> usersInfo = compileUsersInfo(usersLogin);
             req.setAttribute("userMap", usersInfo);
@@ -42,29 +39,5 @@ public class TakeUsers implements Command {
             usersInfo.put(login, status.toString());
         }
         return usersInfo;
-    }
-
-    private ArrayList<String> compileList(ArrayList<String> usersLogins, HttpServletRequest req) {
-        if (req.getServletPath().equals("/Next") && begin + 1 <= usersLogins.size()) {
-            begin += 3;
-        }
-        if (req.getServletPath().equals("/Previous")) {
-            begin -= 3;
-            if(begin < 0) {
-                begin = 0;
-            }
-        }
-        if (req.getServletPath().equals("/Take_Movies")) {
-            begin = 0;
-        }
-
-        ArrayList<String> userList = new ArrayList<>();
-        for (int i = begin; i < begin + 3; i++) {
-            if(i >= usersLogins.size()) {
-                break;
-            }
-            userList.add(usersLogins.get(i));
-        }
-        return userList;
     }
 }

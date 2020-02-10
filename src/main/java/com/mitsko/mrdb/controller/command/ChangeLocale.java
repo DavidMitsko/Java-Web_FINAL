@@ -29,12 +29,20 @@ public class ChangeLocale implements Command {
             session.setAttribute("locale", EN);
         }
 
-        Role role = (Role) session.getAttribute("role");
+        return compileRequest(req.getParameter("path"), req.getParameter("query"));
+        /*Role role = (Role) session.getAttribute("role");
         if (role == Role.USER) {
             return Constants.MAIN;
         } else {
             return Constants.ADMIN;
-        }
+        }*/
         //return Constants.MAKE_REDIRECT;
+    }
+
+    private String compileRequest(String path, String query) {
+        path = path.replaceAll("pages/", "");
+        path = path.replaceAll(".jsp","");
+        //session.getAttribute("movieName");
+        return path + "?" + query;
     }
 }

@@ -47,7 +47,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
 
             preparedStatement.executeUpdate();
 
-            logger.info("Added a " + movie.getName() + " in db");
+            logger.debug("Added a " + movie.getName() + " in db");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);
@@ -71,7 +71,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.setString(1, movieName);
             preparedStatement.executeUpdate();
 
-            logger.info(movieName + " removed from db");
+            logger.debug(movieName + " removed from db");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);

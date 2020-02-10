@@ -14,16 +14,17 @@
     <title>MRDb</title>
 </head>
 <body>
-<a href="pages/signIn.jsp">
-    <button type="submit">
-        <fmt:message key="signIn" bundle="${var}"/>
-    </button>
-</a>
-<br>
-<a href="pages/registration.jsp">
-    <button type="submit">
-        <fmt:message key="reg" bundle="${var}"/>
-    </button>
-</a>
+<%--<a href="pages/sign_in.jsp">--%>
+<%--    <button type="submit">--%>
+<%--        <fmt:message key="signIn" bundle="${var}"/>--%>
+<%--    </button>--%>
+<%--</a>--%>
+<%--<br>--%>
+<%--<a href="pages/registration.jsp">--%>
+<%--    <button type="submit">--%>
+<%--        <fmt:message key="reg" bundle="${var}"/>--%>
+<%--    </button>--%>
+<%--</a>--%>
+<jsp:forward page="pages/sign_in.jsp"/>
 </body>
 </html>

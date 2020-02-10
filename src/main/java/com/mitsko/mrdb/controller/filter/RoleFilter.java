@@ -19,8 +19,8 @@ public class RoleFilter implements Filter {
         Role role = (Role)session.getAttribute("role");
 
         String path = req.getServletPath();
-        if(role == Role.USER && (path.equals("/Add_Movie") || path.equals("/Remove_Movie") ||
-                path.equals("/Change_Status") || path.equals("admin.jsp"))) {
+        if(role == Role.USER && (path.equals("/add_movie") || path.equals("/remove_movie") ||
+                path.equals("/change_status") || path.equals("take_users.jsp"))) {
             RequestDispatcher requestDispatcher = request.getServletContext()
                     .getRequestDispatcher("/pages/lowAccess.html");
             requestDispatcher.forward(req, resp);

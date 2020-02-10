@@ -25,7 +25,7 @@
 
     <ul class="list-group">
         <c:forEach var="movie" items="${movieList}">
-            <form method="post" action="${pageContext.request.contextPath}/Remove_Movie">
+            <form method="post" action="${pageContext.request.contextPath}/remove_movie">
                 <li class="list-group-item">
                     <button type="submit" class="btn" name="movieForRemove" value="${movie.name}">
                             ${movie.name}
@@ -36,14 +36,14 @@
     </ul>
 
     <ul class="pagination justify-content-center" style="margin:20px 0">
-        <form method="get" action="${pageContext.request.contextPath}/Previous">
+        <form method="get" action="${pageContext.request.contextPath}/previous">
             <li class="page-item">
                 <button type="submit" class="page-link" name="previous">
                     <fmt:message key="button.main.previous" bundle="${var}"/>
                 </button>
             </li>
         </form>
-        <form method="get" action="${pageContext.request.contextPath}/Next">
+        <form method="get" action="${pageContext.request.contextPath}/next">
             <li class="page-item">
                 <button type="submit" class="page-link" name="next">
                     <fmt:message key="button.main.next" bundle="${var}"/>

@@ -35,9 +35,6 @@ public class TakeReviews implements Command {
             takeLogins(reviewList);
 
             String description = movieService.takeDescription(movieName);
-            /*if(description == null) {
-                description = "This film havn't description";
-            }*/
 
             req.setAttribute("review", reviewMap);
             req.setAttribute("user", usersRatingMap);
@@ -52,6 +49,9 @@ public class TakeReviews implements Command {
     }
 
     private void takeLogins(ArrayList<Review> reviewList) {
+        reviewMap = new HashMap<>();
+        usersRatingMap = new HashMap<>();
+
         try {
             for (Review review : reviewList) {
                 String login = userService.takeLogin(review.getUserID());
