@@ -2,7 +2,8 @@ package com.mitsko.mrdb.controller;
 
 import com.mitsko.mrdb.controller.command.Command;
 import com.mitsko.mrdb.controller.command.CommandProvider;
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.entity.util.Role;
 
 import javax.servlet.ServletException;
@@ -27,6 +28,9 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String request = processRequest(req, resp);
+        if(request.equals(PagesConstants.ERROR)) {
+            req.getRequestDispatcher(request).forward(req, resp);
+        }
         resp.sendRedirect(request);
     }
 
@@ -36,13 +40,16 @@ public class Controller extends HttpServlet {
 
         if(commandName.equals("next") || commandName.equals("previous")) {
             if(req.getSession().getAttribute("role") == Role.USER) {
-                commandName = Constants.TAKE_MOVIE;
+                commandName = RequestsConstants.TAKE_MOVIE;
             } else {
-                commandName = Constants.TAKE_MOVIES_FOR_REMOVE;
+                commandName = RequestsConstants.TAKE_MOVIES_FOR_REMOVE;
             }
         }
         Command executionCommand = commandProvider.getCommand(commandName);
 
-        return executionCommand.execute(req);
+        String page = executionCommand.execute(req);
+
+
+        return page;
     }
 }

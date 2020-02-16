@@ -26,17 +26,22 @@
             <label for="uname">
                 <fmt:message key="text.login.login" bundle="${var}"/>
             </label>
-            <input type="text" class="form-control" id="uname"
+            <input type="text" class="form-control" id="uname" onchange="validLogin()"
                    placeholder=
                    <fmt:message key="text.login.login.placeholder" bundle="${var}"/> name="login" required>
+            <output class="text-danger" id="wrongLogin"></output>
         </div>
         <div class="form-group">
             <label for="pwd">
                 <fmt:message key="text.login.password" bundle="${var}"/>
             </label>
-            <input type="password" class="form-control" id="pwd"
+            <input type="password" class="form-control" id="pwd" onchange="validPassword()"
                    placeholder=
                    <fmt:message key="text.login.password.placeholder" bundle="${var}"/> name="password" required>
+            <output class="text-danger" id="wrongPassword"></output>
+        </div>
+        <div class="text-danger">
+            <output class="text-danger" id="danger"></output>
         </div>
         <button type="button" class="btn btn-primary" onclick="valid()">
             <fmt:message key="button.login.enter" bundle="${var}"/>
@@ -52,24 +57,37 @@
 </body>
 
 <script>
-    function valid() {
-        let flag = true;
+    let loginFlag = false;
+    let passwordFlag = false;
 
+    function validLogin() {
         const loginPattern = /^[a-zA-Z]{1}[a-zA-Z\d\u002E\u005F]{3,20}$/;
-        const passwordPattern = /^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$/;
-
         let login = document.getElementById("uname").value;
-        let password = document.getElementById("pwd").value;
 
         if (!loginPattern.exec(login)) {
-            flag = false;
+            loginFlag = false;
+            document.getElementById("wrongLogin").innerHTML = "<fmt:message key="signIn/reg.wrongLogin.message" bundle="${var}"/>";
+        } else {
+            loginFlag = true;
+            document.getElementById("wrongLogin").innerHTML = "";
         }
+    }
+
+    function validPassword() {
+        const passwordPattern = /^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$/;
+        let password = document.getElementById("pwd").value;
 
         if (!passwordPattern.exec(password)) {
-            flag = false;
+            passwordFlag = false;
+            document.getElementById("wrongPassword").innerHTML = "<fmt:message key="signIn/reg.wrongPassword.message" bundle="${var}"/>";
+        } else {
+            passwordFlag = true;
+            document.getElementById("wrongPassword").innerHTML = "";
         }
+    }
 
-        if (flag) {
+    function valid() {
+        if (loginFlag && passwordFlag) {
             document.getElementById("form").submit();
         } else {
             alert("<fmt:message key="signIn/reg.message" bundle="${var}"/>");

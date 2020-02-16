@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.service.ReviewService;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -21,8 +22,9 @@ public class RemoveReview implements Command {
         try {
             reviewService.removeReview(userID, reviewID);
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
-        return Constants.MAIN;
+        return RequestsConstants.TAKE_MOVIE;
     }
 }

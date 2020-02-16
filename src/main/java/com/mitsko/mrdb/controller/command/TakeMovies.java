@@ -1,6 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Movie;
 import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.service.MovieService;
@@ -10,7 +10,6 @@ import com.mitsko.mrdb.service.ServiceFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class TakeMovies implements Command {
     private int begin = 0;
@@ -21,46 +20,37 @@ public class TakeMovies implements Command {
         MovieService movieService = serviceFactory.getMovieService();
 
         try {
-            ArrayList<Movie> movieList = movieService.takeAllMovies();
-
-            movieList = compileList(movieList, req);
+            recountOffset(req.getServletPath(), movieService.size());
+            ArrayList<Movie> movieList = movieService.takeMovies(begin);
 
             req.setAttribute("movieList", movieList);
         } catch (ServiceException ex) {
-            ex.printStackTrace();
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
 
         HttpSession session = req.getSession();
         Role role = (Role) session.getAttribute("role");
         if (role == Role.USER) {
-            return Constants.MAIN;
+            return PagesConstants.MAIN;
         } else {
-            return Constants.REMOVE;
+            return PagesConstants.REMOVE;
         }
     }
 
-    private ArrayList<Movie> compileList(ArrayList<Movie> movieArrayList, HttpServletRequest req) {
-        if (req.getServletPath().equals("/next") && begin + 1 <= movieArrayList.size()) {
+    private void recountOffset(String req, int size) {
+        if (req.equals("/next") && begin + 3 <= size) {
             begin += 3;
         }
-        if (req.getServletPath().equals("/previous")) {
+        if (req.equals("/previous")) {
             begin -= 3;
             if(begin < 0) {
                 begin = 0;
             }
         }
-        if (req.getServletPath().equals("/take_movies") ||
-                req.getServletPath().equals("/take_movies_for_remove")) {
+        if (req.equals("/take_movies") ||
+                req.equals("/take_movies_for_remove")) {
             begin = 0;
         }
-
-        ArrayList<Movie> movieList = new ArrayList<>();
-        for (int i = begin; i < begin + 3; i++) {
-            if(i >= movieArrayList.size()) {
-                break;
-            }
-            movieList.add(movieArrayList.get(i));
-        }
-        return movieList;
     }
 }

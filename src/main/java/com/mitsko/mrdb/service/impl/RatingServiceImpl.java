@@ -4,10 +4,14 @@ import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Rating;
 import com.mitsko.mrdb.service.*;
 import com.mitsko.mrdb.service.util.Validator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class RatingServiceImpl implements RatingService {
+    private final static Logger logger = LogManager.getLogger(RatingServiceImpl.class);
+
     private RatingDAO ratingDAO;
     private UserDAO userDAO;
     private MovieDAO movieDAO;
@@ -26,8 +30,9 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void addNewRating(int userID, String movieName, float rating) throws ServiceException {
-        if(validator.checkRating(rating)) {
+    public boolean addNewRating(int userID, String movieName, float rating) throws ServiceException {
+        if (validator.checkRating(rating)) {
+            logger.error("Wrong parameter");
             throw new ServiceException("Wrong parameter");
         }
         try {
@@ -35,20 +40,25 @@ public class RatingServiceImpl implements RatingService {
 
             float oldRating = ratingDAO.takeUsersRatingOfMovie(userID, movieID);
             if (oldRating != -1) {
-                //updateRating(userID, movieID, rating);
-                return;
+                logger.error("This user has rated " + movieName);
+                return false;
             }
 
             Rating newRating = new Rating(userID, movieID, rating);
             ratingDAO.addNewRating(newRating);
+            logger.debug("Added new rating");
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             MovieService movieService = serviceFactory.getMovieService();
-            movieService.updateRating(movieID);
+            movieService.updateRating(movieName);
+            logger.debug("Updated movies average rating");
 
             ArrayList<Integer> usersID = userDAO.takeAllUsersID();
             updateRating(movieID, usersID);
+            logger.debug("Updated users ratings");
+            return true;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -66,6 +76,7 @@ public class RatingServiceImpl implements RatingService {
                 return false;
             }
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -107,19 +118,7 @@ public class RatingServiceImpl implements RatingService {
                 }
             }
         } catch (DAOException ex) {
-            throw new ServiceException(ex);
-        }
-    }
-
-    private void updateRating(int userID, int movieID, float rating) throws ServiceException {
-        try {
-            Rating newRating = new Rating(userID, movieID, rating);
-            ratingDAO.updateRating(newRating);
-
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            MovieService movieService = serviceFactory.getMovieService();
-            movieService.updateRating(movieID);
-        } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -129,7 +128,10 @@ public class RatingServiceImpl implements RatingService {
         try {
             int movieID = movieDAO.takeID(movieName);
             ratingDAO.removeAllRatings(movieID);
+
+            logger.debug("Removed all ratings");
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }

@@ -1,6 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Review;
 import com.mitsko.mrdb.service.MovieService;
 import com.mitsko.mrdb.service.ReviewService;
@@ -33,9 +33,10 @@ public class TakeHistory implements Command {
 
             req.setAttribute("reviewMap", usersReview);
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
-        return Constants.HISTORY;
+        return PagesConstants.HISTORY;
     }
 
     private HashMap<String, Review> compileUsersReview(ArrayList<Review> reviewList) throws ServiceException {

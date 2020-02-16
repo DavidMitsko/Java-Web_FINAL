@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.filter;
 
 import com.mitsko.mrdb.entity.util.Status;
+import com.mitsko.mrdb.resource.ResourceManager;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,15 +18,17 @@ public class StatusFilter implements Filter {
 
         HttpSession session = req.getSession();
         Status status = (Status)session.getAttribute("status");
-        String path = req.getServletPath();
 
-        if(status == Status.BAN && !path.equals("/Sign_Out")) {
+        if(status == Status.BAN) {
             session.removeAttribute("userID");
             session.removeAttribute("role");
             session.removeAttribute("status");
 
+            ResourceManager manager = ResourceManager.getInstance();
+
+            request.setAttribute("error", manager.getString("error.ban.message"));
             RequestDispatcher requestDispatcher = request.getServletContext()
-                    .getRequestDispatcher("/pages/error/ban.html");
+                    .getRequestDispatcher("/pages/error/error.jsp");
             requestDispatcher.forward(req, resp);
         }
 

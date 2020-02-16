@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.service.MovieService;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class AddMovie implements Command {
     private static final String imagePath = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images";
@@ -27,12 +27,11 @@ public class AddMovie implements Command {
         try {
             movieService.addMovie(movieName, imageName, description);
         } catch (ServiceException ex) {
-            String stackTrace = Arrays.toString(ex.getStackTrace());
-            req.setAttribute("error", stackTrace);
-            return Constants.ERROR;
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
 
-        return Constants.ADMIN;
+        return RequestsConstants.TAKE_USERS;
     }
 
     private String takeImage(HttpServletRequest req) {

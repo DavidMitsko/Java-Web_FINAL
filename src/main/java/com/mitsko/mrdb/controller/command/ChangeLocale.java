@@ -1,7 +1,5 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
-import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.resource.ResourceManager;
 
 import javax.servlet.http.HttpServletRequest;

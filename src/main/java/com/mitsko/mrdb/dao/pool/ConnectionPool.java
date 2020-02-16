@@ -34,14 +34,18 @@ public class ConnectionPool {
         password = manager.getValue(Parameter.DB_PASSWORD);
         poolSize = Integer.parseInt(manager.getValue(Parameter.DB_POOL_SIZE));
 
-        initPoolData();
+        try {
+            initPoolData();
+        } catch (ConnectionPoolException ex) {
+            logger.error("Cannot init pool data: " + ex);
+        }
     }
 
     public static ConnectionPool getInstance() {
         return instance;
     }
 
-    public void initPoolData() {
+    public void initPoolData() throws ConnectionPoolException {
         try {
             Class.forName(driverName);
 
@@ -55,7 +59,8 @@ public class ConnectionPool {
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
+            logger.error(ex);
+            throw new ConnectionPoolException(ex);
         }
     }
 

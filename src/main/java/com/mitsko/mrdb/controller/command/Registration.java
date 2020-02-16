@@ -1,6 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -19,7 +19,7 @@ public class Registration implements Command {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        String page = Constants.REGISTRATION;
+        String page = PagesConstants.REGISTRATION;
         try {
             User user = userService.registration(login, password);
 
@@ -29,10 +29,11 @@ public class Registration implements Command {
             session.setAttribute("status", user.getStatus());
 
             if(user != null) {
-                page = Constants.MAIN;
+                page = PagesConstants.MAIN;
             }
         } catch (ServiceException ex) {
-            ex.printStackTrace();
+            req.setAttribute("error", ex.getMessage());
+            page = PagesConstants.ERROR;
         }
         return page;
     }

@@ -1,6 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,8 +11,16 @@ public class Rating implements Command {
         String movieName = req.getParameter("movieNameForRating");
 
         HttpSession session = req.getSession();
-        session.setAttribute("movieName", movieName);
+        if(movieName != null) {
+            session.setAttribute("movieName", movieName);
+        }
 
-        return Constants.RATING;
+        String message = (String)session.getAttribute("message");
+        if(message != null) {
+            req.setAttribute("message", message);
+            session.removeAttribute("message");
+        }
+
+        return PagesConstants.RATING;
     }
 }

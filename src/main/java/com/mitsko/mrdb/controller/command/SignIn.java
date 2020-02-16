@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.service.ServiceException;
@@ -19,26 +20,27 @@ public class SignIn implements Command {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        String page = Constants.SIGN_IN;
+        String page = PagesConstants.SIGN_IN;
 
         try {
             User user = userService.signIn(login, password);
 
             HttpSession session = req.getSession();
 
-            session.setAttribute("userID", user.getID());
-            session.setAttribute("role", user.getRole());
-            session.setAttribute("status", user.getStatus());
-
             if(user != null) {
                 if (user.getRole() == Role.ADMIN) {
-                    page = Constants.TAKE_USERS;
+                    page = RequestsConstants.TAKE_USERS;
                 } else {
-                    page = Constants.TAKE_MOVIE;
+                    page = RequestsConstants.TAKE_MOVIE;
                 }
+
+                session.setAttribute("userID", user.getID());
+                session.setAttribute("role", user.getRole());
+                session.setAttribute("status", user.getStatus());
             }
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            page = PagesConstants.ERROR;
         }
         return page;
     }

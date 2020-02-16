@@ -11,7 +11,6 @@
 
 <%@ include file="bootstrap.jsp" %>
 
-<%--<jsp:useBean id="movieName" type="java.lang.String" scope="session"/>--%>
 <jsp:useBean id="review" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <jsp:useBean id="user" type="java.util.HashMap<java.lang.String, java.lang.Integer>" scope="request"/>
 <jsp:useBean id="description" class="java.lang.String" scope="request"/>
@@ -47,7 +46,6 @@
         <div class="form-group">
             <label for="review">
                 <fmt:message key="text.review.addReview" bundle="${var}"/>:
-<%--                ${movieName}:--%>
             </label>
             <input type="text" class="form-control" id="review" name="usersReview">
             <button type="button" name="addReview" class="btn btn-primary" onclick="valid()">

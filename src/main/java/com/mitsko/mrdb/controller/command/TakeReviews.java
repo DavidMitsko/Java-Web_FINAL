@@ -1,6 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Review;
 import com.mitsko.mrdb.service.*;
 
@@ -26,7 +26,7 @@ public class TakeReviews implements Command {
 
     @Override
     public String execute(HttpServletRequest req) {
-        String page = Constants.REVIEW;
+        String page = PagesConstants.REVIEW;
         reviewMap = new HashMap<>();
         usersRatingMap = new HashMap<>();
         try {
@@ -43,7 +43,8 @@ public class TakeReviews implements Command {
             HttpSession session = req.getSession();
             session.setAttribute("movieName", movieName);
         } catch (ServiceException ex) {
-            ex.printStackTrace();
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
         return page;
     }

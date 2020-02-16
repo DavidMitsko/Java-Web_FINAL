@@ -44,29 +44,4 @@ public class SQLAdminDAOImpl implements AdminDAO {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
-
-    @Override
-    public void refreshAverageRating(int newRating, String login) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(NEW_RATING);
-
-            preparedStatement.setInt(1, newRating);
-            preparedStatement.setString(2, login);
-
-            preparedStatement.executeUpdate();
-            logger.debug("Rating of " +login + " updated(in db)");
-        } catch (SQLException ex) {
-            logger.error(ex);
-            throw new DAOException(ex);
-        } catch (ConnectionPoolException ex) {
-            logger.error(ex);
-            throw new DAOException(ex);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
-        }
-    }
 }

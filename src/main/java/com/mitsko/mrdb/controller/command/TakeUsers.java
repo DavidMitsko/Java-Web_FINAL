@@ -1,7 +1,6 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
-import com.mitsko.mrdb.entity.Movie;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -27,9 +26,10 @@ public class TakeUsers implements Command {
             HashMap<String, String> usersInfo = compileUsersInfo(usersLogin);
             req.setAttribute("userMap", usersInfo);
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
-        return Constants.ADMIN;
+        return PagesConstants.ADMIN;
     }
 
     private HashMap<String, String> compileUsersInfo(ArrayList<String> usersLogins) throws ServiceException {

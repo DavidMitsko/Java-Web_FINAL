@@ -1,7 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
-import com.mitsko.mrdb.entity.User;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.AdminService;
@@ -20,7 +20,6 @@ public class ChangeStatus implements Command {
         UserService userService = serviceFactory.getUserService();
 
         HttpSession session = req.getSession();
-        //User user = (User)session.getAttribute("user");
         Role userRole = (Role)session.getAttribute("role");
 
         String login = req.getParameter("status");
@@ -34,8 +33,9 @@ public class ChangeStatus implements Command {
             }
             adminService.refreshStatus(userRole, login, newStatus);
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
-        return Constants.ADMIN;
+        return RequestsConstants.TAKE_USERS;
     }
 }

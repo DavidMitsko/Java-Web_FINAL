@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
-import com.mitsko.mrdb.controller.command.util.Constants;
+import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.service.MovieService;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -18,9 +19,10 @@ public class RemoveMovie implements Command {
         try {
             movieService.removeMovie(movieName);
         } catch (ServiceException ex) {
-
+            req.setAttribute("error", ex.getMessage());
+            return PagesConstants.ERROR;
         }
 
-        return Constants.ADMIN;
+        return RequestsConstants.TAKE_USERS;
     }
 }

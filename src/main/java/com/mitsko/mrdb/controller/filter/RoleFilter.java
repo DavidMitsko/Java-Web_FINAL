@@ -1,6 +1,7 @@
 package com.mitsko.mrdb.controller.filter;
 
 import com.mitsko.mrdb.entity.util.Role;
+import com.mitsko.mrdb.resource.ResourceManager;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,15 @@ public class RoleFilter implements Filter {
         Role role = (Role)session.getAttribute("role");
 
         String path = req.getServletPath();
-        if(role == Role.USER && (path.equals("/add_movie") || path.equals("/remove_movie") ||
-                path.equals("/change_status") || path.equals("take_users.jsp"))) {
+        if(role == Role.USER && (path.equals("add_movie") || path.equals("remove_movie") ||
+                path.equals("change_status") || path.equals("take_users"))) {
+
+            ResourceManager manager = ResourceManager.getInstance();
+
+            request.setAttribute("error", manager.getString("error.lowAccess.message"));
             RequestDispatcher requestDispatcher = request.getServletContext()
-                    .getRequestDispatcher("/pages/lowAccess.html");
+                    .getRequestDispatcher("/pages/error/error.jsp");
+
             requestDispatcher.forward(req, resp);
         }
 

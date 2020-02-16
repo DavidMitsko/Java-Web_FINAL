@@ -4,6 +4,4 @@ import com.mitsko.mrdb.entity.util.Status;
 
 public interface AdminDAO {
     void refreshStatus(Status newStatus, String login) throws DAOException;
-
-    void refreshAverageRating(int newRating, String login) throws DAOException;
 }

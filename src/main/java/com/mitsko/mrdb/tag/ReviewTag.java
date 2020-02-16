@@ -47,7 +47,7 @@ public class ReviewTag extends TagSupport {
 
             for (Map.Entry<String, Review> entry : reviewSet) {
                 String login = entry.getKey();
-                login = login.replaceAll("\\s+","");
+                login = login.replaceAll("\\s+", "");
                 pageContext.getOut().print("<tr><td>");
                 pageContext.getOut().print(login);
                 int rating = usersRatingHashMap.get(entry.getKey());

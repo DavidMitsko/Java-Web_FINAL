@@ -9,8 +9,6 @@ public interface MovieDAO {
 
     void removeMovie(String movieName) throws DAOException;
 
-    ArrayList<Movie> takeAllMovies() throws DAOException;
-
     void updateRating(float newRating, int movieID) throws DAOException;
 
     void updateCountOfRating(int newCountOfRating, int movieID) throws DAOException;
@@ -24,4 +22,8 @@ public interface MovieDAO {
     String takeDescription(int movieID) throws DAOException;
 
     String takeName(int movieID) throws DAOException;
+
+    ArrayList<Movie> takeMovies(int offset) throws DAOException;
+
+    int size() throws DAOException;
 }

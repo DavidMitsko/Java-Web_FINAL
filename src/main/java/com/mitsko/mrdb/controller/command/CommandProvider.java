@@ -26,11 +26,17 @@ public class CommandProvider {
         repository.put(CommandName.REMOVE_REVIEW, new RemoveReview());
         repository.put(CommandName.LOCALE, new ChangeLocale());
         repository.put(CommandName.ADD_MOVIE_PAGE, new AddMoviePage());
+        repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
     }
 
     public Command getCommand(String name) {
-        CommandName commandName = CommandName.valueOf(name.toUpperCase());
-        Command command = repository.get(commandName);
+        Command command;
+        try {
+            CommandName commandName = CommandName.valueOf(name.toUpperCase());
+            command = repository.get(commandName);
+        } catch (NullPointerException ex) {
+            command = repository.get(CommandName.WRONG_REQUEST);
+        }
         return command;
     }
 }

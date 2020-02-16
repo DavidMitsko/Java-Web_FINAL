@@ -10,10 +10,14 @@ import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.UserService;
 import com.mitsko.mrdb.service.util.Crypto;
 import com.mitsko.mrdb.service.util.Validator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class UserServiceImpl implements UserService {
+    private final static Logger logger = LogManager.getLogger(UserServiceImpl.class);
+
     private UserDAO userDAO;
     private RecountDAO recountDAO;
     private Crypto crypto;
@@ -31,6 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signIn(String login, String password) throws ServiceException {
         if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
+            logger.error("Wrong parameter");
             throw new ServiceException("Wrong parameter");
         }
 
@@ -38,16 +43,20 @@ public class UserServiceImpl implements UserService {
             String passwordInDB = userDAO.takePassword(login);
 
             if (!crypto.checkPassword(password, passwordInDB)) {
-                throw new ServiceException("Wrong login or password");
+                logger.error("Wrong password");
+                throw new ServiceException("Wrong password");
             }
 
             User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
             if (user == null) {
-                throw new ServiceException();
+                logger.error("No user with this login and password");
+                throw new ServiceException("No user with this login and password");
             }
 
+            logger.debug("Sign in");
             return user;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -55,11 +64,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registration(String login, String password) throws ServiceException{
         if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
+            logger.error("Wrong parameter");
             throw new ServiceException("Wrong parameter");
         }
 
         try {
             if (userDAO.findLogin(login)) {
+                logger.error("Already exist a user with this name");
                 throw new ServiceException("Already exist a user with this name");
             }
 
@@ -68,12 +79,15 @@ public class UserServiceImpl implements UserService {
             User user = new User(login, hashPassword);
             int id = userDAO.registration(user);
             if (id == -1) {
-                throw new ServiceException();
+                logger.error("We have problem with db");
+                throw new ServiceException("We have problem with db");
             }
             user.setID(id);
 
+            logger.debug("Added new user");
             return user;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
 
@@ -82,21 +96,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public ArrayList<String> takeAllLogins() throws ServiceException {
         try {
-            return userDAO.takeAllLogins();
+            ArrayList<String> usersLogin = userDAO.takeAllLogins();
+
+            logger.debug("Received all users logins");
+            return usersLogin;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
 
     @Override
     public Status takeStatus(String login) throws ServiceException {
-        if(login.equals("")) {
+        if(!validator.checkLogin(login)) {
+            logger.error("Wrong parameter");
             throw new ServiceException("Wrong parameter");
         }
         try {
             int id = userDAO.takeID(login);
-            return userDAO.takeStatus(id);
+            Status status = userDAO.takeStatus(id);
+
+            logger.debug("Received users status");
+            return status;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -104,8 +127,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public String takeLogin(int userID) throws ServiceException {
         try {
-            return userDAO.takeLogin(userID);
+            String login = userDAO.takeLogin(userID);
+            logger.debug("Received users login");
+            return login;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -116,6 +142,9 @@ public class UserServiceImpl implements UserService {
             int usersRating = userDAO.takeRating(userID);
             int direct = recountDAO.takeDirect(userID, movieID);
             recountDAO.removeRecount(userID, movieID);
+            logger.debug("Removed recount note");
+
+            logger.debug("Reestablish users rating");
             if (usersRating == 0 && direct == -1) {
                 return usersRating;
             }
@@ -124,6 +153,7 @@ public class UserServiceImpl implements UserService {
             }
             return usersRating - direct;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
@@ -132,8 +162,12 @@ public class UserServiceImpl implements UserService {
     public int takeAverageRating(String userLogin) throws ServiceException {
         try {
             int userID = userDAO.takeID(userLogin);
-            return userDAO.takeRating(userID);
+            int rating = userDAO.takeRating(userID);
+
+            logger.debug("Received users rating");
+            return rating;
         } catch (DAOException ex) {
+            logger.error(ex);
             throw new ServiceException(ex);
         }
     }
