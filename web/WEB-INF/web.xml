@@ -28,6 +28,10 @@
         <url-pattern>/next</url-pattern>
         <url-pattern>/take_movies_for_remove</url-pattern>
         <url-pattern>/add_movie_page</url-pattern>
+        <url-pattern>/get_image</url-pattern>
+        <url-pattern>/change_movie</url-pattern>
+        <url-pattern>/change_movie_page</url-pattern>
+        <url-pattern>/change_page</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -54,6 +58,15 @@
     </filter>
     <filter-mapping>
         <filter-name>StatusFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.mitsko.mrdb.controller.filter.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
 </web-app>

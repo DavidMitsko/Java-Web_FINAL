@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ include file="bootstrap.jsp" %>
+<%@ include file="help/bootstrap.jsp" %>
 
 <jsp:useBean id="reviewMap" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
@@ -23,8 +23,10 @@
     </title>
 </head>
 <body>
-<div class="container">
-    ${navbar}
+
+${navbar}
+
+<div class="container mt-3">
 
     <table class="table table-striped">
         <thead>

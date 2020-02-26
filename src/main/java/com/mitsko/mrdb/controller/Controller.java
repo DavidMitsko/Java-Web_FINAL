@@ -11,7 +11,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 
 @MultipartConfig(fileSizeThreshold = 1024 *  1024,
         maxFileSize = 1024 *  1024 *  5,
@@ -28,7 +28,7 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String request = processRequest(req, resp);
-        if(request.equals(PagesConstants.ERROR)) {
+        if(request.equals(PagesConstants.ERROR) || request.equals(PagesConstants.SIGN_IN)) {
             req.getRequestDispatcher(request).forward(req, resp);
         }
         resp.sendRedirect(request);
@@ -38,7 +38,7 @@ public class Controller extends HttpServlet {
         String commandName = req.getServletPath();
         commandName = commandName.substring(1);
 
-        if(commandName.equals("next") || commandName.equals("previous")) {
+        if(commandName.equals("next") || commandName.equals("previous") || commandName.equals("change_page")) {
             if(req.getSession().getAttribute("role") == Role.USER) {
                 commandName = RequestsConstants.TAKE_MOVIE;
             } else {
@@ -47,8 +47,7 @@ public class Controller extends HttpServlet {
         }
         Command executionCommand = commandProvider.getCommand(commandName);
 
-        String page = executionCommand.execute(req);
-
+        String page = executionCommand.execute(req, resp);
 
         return page;
     }

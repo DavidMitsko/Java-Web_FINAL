@@ -8,6 +8,7 @@ public class Validator {
     private Pattern loginPattern = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]{3,20}$");
     private Pattern passwordPattern = Pattern.compile("^[a-zA-Z]{1}[a-zA-Z1-9]{3,20}$");
     private Pattern reviewPattern = Pattern.compile("^[a-zA-Z0-9]{1,1000}$");
+    private Pattern descriptionPattern = Pattern.compile("^[a-zA-Z0-9]{1,1000}$");
 
     public boolean checkRating(float rating) {
         if (rating > 10 || rating < 0) {
@@ -27,6 +28,13 @@ public class Validator {
 
     public boolean checkReview(String review) {
         return checkString(review, reviewPattern);
+    }
+
+    public boolean checkDescription(String description) {
+        if(description == null || description.equals("")) {
+            return true;
+        }
+        return checkString(description, descriptionPattern);
     }
 
     private boolean checkString(String stringForChecking, Pattern patternForChecking) {

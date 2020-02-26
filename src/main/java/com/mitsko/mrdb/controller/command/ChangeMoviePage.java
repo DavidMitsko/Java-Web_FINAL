@@ -4,17 +4,13 @@ import com.mitsko.mrdb.controller.command.util.PagesConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-public class SignOut implements Command {
+public class ChangeMoviePage implements Command {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) {
-        HttpSession session = req.getSession();
+        String movieName = req.getParameter("movieName");
 
-        session.removeAttribute("userID");
-        session.removeAttribute("role");
-        session.removeAttribute("status");
-
-        return PagesConstants.INDEX;
+        req.getSession().setAttribute("movieName", movieName);
+        return PagesConstants.CHANGE_MOVIE;
     }
 }

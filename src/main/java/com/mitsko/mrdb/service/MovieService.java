@@ -11,6 +11,8 @@ public interface MovieService {
 
     void addMovie(String movieName, String imageName, String description) throws ServiceException;
 
+    void updateMovie(String movieName, String newMovieName, String imageName, String description) throws ServiceException;
+
     void removeMovie(String movieName) throws ServiceException;
 
     String takeDescription(String movieName) throws ServiceException;

@@ -17,7 +17,10 @@ public class CommandProvider {
         repository.put(CommandName.ADD_REVIEW , new AddReview());
         repository.put(CommandName.RATING, new Rating());
         repository.put(CommandName.ADD_RATING, new AddRating());
-        repository.put(CommandName.ADD_MOVIE, new AddMovie());
+
+        repository.put(CommandName.ADD_MOVIE, new AddMovie(true));
+        repository.put(CommandName.CHANGE_MOVIE, new AddMovie(false));
+
         repository.put(CommandName.TAKE_USERS, new TakeUsers());
         repository.put(CommandName.CHANGE_STATUS, new ChangeStatus());
         repository.put(CommandName.REMOVE_MOVIE, new RemoveMovie());
@@ -27,6 +30,8 @@ public class CommandProvider {
         repository.put(CommandName.LOCALE, new ChangeLocale());
         repository.put(CommandName.ADD_MOVIE_PAGE, new AddMoviePage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
+        repository.put(CommandName.GET_IMAGE, new GetImage());
+        repository.put(CommandName.CHANGE_MOVIE_PAGE, new ChangeMoviePage());
     }
 
     public Command getCommand(String name) {

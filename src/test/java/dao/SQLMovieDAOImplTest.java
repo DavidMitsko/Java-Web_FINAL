@@ -3,9 +3,6 @@ package dao;
 import com.mitsko.mrdb.dao.DAOException;
 import com.mitsko.mrdb.dao.impl.SQLMovieDAOImpl;
 import com.mitsko.mrdb.entity.Movie;
-import com.mitsko.mrdb.entity.User;
-import com.mitsko.mrdb.service.ServiceException;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;

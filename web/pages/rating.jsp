@@ -9,7 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@ include file="bootstrap.jsp" %>
+<%@ include file="help/bootstrap.jsp" %>
 <c:import url="header/mainNavbar.jsp" var="navbar"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
@@ -22,8 +22,10 @@
     </title>
 </head>
 <body>
-<div class="container">
-    ${navbar}
+
+${navbar}
+
+<div class="container mt-3">
 
     <form id="form" method="post" action="${pageContext.request.contextPath}/add_rating">
         <div class="form-group">
@@ -36,6 +38,9 @@
                     <output class="text-danger">${message}</output>
                 </div>
             </c:if>
+            <div class="text-danger">
+                <output class="text-danger" id="error"></output>
+            </div>
             <button type="button" class="btn btn-primary" onclick="valid()">
                 <fmt:message key="button.review.add" bundle="${var}"/>
             </button>
@@ -53,7 +58,7 @@
         if (pattern.exec(rating)) {
             document.getElementById("form").submit();
         } else {
-            alert("<fmt:message key="addRating.message" bundle="${var}"/>");
+            document.getElementById("error").innerHTML = "<fmt:message key="addRating.message" bundle="${var}"/>";
         }
     }
 </script>

@@ -7,11 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@include file="bootstrap.jsp" %>
+<%@include file="help/bootstrap.jsp" %>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
+
+<jsp:useBean id="message" scope="request" class="java.lang.String"/>
 <html>
 <head>
     <title>
@@ -40,9 +43,17 @@
                    <fmt:message key="text.login.password.placeholder" bundle="${var}"/> name="password" required>
             <output class="text-danger" id="wrongPassword"></output>
         </div>
+
         <div class="text-danger">
             <output class="text-danger" id="danger"></output>
         </div>
+
+        <c:if test="${!message.equals(\"\")}">
+            <div class="text-danger">
+                <output class="text-danger">${message}</output>
+            </div>
+        </c:if>
+
         <button type="button" class="btn btn-primary" onclick="valid()">
             <fmt:message key="button.login.enter" bundle="${var}"/>
         </button>

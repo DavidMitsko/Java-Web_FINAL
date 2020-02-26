@@ -9,9 +9,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="bootstrap.jsp" %>
+<%@include file="help/bootstrap.jsp" %>
 
 <jsp:useBean id="movieList" class="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="size" type="java.lang.Integer" scope="request"/>
+
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
 
@@ -24,8 +26,9 @@
 </head>
 <body>
 
-<div class="container">
-    ${navbar}
+${navbar}
+
+<div class="container mt-3">
 
     <c:if test="${movieList.size() != 0}">
         <table class="table table-striped">
@@ -45,7 +48,8 @@
                 <tr>
                     <td>
                         <c:if test="${movie.imageName != null}">
-                            <img src="${movie.imageName}" width="187" height="287" alt="Noooooooo"/>
+                            <img src="${pageContext.request.contextPath}/get_image?fileName=${movie.imageName}"
+                                 width="187" height="287" alt="Noooooooo"/>
                         </c:if>
                     </td>
                     <form method="get" action="${pageContext.request.contextPath}/take_reviews">
@@ -74,6 +78,15 @@
                     </button>
                 </li>
             </form>
+            <c:forEach begin="${1}" end="${size}" step="${1}" var="list">
+                <form method="get" action="${pageContext.request.contextPath}/change_page">
+                    <li class="page-item">
+                        <button type="submit" class="page-link" name="page" value="${list}">
+                            ${list}
+                        </button>
+                    </li>
+                </form>
+            </c:forEach>
             <form method="get" action="${pageContext.request.contextPath}/next">
                 <li class="page-item">
                     <button type="submit" class="page-link" name="next">
@@ -84,6 +97,5 @@
         </ul>
     </c:if>
 </div>
-
 </body>
 </html>

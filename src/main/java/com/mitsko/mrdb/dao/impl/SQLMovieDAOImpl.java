@@ -19,8 +19,11 @@ public class SQLMovieDAOImpl implements MovieDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String TAKE_ID = "SELECT id FROM movie WHERE name = ?";
-    private static final String ADD_NEW_MOVIE = "INSERT INTO movie(id, name, averageRating, countOfRatings, imageName," +
-            "description) VALUES(NULL,?,?,?,?,?)";
+    private static final String TAKE_MOVIE = "SELECT * FROM movie WHERE id = ?";
+    private static final String ADD_NEW_MOVIE = "INSERT INTO movie(id, name, averageRating, countOfRatings," +
+            " imageName, description) VALUES(NULL,?,?,?,?,?)";
+    private static final String UPDATE_MOVIE = "UPDATE movie SET name = ?, averageRating = ?," +
+            " countOfRatings = ?, imageName = ?, description = ? WHERE id = ?";
     private static final String UPDATE_MOVIES_RATING = "UPDATE movie SET averageRating = ? WHERE id = ?";
     private static final String UPDATE_COUNT_OF_RATING = "UPDATE movie SET countOfRatings = ? WHERE id = ?";
     private static final String TAKE_COUNT_OF_RATING = "SELECT countOfRatings FROM movie WHERE id = ?";
@@ -28,6 +31,7 @@ public class SQLMovieDAOImpl implements MovieDAO {
     private static final String REMOVE_MOVIE = "DELETE FROM movie WHERE name = ?";
     private static final String TAKE_DESCRIPTION = "SELECT description FROM movie WHERE id = ?";
     private static final String TAKE_NAME = "SELECT name FROM movie WHERE id = ?";
+    private static final String TAKE_IMAGE_NAME = "SELECT imageName FROM movie WHERE id = ?";
     private static final String TAKE_MOVIES = "SELECT * FROM movie LIMIT 3 OFFSET ?";
     private static final String TAKE_SIZE = "SELECT COUNT(*) FROM movie";
 
@@ -49,6 +53,37 @@ public class SQLMovieDAOImpl implements MovieDAO {
             preparedStatement.executeUpdate();
 
             logger.debug("Added a " + movie.getName() + " in db");
+        } catch (SQLException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } catch (ConnectionPoolException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
+
+    @Override
+    public void updateMovie(Movie movie) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_MOVIE);
+
+            preparedStatement.setString(1, movie.getName());
+            preparedStatement.setFloat(2, movie.getAverageRating());
+            preparedStatement.setInt(3, movie.getCountOfRatings());
+            preparedStatement.setString(4, movie.getImageName());
+            preparedStatement.setString(5, movie.getDescription());
+
+            preparedStatement.setInt(6, movie.getID());
+
+            preparedStatement.executeUpdate();
+
+            logger.debug("Updated a " + movie.getName() + " in db");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);
@@ -84,6 +119,34 @@ public class SQLMovieDAOImpl implements MovieDAO {
         }
     }
 
+
+    @Override
+    public Movie takeMovie(int movieID) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(TAKE_MOVIE);
+
+            preparedStatement.setInt(1, movieID);
+
+            resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+            return compileMovie(resultSet);
+        } catch (SQLException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } catch (ConnectionPoolException ex) {
+            logger.error(ex);
+            throw new DAOException(ex);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+    }
+
     @Override
     public ArrayList<Movie> takeMovies(int offset) throws DAOException {
         Connection connection = null;
@@ -112,18 +175,20 @@ public class SQLMovieDAOImpl implements MovieDAO {
         return movieList;
     }
 
+    private Movie compileMovie(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt(1);
+        String name = resultSet.getString(2);
+        float averageRating = resultSet.getFloat(3);
+        int countOfRatings = resultSet.getInt(4);
+        String imageName = resultSet.getString(5);
+        String description = resultSet.getString(6);
+
+        return new Movie(id, name, averageRating, countOfRatings, imageName, description);
+    }
+
     private void compileList(ResultSet resultSet, ArrayList<Movie> movieList) throws SQLException {
         while (resultSet.next()) {
-            int id = resultSet.getInt(1);
-            String name = resultSet.getString(2);
-            float averageRating = resultSet.getFloat(3);
-            int countOfRatings = resultSet.getInt(4);
-            String imageName = resultSet.getString(5);
-            String description = resultSet.getString(6);
-
-            Movie film = new Movie(id, name, averageRating, countOfRatings, imageName, description);
-
-            movieList.add(film);
+            movieList.add(compileMovie(resultSet));
         }
 
         logger.debug("Tacked movies from db");
@@ -317,6 +382,11 @@ public class SQLMovieDAOImpl implements MovieDAO {
     @Override
     public String takeName(int movieID) throws DAOException {
         return getString(movieID, TAKE_NAME);
+    }
+
+    @Override
+    public String takeImageName(int movieID) throws DAOException {
+        return getString(movieID, TAKE_IMAGE_NAME);
     }
 
     private String getString(int movieID, String takeParameter) throws DAOException {

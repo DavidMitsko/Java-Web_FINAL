@@ -8,11 +8,12 @@ import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class AddRating implements Command {
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         RatingService ratingService = serviceFactory.getRatingService();
 

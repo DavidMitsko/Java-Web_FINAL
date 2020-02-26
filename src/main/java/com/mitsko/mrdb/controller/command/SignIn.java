@@ -9,11 +9,12 @@ import com.mitsko.mrdb.service.ServiceFactory;
 import com.mitsko.mrdb.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class SignIn implements Command {
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         UserService userService = serviceFactory.getUserService();
 
@@ -37,10 +38,22 @@ public class SignIn implements Command {
                 session.setAttribute("userID", user.getID());
                 session.setAttribute("role", user.getRole());
                 session.setAttribute("status", user.getStatus());
+            } else {
+                req.setAttribute("login", login);
+                req.setAttribute("password", password);
+                req.setAttribute("error", "Error");
             }
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            page = PagesConstants.ERROR;
+            if(ex.getMessage().equals("Wrong password")) {
+                req.setAttribute("login", login);
+//                req.setAttribute("password", password);
+                req.setAttribute("message", "Error");
+                page = PagesConstants.SIGN_IN;
+            } else {
+
+                req.setAttribute("error", ex.getMessage());
+                page = PagesConstants.ERROR;
+            }
         }
         return page;
     }

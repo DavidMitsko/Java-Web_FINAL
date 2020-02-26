@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@ include file="bootstrap.jsp" %>
+<%@ include file="help/bootstrap.jsp" %>
 
 <jsp:useBean id="review" type="java.util.HashMap<java.lang.String, com.mitsko.mrdb.entity.Review>" scope="request"/>
 <jsp:useBean id="user" type="java.util.HashMap<java.lang.String, java.lang.Integer>" scope="request"/>
@@ -29,9 +29,10 @@
     </title>
 </head>
 <body>
-<div class="container">
 
-    ${navbar}
+${navbar}
+
+<div class="container mt-3">
 
     <label>
         <c:if test="${description != null}">
@@ -48,6 +49,9 @@
                 <fmt:message key="text.review.addReview" bundle="${var}"/>:
             </label>
             <input type="text" class="form-control" id="review" name="usersReview">
+            <div class="text-danger">
+                <output class="text-danger" id="error"></output>
+            </div>
             <button type="button" name="addReview" class="btn btn-primary" onclick="valid()">
                 <fmt:message key="button.review.add" bundle="${var}"/>
             </button>
@@ -63,10 +67,10 @@
 
         let review = document.getElementById("review").value;
 
-        if(pattern.exec(review)) {
+        if (pattern.exec(review)) {
             document.getElementById("form").submit();
         } else {
-            alert("<fmt:message key="addReview.message" bundle="${var}"/>");
+            document.getElementById("error").innerHTML = "<fmt:message key="addReview.message" bundle="${var}"/>";
         }
     }
 </script>

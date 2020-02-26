@@ -8,15 +8,21 @@ import com.mitsko.mrdb.service.ServiceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 
 public class AddMovie implements Command {
+    private final boolean command;
     private static final String imagePath = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images";
 
+    public AddMovie(boolean command) {
+        this.command = command;
+    }
+
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
@@ -25,7 +31,12 @@ public class AddMovie implements Command {
         String description = req.getParameter("movieDescription");
 
         try {
-            movieService.addMovie(movieName, imageName, description);
+            if(command) {
+                movieService.addMovie(movieName, imageName, description);
+            } else {
+                String oldMovieName = (String)req.getSession().getAttribute("movieName");
+                movieService.updateMovie(oldMovieName, movieName, imageName, description);
+            }
         } catch (ServiceException ex) {
             req.setAttribute("error", ex.getMessage());
             return PagesConstants.ERROR;

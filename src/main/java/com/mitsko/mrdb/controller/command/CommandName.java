@@ -18,5 +18,8 @@ public enum CommandName {
     LOCALE,
     TAKE_MOVIES_FOR_REMOVE,
     ADD_MOVIE_PAGE,
+    GET_IMAGE,
+    CHANGE_MOVIE_PAGE,
+    CHANGE_MOVIE,
     WRONG_REQUEST
 }

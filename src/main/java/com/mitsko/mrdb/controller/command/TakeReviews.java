@@ -5,6 +5,7 @@ import com.mitsko.mrdb.entity.Review;
 import com.mitsko.mrdb.service.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class TakeReviews implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) {
         String page = PagesConstants.REVIEW;
         reviewMap = new HashMap<>();
         usersRatingMap = new HashMap<>();

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public interface MovieDAO {
     void addMovie(Movie movie) throws DAOException;
 
+    void updateMovie(Movie movie) throws DAOException;
+
     void removeMovie(String movieName) throws DAOException;
 
     void updateRating(float newRating, int movieID) throws DAOException;
@@ -23,7 +25,11 @@ public interface MovieDAO {
 
     String takeName(int movieID) throws DAOException;
 
+    String takeImageName(int movieID) throws DAOException;
+
     ArrayList<Movie> takeMovies(int offset) throws DAOException;
+
+    Movie takeMovie(int movieID) throws DAOException;
 
     int size() throws DAOException;
 }

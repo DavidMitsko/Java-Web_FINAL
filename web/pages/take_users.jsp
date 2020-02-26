@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="bootstrap.jsp" %>
+<%@include file="help/bootstrap.jsp" %>
 <c:import url="header/adminNavbar.jsp" var="navbar"/>
 
 <jsp:useBean id="userMap" class="java.util.HashMap" scope="request"/>
@@ -23,9 +23,9 @@
 </head>
 <body>
 
+${navbar}
 
-<div class="container">
-    ${navbar}
+<div class="container mt-3">
 
     <c:if test="${userMap.size() != 0}">
         <table class="table table-striped">

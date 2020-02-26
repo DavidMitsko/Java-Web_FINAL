@@ -3,20 +3,24 @@ package com.mitsko.mrdb.service.impl;
 import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Movie;
 import com.mitsko.mrdb.service.*;
+import com.mitsko.mrdb.service.util.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class MovieServiceImpl implements MovieService {
     private final static Logger logger = LogManager.getLogger(MovieServiceImpl.class);
 
-    private final static String imagePath = "../images/";
+    private final static String path = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images";
 
     private RatingDAO ratingDAO;
     private MovieDAO movieDAO;
     private RecountDAO recountDAO;
     private UserDAO userDAO;
+    private Validator validator;
 
     public MovieServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
@@ -24,6 +28,8 @@ public class MovieServiceImpl implements MovieService {
         movieDAO = daoFactory.getSQLMovieDAO();
         userDAO = daoFactory.getSQLUserDAO();
         recountDAO = daoFactory.getSQLRecountDAO();
+
+        validator = new Validator();
     }
 
     @Override
@@ -78,12 +84,6 @@ public class MovieServiceImpl implements MovieService {
             logger.error("There isn`t any movies");
             throw new ServiceException("There isn`t any movies");
         }
-        for (Movie movie : movieList) {
-            if (movie.getImageName() != null) {
-                String imagePath = MovieServiceImpl.imagePath + movie.getImageName();
-                movie.setImageName(imagePath);
-            }
-        }
 
         logger.debug("Received movies");
         return movieList;
@@ -107,7 +107,39 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public void updateMovie(String movieName, String newMovieName, String imageName, String description) throws ServiceException {
+        try {
+            int movieID = movieDAO.takeID(movieName);
+            Movie movie = movieDAO.takeMovie(movieID);
+
+            if(newMovieName != null && !newMovieName.equals("")) {
+                movie.setName(newMovieName);
+            }
+            if(imageName != null && !imageName.equals("")) {
+                String oldImage = movie.getImageName();
+                if(oldImage != null && !oldImage.equals("")) {
+                    deleteImage(oldImage);
+                }
+                movie.setImageName(imageName);
+            }
+            if(description != null && !description.equals("")) {
+                movie.setDescription(description);
+            }
+
+            movieDAO.updateMovie(movie);
+        } catch (DAOException ex) {
+            logger.error(ex);
+            throw new ServiceException(ex);
+        }
+    }
+
+    @Override
     public void addMovie(String movieName, String imageName, String description) throws ServiceException {
+        if(!validator.checkDescription(description)) {
+            logger.error("Wrong parameter");
+            throw new ServiceException("Wrong parameter");
+        }
+
         Movie movie = new Movie(movieName, imageName, description);
 
         try {
@@ -145,6 +177,9 @@ public class MovieServiceImpl implements MovieService {
             reviewService.removeAllMoviesReview(movieName);
             logger.debug("Removed all users reviews to this movie " + movieName);
 
+            String image = movieDAO.takeImageName(movieID);
+            deleteImage(image);
+
             movieDAO.removeMovie(movieName);
             logger.debug("Removed movie");
         } catch (ServiceException ex) {
@@ -154,6 +189,13 @@ public class MovieServiceImpl implements MovieService {
             logger.error(ex);
             throw new ServiceException(ex);
         }
+    }
+
+    private void deleteImage(String imageName) {
+        String filePath = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images\\" + imageName;
+
+        File file = new File(filePath);
+        file.delete();
     }
 
     @Override

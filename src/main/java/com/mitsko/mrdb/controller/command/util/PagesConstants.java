@@ -12,4 +12,5 @@ public class PagesConstants {
     public static final String HISTORY = "pages/user_history.jsp";
     public static final String REMOVE = "pages/take_movies_for_remove.jsp";
     public static final String ADD_MOVIE = "pages/add_movie_page.jsp";
+    public static final String CHANGE_MOVIE = "pages/change_movie_page.jsp";
 }

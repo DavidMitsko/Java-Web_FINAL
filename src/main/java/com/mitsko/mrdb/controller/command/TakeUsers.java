@@ -7,6 +7,7 @@ import com.mitsko.mrdb.service.ServiceFactory;
 import com.mitsko.mrdb.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ public class TakeUsers implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) {
         try {
             ArrayList<String> usersLogin = userService.takeAllLogins();
 
