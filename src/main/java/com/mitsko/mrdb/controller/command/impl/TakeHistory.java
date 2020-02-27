@@ -1,5 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Review;
 import com.mitsko.mrdb.service.MovieService;
@@ -24,7 +26,7 @@ public class TakeHistory implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         HttpSession session = req.getSession();
         int userID = (int)session.getAttribute("userID");
 
@@ -34,8 +36,9 @@ public class TakeHistory implements Command {
 
             req.setAttribute("reviewMap", usersReview);
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            return PagesConstants.ERROR;
+//            req.setAttribute("error", ex.getMessage());
+//            return PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
         return PagesConstants.HISTORY;
     }

@@ -11,19 +11,22 @@
 
 <%@ include file="help/bootstrap.jsp" %>
 <c:import url="header/adminNavbar.jsp" var="navbar"/>
+<c:import url="help/pagination.jsp" var="pagination"/>
 
 <jsp:useBean id="movieList" type="java.util.ArrayList<com.mitsko.mrdb.entity.Movie>" scope="request"/>
+
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
 <html>
 <head>
-    <title>Remove Movie</title>
+    <title>
+        <fmt:message key="title.editing" bundle="${var}"/>
+    </title>
 </head>
 <body>
 ${navbar}
 
 <div class="container mt-3">
-
 
     <ul class="list-group">
         <c:forEach var="movie" items="${movieList}">
@@ -34,13 +37,15 @@ ${navbar}
 
                 <div class="container mt-3">
                     <form method="get" action="${pageContext.request.contextPath}/change_movie_page">
-                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0" name="movieName" value="${movie.name}">
-                            Change
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0" name="movieName"
+                                value="${movie.name}">
+                            <fmt:message key="button.editing.change" bundle="${var}"/>
                         </button>
                     </form>
                     <form method="post" action="${pageContext.request.contextPath}/remove_movie">
-                        <button type="submit" class="btn btn-outline-secondary my-2 my-sm-0" name="movieForRemove" value="${movie.name}">
-                            Delete
+                        <button type="submit" class="btn btn-outline-secondary my-2 my-sm-0" name="movieForRemove"
+                                value="${movie.name}">
+                            <fmt:message key="button.editing.remove" bundle="${var}"/>
                         </button>
                     </form>
                 </div>
@@ -48,22 +53,7 @@ ${navbar}
         </c:forEach>
     </ul>
 
-    <ul class="pagination justify-content-center" style="margin:20px 0">
-        <form method="get" action="${pageContext.request.contextPath}/previous">
-            <li class="page-item">
-                <button type="submit" class="page-link" name="previous">
-                    <fmt:message key="button.main.previous" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-        <form method="get" action="${pageContext.request.contextPath}/next">
-            <li class="page-item">
-                <button type="submit" class="page-link" name="next">
-                    <fmt:message key="button.main.next" bundle="${var}"/>
-                </button>
-            </li>
-        </form>
-    </ul>
+    ${pagination}
 
 </div>
 </body>

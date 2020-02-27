@@ -14,48 +14,6 @@
 <head>
 </head>
 <body>
-
-<%--<div class="container">--%>
-    <%--    <ul class="nav nav-tabs">--%>
-    <%--        <form method="get" action="${pageContext.request.contextPath}/take_users">--%>
-    <%--            <li class="nav-item">--%>
-    <%--                <button type="submit" class="nav-link btn">--%>
-    <%--                    <fmt:message key="navbar.admin.users" bundle="${var}"/>--%>
-    <%--                </button>--%>
-    <%--            </li>--%>
-    <%--        </form>--%>
-    <%--        <form method="get" action="${pageContext.request.contextPath}/add_movie_page">--%>
-    <%--            <li>--%>
-    <%--                <button type="submit" class="nav-link btn">--%>
-    <%--                    <fmt:message key="navbar.admin.addMovie" bundle="${var}"/>--%>
-    <%--                </button>--%>
-    <%--            </li>--%>
-    <%--        </form>--%>
-    <%--        <form method="get" action="${pageContext.request.contextPath}/take_movies_for_remove">--%>
-    <%--            <li>--%>
-    <%--                <button type="submit" class="btn nav-link">--%>
-    <%--                    <fmt:message key="navbar.admin.removeMovie" bundle="${var}"/>--%>
-    <%--                </button>--%>
-    <%--            </li>--%>
-    <%--        </form>--%>
-    <%--        <form method="get" action="${pageContext.request.contextPath}/sign_out">--%>
-    <%--            <li>--%>
-    <%--                <button type="submit" class="btn float-right">--%>
-    <%--                    <fmt:message key="navbar.admin.signOut" bundle="${var}"/>--%>
-    <%--                </button>--%>
-    <%--            </li>--%>
-    <%--        </form>--%>
-    <%--        <form method="post" action="${pageContext.request.contextPath}/locale">--%>
-    <%--            <li>--%>
-    <%--                <button type="submit" class="btn float-right">--%>
-    <%--                    <fmt:message key="navbar.admin.local" bundle="${var}"/>--%>
-    <%--                </button>--%>
-    <%--                <input type="hidden" value="${pageContext.request.queryString}" name="query">--%>
-    <%--                <input type="hidden" value="${pageContext.request.servletPath}" name="path">--%>
-    <%--            </li>--%>
-    <%--        </form>--%>
-    <%--    </ul>--%>
-
     <header class="navbar navbar-expand-lg navbar-light flex-column flex-md-row bd-navbar bg-light">
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
@@ -73,10 +31,10 @@
                         </button>
                     </li>
                 </form>
-                <form method="get" action="${pageContext.request.contextPath}/take_movies_for_remove">
+                <form method="get" action="${pageContext.request.contextPath}/editing_movies">
                     <li>
                         <button type="submit" class="btn nav-link">
-                            <fmt:message key="navbar.admin.removeMovie" bundle="${var}"/>
+                            <fmt:message key="navbar.admin.editMovie" bundle="${var}"/>
                         </button>
                     </li>
                 </form>
@@ -104,6 +62,5 @@
             </form>
         </ul>
     </header>
-<%--</div>--%>
 </body>
 </html>

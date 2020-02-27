@@ -7,11 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ include file="help/bootstrap.jsp" %>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
+
+<jsp:useBean id="message" scope="request" class="java.lang.String"/>
 <html>
 <head>
     <title>
@@ -29,6 +32,7 @@
                <fmt:message key="text.reg.login.placeholder" bundle="${var}"/> name="login" required>
         <output class="text-danger" id="wrongLogin"></output>
     </div>
+
     <div class="form-group">
         <label for="password">
             <fmt:message key="text.reg.password" bundle="${var}"/>
@@ -38,6 +42,7 @@
                <fmt:message key="text.reg.password.placeholder" bundle="${var}"/> name="password" required>
         <output class="text-danger" id="wrongPassword"></output>
     </div>
+
     <div class="form-group">
         <label for="pwd">
             <fmt:message key="text.reg.password.again" bundle="${var}"/>
@@ -47,6 +52,13 @@
                <fmt:message key="text.reg.password.placeholder" bundle="${var}"/> name="passwordAgain" required>
         <output class="text-danger" id="matchPasswords"></output>
     </div>
+
+    <c:if test="${!message.equals(\"\")}">
+        <div class="text-danger">
+            <output class="text-danger">${message}</output>
+        </div>
+    </c:if>
+
     <button type="button" onclick="valid()" class="btn btn-primary">
         <fmt:message key="button.reg.enter" bundle="${var}"/>
     </button>

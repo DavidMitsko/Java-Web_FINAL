@@ -14,8 +14,6 @@ import java.util.ArrayList;
 public class MovieServiceImpl implements MovieService {
     private final static Logger logger = LogManager.getLogger(MovieServiceImpl.class);
 
-    private final static String path = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images";
-
     private RatingDAO ratingDAO;
     private MovieDAO movieDAO;
     private RecountDAO recountDAO;

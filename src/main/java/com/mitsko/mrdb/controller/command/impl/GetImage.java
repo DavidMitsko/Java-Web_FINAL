@@ -1,4 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
+
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -10,11 +13,13 @@ import java.io.OutputStream;
 
 public class GetImage implements Command {
 
+    private final String path = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images\\";
+
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         String fileName = req.getParameter("fileName");
         ServletContext servletContext = req.getServletContext();
-        String filePath = "F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\web\\images\\" + fileName;//servletContext.getContextPath() +  "images\\" + fileName;
+        String filePath = path + fileName;
         String mime = servletContext.getMimeType(filePath);
 
         if (mime == null) {
@@ -37,8 +42,8 @@ public class GetImage implements Command {
             }
             outputStream.close();
             inputStream.close();
-        } catch (IOException e) {
-
+        } catch (IOException ex) {
+            throw new CommandException(ex);
         }
 
         return null;

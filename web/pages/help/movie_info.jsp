@@ -12,7 +12,6 @@
 <fmt:setBundle basename="text" var="var"/>
 <html>
 <head>
-    <title>Title</title>
 </head>
 <body>
 

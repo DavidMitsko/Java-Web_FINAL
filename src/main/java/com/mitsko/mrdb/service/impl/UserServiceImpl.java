@@ -6,7 +6,9 @@ import com.mitsko.mrdb.dao.RecountDAO;
 import com.mitsko.mrdb.dao.UserDAO;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.entity.util.Status;
+import com.mitsko.mrdb.resource.ResourceManager;
 import com.mitsko.mrdb.service.ServiceException;
+import com.mitsko.mrdb.service.UserException;
 import com.mitsko.mrdb.service.UserService;
 import com.mitsko.mrdb.service.util.Crypto;
 import com.mitsko.mrdb.service.util.Validator;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private RecountDAO recountDAO;
     private Crypto crypto;
     private Validator validator;
+    private ResourceManager manager;
 
     public UserServiceImpl() {
         DAOFactory daoFactory = DAOFactory.getInstance();
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
         crypto = new Crypto();
         validator = new Validator();
+        manager = ResourceManager.getInstance();
     }
 
     @Override
@@ -41,16 +45,20 @@ public class UserServiceImpl implements UserService {
 
         try {
             String passwordInDB = userDAO.takePassword(login);
+            if(passwordInDB == null) {
+                logger.error("Wrong login");
+                throw new UserException(manager.getString("error.wrongLogin.message"));
+            }
 
             if (!crypto.checkPassword(password, passwordInDB)) {
                 logger.error("Wrong password");
-                throw new ServiceException("Wrong password");
+                throw new UserException(manager.getString("error.wrongPassword.message"));
             }
 
             User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
             if (user == null) {
-                logger.error("No user with this login and password");
-                throw new ServiceException("No user with this login and password");
+                logger.error("Doesn`t exist user with this login and password");
+                throw new UserException(manager.getString("error.user.message"));
             }
 
             logger.debug("Sign in");
@@ -71,7 +79,7 @@ public class UserServiceImpl implements UserService {
         try {
             if (userDAO.findLogin(login)) {
                 logger.error("Already exist a user with this name");
-                throw new ServiceException("Already exist a user with this name");
+                throw new UserException(manager.getString("error.alreadyExist.message"));
             }
 
             String hashPassword = crypto.encode(password);

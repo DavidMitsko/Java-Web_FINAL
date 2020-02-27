@@ -34,6 +34,7 @@
                    <fmt:message key="text.login.login.placeholder" bundle="${var}"/> name="login" required>
             <output class="text-danger" id="wrongLogin"></output>
         </div>
+
         <div class="form-group">
             <label for="pwd">
                 <fmt:message key="text.login.password" bundle="${var}"/>

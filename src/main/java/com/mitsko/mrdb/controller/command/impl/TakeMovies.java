@@ -1,5 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Movie;
 import com.mitsko.mrdb.entity.util.Role;
@@ -16,7 +18,7 @@ public class TakeMovies implements Command {
     private int begin = 0;
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
@@ -27,9 +29,11 @@ public class TakeMovies implements Command {
 
             req.setAttribute("movieList", movieList);
             req.setAttribute("size", countPages(size));
+            req.setAttribute("currentPage", begin / 3 + 1);
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            return PagesConstants.ERROR;
+//            req.setAttribute("error", ex.getMessage());
+//            return PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
 
         HttpSession session = req.getSession();

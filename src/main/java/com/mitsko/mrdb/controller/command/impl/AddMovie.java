@@ -1,5 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.service.MovieService;
@@ -22,7 +24,7 @@ public class AddMovie implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         MovieService movieService = serviceFactory.getMovieService();
 
@@ -38,8 +40,9 @@ public class AddMovie implements Command {
                 movieService.updateMovie(oldMovieName, movieName, imageName, description);
             }
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            return PagesConstants.ERROR;
+//            req.setAttribute("error", ex.getMessage());
+//            return PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
 
         return RequestsConstants.TAKE_USERS;

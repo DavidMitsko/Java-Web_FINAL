@@ -1,9 +1,12 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
+import com.mitsko.mrdb.service.UserException;
 import com.mitsko.mrdb.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +16,7 @@ import javax.servlet.http.HttpSession;
 public class Registration implements Command {
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         UserService userService = serviceFactory.getUserService();
 
@@ -33,8 +36,7 @@ public class Registration implements Command {
                 page = PagesConstants.MAIN;
             }
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            page = PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
         return page;
     }

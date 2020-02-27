@@ -1,5 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.resource.ResourceManager;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 public class AddRating implements Command {
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         RatingService ratingService = serviceFactory.getRatingService();
 
@@ -37,8 +39,9 @@ public class AddRating implements Command {
                 session.setAttribute("movieName", movieName);
             }
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            return PagesConstants.ERROR;
+//            req.setAttribute("error", ex.getMessage());
+//            return PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
         return page;
     }

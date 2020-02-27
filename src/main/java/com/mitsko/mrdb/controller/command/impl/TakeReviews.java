@@ -1,5 +1,7 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
+import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
 import com.mitsko.mrdb.entity.Review;
 import com.mitsko.mrdb.service.*;
@@ -26,7 +28,7 @@ public class TakeReviews implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
         String page = PagesConstants.REVIEW;
         reviewMap = new HashMap<>();
         usersRatingMap = new HashMap<>();
@@ -44,27 +46,25 @@ public class TakeReviews implements Command {
             HttpSession session = req.getSession();
             session.setAttribute("movieName", movieName);
         } catch (ServiceException ex) {
-            req.setAttribute("error", ex.getMessage());
-            return PagesConstants.ERROR;
+//            req.setAttribute("error", ex.getMessage());
+//            return PagesConstants.ERROR;
+            throw new CommandException(ex);
         }
         return page;
     }
 
-    private void takeLogins(ArrayList<Review> reviewList) {
+    private void takeLogins(ArrayList<Review> reviewList) throws ServiceException {
         reviewMap = new HashMap<>();
         usersRatingMap = new HashMap<>();
 
-        try {
-            for (Review review : reviewList) {
-                String login = userService.takeLogin(review.getUserID());
-                int rating = userService.takeAverageRating(login);
-                while (reviewMap.containsKey(login)) {
-                    login = login + " ";
-                }
-                reviewMap.put(login, review);
-                usersRatingMap.put(login, rating);
+        for (Review review : reviewList) {
+            String login = userService.takeLogin(review.getUserID());
+            int rating = userService.takeAverageRating(login);
+            while (reviewMap.containsKey(login)) {
+                login = login + " ";
             }
-        } catch (ServiceException ex) {
+            reviewMap.put(login, review);
+            usersRatingMap.put(login, rating);
 
         }
     }

@@ -12,12 +12,12 @@
 <%@include file="help/bootstrap.jsp" %>
 
 <jsp:useBean id="movieList" class="java.util.ArrayList" scope="request"/>
-<jsp:useBean id="size" type="java.lang.Integer" scope="request"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
 
 <c:import url="header/mainNavbar.jsp" var="navbar"/>
+<c:import url="help/pagination.jsp" var="pagination"/>
 <html>
 <head>
     <title>
@@ -70,31 +70,7 @@ ${navbar}
             </tbody>
         </table>
 
-        <ul class="pagination justify-content-center" style="margin:20px 0">
-            <form method="get" action="${pageContext.request.contextPath}/previous">
-                <li class="page-item">
-                    <button type="submit" class="page-link" name="previous">
-                        <fmt:message key="button.main.previous" bundle="${var}"/>
-                    </button>
-                </li>
-            </form>
-            <c:forEach begin="${1}" end="${size}" step="${1}" var="list">
-                <form method="get" action="${pageContext.request.contextPath}/change_page">
-                    <li class="page-item">
-                        <button type="submit" class="page-link" name="page" value="${list}">
-                            ${list}
-                        </button>
-                    </li>
-                </form>
-            </c:forEach>
-            <form method="get" action="${pageContext.request.contextPath}/next">
-                <li class="page-item">
-                    <button type="submit" class="page-link" name="next">
-                        <fmt:message key="button.main.next" bundle="${var}"/>
-                    </button>
-                </li>
-            </form>
-        </ul>
+        ${pagination}
     </c:if>
 </div>
 </body>

@@ -1,5 +1,7 @@
 package com.mitsko.mrdb.controller.command;
 
+import com.mitsko.mrdb.controller.command.impl.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ public class CommandProvider {
         repository.put(CommandName.REGISTRATION, new Registration());
 
         repository.put(CommandName.TAKE_MOVIES, new TakeMovies());
-        repository.put(CommandName.TAKE_MOVIES_FOR_REMOVE, new TakeMovies());
+        repository.put(CommandName.EDITING_MOVIES, new TakeMovies());
 
         repository.put(CommandName.TAKE_REVIEWS, new TakeReviews());
         repository.put(CommandName.ADD_REVIEW , new AddReview());

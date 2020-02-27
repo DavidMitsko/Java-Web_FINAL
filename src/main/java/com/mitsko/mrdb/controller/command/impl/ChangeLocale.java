@@ -1,5 +1,6 @@
-package com.mitsko.mrdb.controller.command;
+package com.mitsko.mrdb.controller.command.impl;
 
+import com.mitsko.mrdb.controller.command.Command;
 import com.mitsko.mrdb.resource.ResourceManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +16,6 @@ public class ChangeLocale implements Command {
     public String execute(HttpServletRequest req, HttpServletResponse resp) {
         ResourceManager resourceManager = ResourceManager.getInstance();
 
-        /*String page = req.getParameter("page");
-        page = page.substring(22);*/
-
         HttpSession session = req.getSession();
         Locale currentLocale = resourceManager.getCurrentLocale();
         if(currentLocale.equals(EN)) {
@@ -29,19 +27,11 @@ public class ChangeLocale implements Command {
         }
 
         return compileRequest(req.getParameter("path"), req.getParameter("query"));
-        /*Role role = (Role) session.getAttribute("role");
-        if (role == Role.USER) {
-            return Constants.MAIN;
-        } else {
-            return Constants.ADMIN;
-        }*/
-        //return Constants.MAKE_REDIRECT;
     }
 
     private String compileRequest(String path, String query) {
         path = path.replaceAll("pages/", "");
         path = path.replaceAll(".jsp","");
-        //session.getAttribute("movieName");
         return path + "?" + query;
     }
 }
