@@ -1,7 +1,6 @@
 package com.mitsko.mrdb.controller.command.util;
 
 public class PagesConstants {
-    public static final String SIGN_IN = "pages/sign_in.jsp";
     public static final String REGISTRATION = "pages/registration.jsp";
     public static final String ADMIN = "pages/take_users.jsp";
     public static final String MAIN = "pages/take_movies.jsp";

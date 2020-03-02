@@ -19,7 +19,7 @@ public class ReviewTag extends TagSupport {
 
     private HashMap<String, Review> reviewHashMap;
     private HashMap<String, Integer> usersRatingHashMap;
-    private String star;
+    private String star = "<img src=\"/get_image?fileName=graphics/star.svg\" height=\"15\" width=\"15\"/>";
 
     public HashMap<String, Review> getReviewHashMap() {
         return reviewHashMap;

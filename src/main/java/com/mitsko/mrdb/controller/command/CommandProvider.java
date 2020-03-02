@@ -41,7 +41,7 @@ public class CommandProvider {
         try {
             CommandName commandName = CommandName.valueOf(name.toUpperCase());
             command = repository.get(commandName);
-        } catch (NullPointerException ex) {
+        } catch (IllegalArgumentException ex) {
             command = repository.get(CommandName.WRONG_REQUEST);
         }
         return command;

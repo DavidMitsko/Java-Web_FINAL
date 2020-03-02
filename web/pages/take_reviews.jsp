@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="v" uri="http://MRDb.mitsko.com" %>
 
 <%@ include file="help/bootstrap.jsp" %>
 
@@ -16,12 +17,11 @@
 <jsp:useBean id="description" class="java.lang.String" scope="request"/>
 
 <c:import url="header/mainNavbar.jsp" var="navbar"/>
+<c:import url="graphics/star.svg" var="star"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>
 
-<%@ taglib prefix="v" uri="http://MRDb.mitsko.com" %>
-<c:import url="graphics/star.svg" var="star"/>
 <html>
 <head>
     <title>
@@ -31,7 +31,6 @@
 <body>
 
 ${navbar}
-
 <div class="container mt-3">
 
     <label>
@@ -41,7 +40,9 @@ ${navbar}
         </c:if>
     </label>
 
-    <v:ReviewTag reviewHashMap="${review}" usersRatingHashMap="${user}" star="${star}"/>
+
+
+    <v:ReviewTag reviewHashMap="${review}" usersRatingHashMap="${user}"/>
 
     <form id="form" method="post" action="${pageContext.request.contextPath}/add_review">
         <div class="form-group">
@@ -59,6 +60,10 @@ ${navbar}
     </form>
 
 </div>
+
+<footer>
+
+</footer>
 </body>
 
 <script>
@@ -73,6 +78,8 @@ ${navbar}
             document.getElementById("error").innerHTML = "<fmt:message key="addReview.message" bundle="${var}"/>";
         }
     }
+
+
 </script>
 
 </html>

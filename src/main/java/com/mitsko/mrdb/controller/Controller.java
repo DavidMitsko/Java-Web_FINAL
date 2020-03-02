@@ -27,7 +27,7 @@ public class Controller extends HttpServlet {
             String page = processRequest(req, resp);
             req.getRequestDispatcher(page).forward(req, resp);
         } catch (CommandException ex) {
-            error(ex, req, resp);
+            handlingOfError(ex, req, resp);
         }
     }
 
@@ -37,7 +37,7 @@ public class Controller extends HttpServlet {
             String request = processRequest(req, resp);
             resp.sendRedirect(request);
         } catch (CommandException ex) {
-            error(ex, req, resp);
+            handlingOfError(ex, req, resp);
         }
     }
 
@@ -49,17 +49,15 @@ public class Controller extends HttpServlet {
             if(req.getSession().getAttribute("role") == Role.USER) {
                 commandName = RequestsConstants.TAKE_MOVIE;
             } else {
-                commandName = RequestsConstants.TAKE_MOVIES_FOR_REMOVE;
+                commandName = RequestsConstants.EDITING_MOVIES;
             }
         }
         Command executionCommand = commandProvider.getCommand(commandName);
 
-        String page = executionCommand.execute(req, resp);
-
-        return page;
+        return executionCommand.execute(req, resp);
     }
 
-    private void error(CommandException ex, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handlingOfError(CommandException ex, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page;
         if(ex.getCause().getClass() == UserException.class) {
             page = req.getServletPath();

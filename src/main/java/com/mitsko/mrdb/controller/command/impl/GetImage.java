@@ -47,6 +47,5 @@ public class GetImage implements Command {
         }
 
         return null;
-
     }
 }
