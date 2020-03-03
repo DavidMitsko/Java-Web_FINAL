@@ -13,7 +13,7 @@ class UserServiceImplTest {
     private static final UserServiceImpl userService = new UserServiceImpl();
 
     private User testUser = new User(14, "vlad", "$2a$10$1khs7RvAGoKuQ./ervFhEekkL076CK7vslzNCeLQe2hepvN3san82",
-            Role.USER.toString(), Status.NO_LIMITS.toString(), 0);
+            Role.USER.toString(), Status.BAN.toString(), 1);
 
     @Test
     void signIn() {

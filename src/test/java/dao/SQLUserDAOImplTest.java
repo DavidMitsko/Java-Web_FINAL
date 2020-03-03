@@ -14,16 +14,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 
 class SQLUserDAOImplTest {
-   // private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static final UserDAO userDAO = new SQLUserDAOImpl();
 
     private User testUser = new User(14, "vlad", "$2a$10$1khs7RvAGoKuQ./ervFhEekkL076CK7vslzNCeLQe2hepvN3san82",
             Role.USER.toString(), Status.NO_LIMITS.toString(), 0);
-
-    @BeforeClass
-    public static void init() {
-        //connectionPool.initPoolData();
-    }
 
     @Test
     void takePassword() {
@@ -106,10 +100,5 @@ class SQLUserDAOImplTest {
         } catch (DAOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    @AfterClass
-    public static void dispose() {
-       // connectionPool.dispose();
     }
 }

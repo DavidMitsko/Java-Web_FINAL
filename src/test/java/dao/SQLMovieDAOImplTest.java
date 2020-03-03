@@ -1,6 +1,7 @@
 package dao;
 
 import com.mitsko.mrdb.dao.DAOException;
+import com.mitsko.mrdb.dao.MovieDAO;
 import com.mitsko.mrdb.dao.impl.SQLMovieDAOImpl;
 import com.mitsko.mrdb.entity.Movie;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 
 class SQLMovieDAOImplTest {
-    private final static SQLMovieDAOImpl movieDAO = new SQLMovieDAOImpl();
+    private final static MovieDAO movieDAO = new SQLMovieDAOImpl();
 
     private final Movie testMovie = new Movie(7, "Iron Man 2", 0, 0,
             "Iron Man 2.jpg", "Iron Man 2 is a 2010 American superhero film " +
@@ -32,7 +33,7 @@ class SQLMovieDAOImplTest {
         try {
             float actual = movieDAO.takeRatingOfMovie(7);
             float expected = testMovie.getAverageRating();
-            assertEquals(expected, actual, 0);
+            assertEquals(expected, actual, 0.001);
         } catch (DAOException ex) {
             ex.printStackTrace();
         }
