@@ -2,8 +2,6 @@ package com.mitsko.mrdb.service.impl;
 
 import com.mitsko.mrdb.dao.*;
 import com.mitsko.mrdb.entity.Review;
-import com.mitsko.mrdb.entity.User;
-import com.mitsko.mrdb.entity.util.Role;
 import com.mitsko.mrdb.entity.util.Status;
 import com.mitsko.mrdb.service.ReviewService;
 import com.mitsko.mrdb.service.ServiceException;
@@ -53,9 +51,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void removeReview(int userID, int reviewID) throws ServiceException {
         try {
-            Review review = reviewDAO.takeByID(reviewID);
+            int usersIDFromDB = reviewDAO.takeUsersID(reviewID);
 
-            if (review.getUserID() == userID) {
+            if (usersIDFromDB == userID) {
                 reviewDAO.removeReview(reviewID);
                 logger.debug("Removed review");
             } else {

@@ -73,8 +73,8 @@ public class Rating {
     public String toString() {
         return "Rating{" +
                 "ID=" + ID +
-                ", usersLogin='" + userID + '\'' +
-                ", nameOfMovie='" + movieID + '\'' +
+                ", userID=" + userID +
+                ", movieID=" + movieID +
                 ", rating=" + rating +
                 '}';
     }

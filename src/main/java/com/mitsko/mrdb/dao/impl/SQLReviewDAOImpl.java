@@ -19,11 +19,11 @@ public class SQLReviewDAOImpl implements ReviewDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String ADD_NEW_REVIEW = "INSERT INTO review (id, userID, movieID, review) VALUES(NULL,?,?,?)";
-    private static final String TAKE_ALL_MOVIES_REVIEW = "SELECT userID, review FROM review WHERE movieID = ?";
+    private static final String TAKE_ALL_MOVIES_REVIEW = "SELECT id, userID, review FROM review WHERE movieID = ?";
     private static final String REMOVE_REVIEW = "DELETE FROM review WHERE ID = ?";
     private static final String REMOVE_ALL_REVIEW = "DELETE  FROM review WHERE movieID = ?";
     private static final String TAKE_ALL_USERS_REVIEW = "SELECT * FROM review WHERE userID = ?";
-    private static final String TAKE_REVIEW = "SELECT * FROM review WHERE id = ?";
+    private static final String TAKE_USERS_ID = "SELECT userID FROM review WHERE id = ?";
 
     @Override
     public void addReview(Review review) throws DAOException {
@@ -68,10 +68,11 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                int userID = resultSet.getInt(1);
-                String review = resultSet.getString(2);
+                int id = resultSet.getInt(1);
+                int userID = resultSet.getInt(2);
+                String review = resultSet.getString(3);
 
-                Review oldReview = new Review(userID, movieID, review);
+                Review oldReview = new Review(id, userID, movieID, review);
                 reviewList.add(oldReview);
             }
 
@@ -176,15 +177,15 @@ public class SQLReviewDAOImpl implements ReviewDAO {
     }
 
     @Override
-    public Review takeByID(int reviewID) throws DAOException {
+    public int takeUsersID(int reviewID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Review reviewFromDB = null;
+        int usersID = -1;
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(TAKE_REVIEW);
+            preparedStatement = connection.prepareStatement(TAKE_USERS_ID);
 
             preparedStatement.setInt(1, reviewID);
 
@@ -193,12 +194,7 @@ public class SQLReviewDAOImpl implements ReviewDAO {
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
 
-                int id = resultSet.getInt(1);
-                int userID = resultSet.getInt(2);
-                int movieID = resultSet.getInt(3);
-                String review = resultSet.getString(3);
-
-                reviewFromDB = new Review(id, userID, movieID, review);
+                usersID = resultSet.getInt(1);
             }
 
             logger.debug("From db received review bi ID");
@@ -211,6 +207,6 @@ public class SQLReviewDAOImpl implements ReviewDAO {
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
-        return reviewFromDB;
+        return usersID;
     }
 }

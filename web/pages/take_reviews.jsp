@@ -17,7 +17,6 @@
 <jsp:useBean id="description" class="java.lang.String" scope="request"/>
 
 <c:import url="header/mainNavbar.jsp" var="navbar"/>
-<c:import url="graphics/star.svg" var="star"/>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
 <fmt:setBundle basename="text" var="var"/>

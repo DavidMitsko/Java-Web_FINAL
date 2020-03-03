@@ -15,5 +15,5 @@ public interface ReviewDAO {
 
     ArrayList<Review> takeAllUsersReviews(int userID) throws DAOException;
 
-    Review takeByID(int reviewID) throws DAOException;
+    int takeUsersID(int reviewID) throws DAOException;
 }

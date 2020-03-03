@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface ReviewService {
     void addNewReview(int userID, String movieName, String review) throws ServiceException;
 
-    void removeReview(int userIF, int reviewID) throws ServiceException;
+    void removeReview(int userID, int reviewID) throws ServiceException;
 
     void removeAllMoviesReview(String movieID) throws ServiceException;
 
