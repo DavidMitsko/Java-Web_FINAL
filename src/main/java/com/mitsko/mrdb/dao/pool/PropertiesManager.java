@@ -3,34 +3,20 @@ package com.mitsko.mrdb.dao.pool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 public class PropertiesManager {
     private final static Logger logger = LogManager.getLogger(PropertiesManager.class);
-    private Properties properties;
+    private final static PropertiesManager instance = new PropertiesManager();
 
-    public PropertiesManager(String path) {
-        try {
-            FileInputStream fis = new FileInputStream("F:\\IntelliJ IDEA Ultimate\\Projects\\Java-Web_FINAL\\src\\main\\resources\\db.properties");
-            properties = new Properties();
-            properties.load(fis);
-            logger.debug("Load db parameters");
-        } catch (FileNotFoundException ex) {
-            logger.error(ex);
-            //System.exit(-1);
-            //throw new DAOException(ex);
-        } catch (IOException ex) {
-            logger.error(ex);
-            //System.exit(-1);
-            //throw new DAOException(ex);
-        }
+    private ResourceBundle bundle = ResourceBundle.getBundle("db");
+
+    public static PropertiesManager getInstance() {
+        return instance;
     }
 
     public String getValue(String parameter) {
         logger.debug("Get db parameter " + parameter);
-        return properties.getProperty(parameter);
+        return bundle.getString(parameter);
     }
 }

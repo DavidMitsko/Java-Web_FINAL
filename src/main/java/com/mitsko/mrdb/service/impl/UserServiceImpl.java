@@ -38,10 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signIn(String login, String password) throws ServiceException {
-        if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
-            logger.error("Wrong parameter");
-            throw new ServiceException("Wrong parameter");
-        }
+        checkParameter(login, password);
 
         try {
             String passwordInDB = userDAO.takePassword(login);
@@ -57,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
             User user = userDAO.takeUserByLoginAndPassword(login, passwordInDB);
             if (user == null) {
-                logger.error("Doesn`t exist user with this login and password");
+                logger.error("Doesn't exist user with this login and password");
                 throw new UserException(manager.getString("error.user.message"));
             }
 
@@ -71,10 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registration(String login, String password) throws ServiceException{
-        if(!validator.checkLogin(login) || !validator.checkPassword(password)) {
-            logger.error("Wrong parameter");
-            throw new ServiceException("Wrong parameter");
-        }
+        checkParameter(login, password);
 
         try {
             if (userDAO.findLogin(login)) {
@@ -99,6 +93,17 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(ex);
         }
 
+    }
+
+    private void checkParameter(String login, String password) throws UserException {
+        if(!validator.checkLogin(login)) {
+            logger.error("Wrong login");
+            throw new UserException(manager.getString("error.wrongLogin.message"));
+        }
+        if(!validator.checkPassword(password)) {
+            logger.error("Wrong password");
+            throw new UserException(manager.getString("error.wrongPassword.message"));
+        }
     }
 
     @Override

@@ -197,7 +197,7 @@ public class SQLReviewDAOImpl implements ReviewDAO {
                 usersID = resultSet.getInt(1);
             }
 
-            logger.debug("From db received review bi ID");
+            logger.debug("From db received review by ID");
         } catch (SQLException ex) {
             logger.error(ex);
             throw new DAOException(ex);
