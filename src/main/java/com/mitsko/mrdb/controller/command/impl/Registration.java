@@ -3,6 +3,7 @@ package com.mitsko.mrdb.controller.command.impl;
 import com.mitsko.mrdb.controller.command.Command;
 import com.mitsko.mrdb.controller.command.CommandException;
 import com.mitsko.mrdb.controller.command.util.PagesConstants;
+import com.mitsko.mrdb.controller.command.util.RequestsConstants;
 import com.mitsko.mrdb.entity.User;
 import com.mitsko.mrdb.service.ServiceException;
 import com.mitsko.mrdb.service.ServiceFactory;
@@ -33,7 +34,7 @@ public class Registration implements Command {
             session.setAttribute("status", user.getStatus());
 
             if(user != null) {
-                page = PagesConstants.MAIN;
+                page = RequestsConstants.TAKE_MOVIE;
             }
         } catch (ServiceException ex) {
             throw new CommandException(ex);
